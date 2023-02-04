@@ -29,7 +29,7 @@
             android:layout_alignParentTop="true"
             android:text="@string/title"
             android:textAppearance="@style/title"
-           />
+            />
     </RelativeLayout>
 
     <LinearLayout
@@ -55,7 +55,7 @@
             app:icon="@drawable/search"
             app:iconGravity="textStart"
             app:iconTint="@color/black"
-           ></Button>
+            ></Button>
 
         <Button
             android:id="@+id/button_media"
