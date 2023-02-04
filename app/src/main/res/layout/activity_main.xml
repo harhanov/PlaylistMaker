@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:clipToOutline="true"
     android:background="@drawable/some_id"
+    android:clipToOutline="true"
+    android:orientation="vertical"
     tools:ignore="DuplicateIds">
 
     <RelativeLayout
@@ -19,8 +18,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="@dimen/standard_margin"
         android:layout_marginTop="@dimen/standard_margin"
-        android:layout_marginEnd="@dimen/standard_margin"
-        >
+        android:layout_marginEnd="@dimen/standard_margin">
 
         <TextView
             android:id="@+id/title"
@@ -28,8 +26,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             android:text="@string/title"
-            android:textAppearance="@style/title"
-            />
+            android:textAppearance="@style/title" />
     </RelativeLayout>
 
     <LinearLayout
@@ -43,34 +40,33 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginLeft="@dimen/standard_margin"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/button_margin_top"
             android:layout_marginRight="@dimen/standard_margin"
             android:layout_weight="1"
             android:backgroundTint="@color/white"
+            android:foreground="?attr/selectableItemBackground"
             android:text="@string/search"
             android:textAppearance="@style/some_id"
             android:textColor="@color/black"
-            android:foreground="?attr/selectableItemBackground"
-            app:cornerRadius="15dp"
+            app:cornerRadius="@dimen/corner_radius"
             app:icon="@drawable/search"
             app:iconGravity="textStart"
-            app:iconTint="@color/black"
-            ></Button>
+            app:iconTint="@color/black"></Button>
 
         <Button
             android:id="@+id/button_media"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginLeft="@dimen/standard_margin"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/button_margin_top"
             android:layout_marginRight="@dimen/standard_margin"
             android:layout_weight="1"
             android:backgroundTint="@color/white"
+            android:foreground="?attr/selectableItemBackground"
             android:text="@string/media_library"
             android:textAppearance="@style/some_id"
             android:textColor="@color/black"
-            android:foreground="?attr/selectableItemBackground"
-            app:cornerRadius="15dp"
+            app:cornerRadius="@dimen/corner_radius"
             app:icon="@drawable/library"
             app:iconGravity="textStart"
             app:iconTint="@color/black"></Button>
@@ -80,16 +76,16 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginLeft="@dimen/standard_margin"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="@dimen/standard_margin"
+            android:layout_marginTop="@dimen/button_margin_top"
             android:layout_marginRight="@dimen/standard_margin"
+            android:layout_marginBottom="@dimen/standard_margin"
             android:layout_weight="1"
             android:backgroundTint="@color/white"
+            android:foreground="?attr/selectableItemBackground"
             android:text="@string/settings"
             android:textAppearance="@style/some_id"
             android:textColor="@color/black"
-            android:foreground="?attr/selectableItemBackground"
-            app:cornerRadius="15dp"
+            app:cornerRadius="@dimen/corner_radius"
             app:icon="@drawable/gear"
             app:iconGravity="textStart"
             app:iconTint="@color/black"></Button>
