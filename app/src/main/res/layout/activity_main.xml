@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/some_id"
+    android:clipToOutline="true"
+    android:orientation="vertical"
+    tools:ignore="DuplicateIds">
+
+    <RelativeLayout
+        android:id="@+id/panel_header"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/relative_layout_height"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="@dimen/standard_margin"
+        android:layout_marginTop="@dimen/standard_margin"
+        android:layout_marginEnd="@dimen/standard_margin">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:text="@string/title"
+            android:textAppearance="@style/title" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/button_search"
+            android:text="@string/search"
+            android:layout_marginTop = "0dp"
+            android:textAppearance="@style/some_id"
+            app:icon="@drawable/search"
+            style="@style/ButtonStyle"></Button>
+
+        <Button
+            android:id="@+id/button_media"
+            android:text="@string/media_library"
+            android:textAppearance="@style/some_id"
+            app:icon="@drawable/library"
+            style="@style/ButtonStyle"></Button>
+
+        <Button
+            android:id="@+id/button_settings"
+            android:layout_marginBottom="@dimen/standard_margin"
+            android:text="@string/settings"
+            android:textAppearance="@style/some_id"
+            app:icon="@drawable/gear"
+            style="@style/ButtonStyle"></Button>
+
+    </LinearLayout>
+</LinearLayout>
