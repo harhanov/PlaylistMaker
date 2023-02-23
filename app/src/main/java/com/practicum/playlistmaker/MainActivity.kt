@@ -3,9 +3,7 @@ package com.practicum.playlistmaker
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
-import android.widget.Toast
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,20 +16,26 @@ class MainActivity : AppCompatActivity() {
         imageSearch.setOnClickListener{
             val searchIntent = Intent(this, MainActivity::class.java)
             startActivity(searchIntent)
-            finish()
+
         }
 
         imageMedia.setOnClickListener{
             val mediaIntent = Intent(this, MainActivity::class.java)
             startActivity(mediaIntent)
-            finish()
+
         }
 
         imageSettings.setOnClickListener{
             val settingsIntent = Intent(this, SettingsActivity::class.java)
             startActivity(settingsIntent)
-            finish()
+
         }
+        imageSearch.setOnClickListener{
+            val searchActivityIntent = Intent(this, SearchActivity::class.java)
+            startActivity(searchActivityIntent)
+
+        }
+
     }
 
 }

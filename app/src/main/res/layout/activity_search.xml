@@ -1,9 +1,78 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Search">
+    android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Верхняя панель с заголовком и кнопкой назад -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/relative_layout_height"
+        android:layout_marginStart="@dimen/standard_margin"
+        android:layout_marginTop="@dimen/standard_margin"
+        android:layout_marginEnd="@dimen/end_margin">
+
+        <ImageView
+            android:id="@+id/searchBackButton"
+            style="@style/backArrow"
+            android:layout_alignTop="@id/searchText"
+            android:layout_alignBottom="@id/searchText"
+            />
+
+        <TextView
+            android:id="@+id/searchText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/search"
+            android:layout_toEndOf="@id/searchBackButton"
+            android:paddingStart="@dimen/largePadding"
+            android:textAppearance="@style/title2"/>
+
+    </RelativeLayout>
+
+    <!-- Окно поиска -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/rounded_background"
+        android:paddingStart="@dimen/standardPadding"
+        android:paddingEnd="@dimen/standardPadding"
+        android:layout_marginStart="@dimen/standard_margin"
+        android:layout_marginEnd="@dimen/end_margin"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/search"
+            android:tint="?attr/searchHintColor"
+            android:paddingEnd="@dimen/minPadding"
+            tools:ignore="UseAppTint" />
+
+        <EditText
+            android:id="@+id/searchEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:hint="@string/search"
+            android:inputType="text"
+            android:maxLines="1"
+            android:minHeight="@dimen/minimalHeight"
+            android:textColorHint="?attr/searchHintColor" />
+
+        <ImageView
+            android:id="@+id/clearIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:visibility="gone"
+            />
+    </LinearLayout>
+
+</LinearLayout>
