@@ -86,22 +86,22 @@
 
 </RelativeLayout>
 
-<RelativeLayout
-    android:id="@+id/serviceTerms"
-    style="@style/MenuItem">
+    <RelativeLayout
+        android:id="@+id/serviceTerms"
+        style="@style/MenuItem">
 
-    <TextView
-        android:id="@+id/ys_regular_"
-        android:text="@string/terms_of_service"
-        style="@style/ys_regular" />
+        <TextView
+            android:id="@+id/ys_regular_"
+            style="@style/ys_regular"
+            android:text="@string/terms_of_service" />
 
-    <ImageView
-        android:id="@+id/vector"
-        android:layout_width="10dp"
-        android:layout_height="18dp"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:background="@drawable/arrow_forward" />
-</RelativeLayout>
+        <ImageView
+            android:id="@+id/vector"
+            android:layout_width="10dp"
+            android:layout_height="18dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/arrow_forward" />
+    </RelativeLayout>
 
 </LinearLayout>

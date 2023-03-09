@@ -14,8 +14,6 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
         val backFromSettings = findViewById<View>(R.id.exitSettings)
         backFromSettings.setOnClickListener{
-            val backSettingsIntent = Intent(this, MainActivity::class.java)
-            startActivity(backSettingsIntent)
             finish()
                     }
         val shareApp = findViewById<View>(R.id.shareArea)
