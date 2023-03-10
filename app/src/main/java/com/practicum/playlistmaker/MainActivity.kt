@@ -16,22 +16,21 @@ class MainActivity : AppCompatActivity() {
         val imageMedia = findViewById<Button>(R.id.button_media)
         val imageSettings = findViewById<Button>(R.id.button_settings)
 
-        imageMedia.setOnClickListener{
-            val mediaIntent = Intent(this, MainActivity::class.java)
-            startActivity(mediaIntent)
-
+        imageMedia.setOnClickListener {
+            navigateTo(MediaLibrary::class.java)
         }
 
-        imageSettings.setOnClickListener{
-            val settingsIntent = Intent(this, SettingsActivity::class.java)
-            startActivity(settingsIntent)
-
+        imageSettings.setOnClickListener {
+            navigateTo(SettingsActivity::class.java)
         }
-        imageSearch.setOnClickListener{
-          val searchActivityIntent = Intent(this, SearchActivity::class.java)
-           startActivity(searchActivityIntent)
 
+        imageSearch.setOnClickListener {
+            navigateTo(SearchActivity::class.java)
         }
     }
 
+    private fun navigateTo(clazz: Class<out AppCompatActivity>) {
+        val intent = Intent(this, clazz)
+        startActivity(intent)
+    }
 }

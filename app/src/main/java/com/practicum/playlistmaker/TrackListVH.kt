@@ -15,12 +15,13 @@ class TrackListVH (itemView: View): RecyclerView.ViewHolder(itemView) {
     private val songDuration: TextView = itemView.findViewById(R.id.song_duration)
 
     fun bind(item: Track) {
+        val radiusInPixels = itemView.resources.getDimensionPixelSize(R.dimen.cover_corner_radius)
 
         Glide.with(itemView)
             .load(item.artworkUrl100)
             .centerCrop()
-            .placeholder(R.drawable.image_search)
-            .transform(RoundedCorners(2))
+            .placeholder(R.drawable.crocozebra)
+            .transform(RoundedCorners(radiusInPixels))
             .into(songCoverImage)
 
         songTitle.text = item.trackName

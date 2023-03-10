@@ -15,17 +15,16 @@
             android:id="@+id/exitSettings"
             style="@style/backArrow"
             android:layout_alignTop="@id/settingsHeader"
-            android:layout_alignBottom="@id/settingsHeader"
-            />
+            android:layout_alignBottom="@id/settingsHeader" />
 
         <TextView
             android:id="@+id/settingsHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/settings"
             android:layout_toEndOf="@+id/exitSettings"
             android:paddingStart="@dimen/largePadding"
-            android:textAppearance="@style/title2"/>
+            android:text="@string/settings"
+            android:textAppearance="@style/title2" />
 
     </RelativeLayout>
 
@@ -49,42 +48,41 @@
     </RelativeLayout>
 
     <RelativeLayout
-    android:id="@+id/shareArea"
-    style="@style/MenuItem">
+        android:id="@+id/shareArea"
+        style="@style/MenuItem">
 
-    <TextView
-        android:id="@+id/sharing"
-        style="@style/ys_regular"
-        android:text="@string/share_app" />
+        <TextView
+            android:id="@+id/sharing"
+            style="@style/ys_regular"
+            android:text="@string/share_app" />
 
-    <ImageView
-        android:id="@+id/shareIcon"
-        android:layout_width="@dimen/image_layout_width"
-        android:layout_height="22dp"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:background="@drawable/share" />
+        <ImageView
+            android:id="@+id/shareIcon"
+            android:layout_width="@dimen/side_icons"
+            android:layout_height="@dimen/side_icons"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/share" />
 
-</RelativeLayout>
+    </RelativeLayout>
 
-<RelativeLayout
-    android:id="@+id/writeToSupport"
-    style="@style/MenuItem">
+    <RelativeLayout
+        android:id="@+id/writeToSupport"
+        style="@style/MenuItem">
 
-    <TextView
-        android:id="@+id/writeSupport"
-        android:text="@string/write_to_support"
-        style="@style/ys_regular" />
+        <TextView
+            android:id="@+id/writeSupport"
+            style="@style/ys_regular"
+            android:text="@string/write_to_support" />
 
-    <ImageView
-        android:id="@+id/supportIcon"
-        android:layout_width="@dimen/image_layout_width"
-        android:layout_height="20dp"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:background="@drawable/support" />
-
-</RelativeLayout>
+        <ImageView
+            android:id="@+id/supportIcon"
+            android:layout_width="@dimen/side_icons"
+            android:layout_height="@dimen/side_icons"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/support" />
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/serviceTerms"
@@ -97,8 +95,8 @@
 
         <ImageView
             android:id="@+id/vector"
-            android:layout_width="10dp"
-            android:layout_height="18dp"
+            android:layout_width="@dimen/side_icons"
+            android:layout_height="@dimen/side_icons"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:background="@drawable/arrow_forward" />
