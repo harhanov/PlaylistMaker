@@ -13,5 +13,7 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="searchHintColor">@color/dark_gray</item>
+        <item name="titleColor">@color/dark_gray</item>
+        <item name="bandColor">@color/dark_gray</item>
     </style>
 </resources>
