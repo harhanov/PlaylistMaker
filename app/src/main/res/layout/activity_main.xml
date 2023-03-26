@@ -36,26 +36,26 @@
 
         <Button
             android:id="@+id/button_search"
+            style="@style/ButtonStyle"
+            android:layout_marginTop="0dp"
             android:text="@string/search"
-            android:layout_marginTop = "0dp"
             android:textAppearance="@style/some_id"
-            app:icon="@drawable/search"
-            style="@style/ButtonStyle"></Button>
+            app:icon="@drawable/search"></Button>
 
         <Button
             android:id="@+id/button_media"
+            style="@style/ButtonStyle"
             android:text="@string/media_library"
             android:textAppearance="@style/some_id"
-            app:icon="@drawable/library"
-            style="@style/ButtonStyle"></Button>
+            app:icon="@drawable/library"></Button>
 
         <Button
             android:id="@+id/button_settings"
+            style="@style/ButtonStyle"
             android:layout_marginBottom="@dimen/standard_margin"
             android:text="@string/settings"
             android:textAppearance="@style/some_id"
-            app:icon="@drawable/gear"
-            style="@style/ButtonStyle"></Button>
+            app:icon="@drawable/gear"></Button>
 
     </LinearLayout>
 </LinearLayout>
