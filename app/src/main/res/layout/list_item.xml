@@ -11,7 +11,8 @@
     <ImageView
         android:id="@+id/song_cover_image"
         android:layout_width="@dimen/cover_side"
-        android:layout_height="@dimen/cover_side" />
+        android:layout_height="@dimen/cover_side"
+        tools:src="@drawable/crocozebra"/>
 
     <LinearLayout
         android:layout_width="0dp"
@@ -27,7 +28,6 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:fontFamily="@font/ys_display_regular"
-            android:maxLength="40"
             android:maxLines="1"
             android:textColor="?attr/colorOnSecondary"
             android:textSize="16sp"
@@ -40,8 +40,8 @@
 
             <TextView
                 android:id="@+id/song_artist"
+                android:layout_gravity="start"
                 style="@style/BottomText"
-                android:maxLength="50"
                 tools:text="Song Artist" />
 
             <ImageView
@@ -51,12 +51,12 @@
                 android:layout_marginStart="@dimen/circle_margin"
                 android:layout_marginEnd="@dimen/circle_margin"
                 android:background="@drawable/ellipse_1"
-                app:tint="?attr/titleColor" />
+                app:tint="?attr/titleColor"/>
 
             <TextView
                 android:id="@+id/song_duration"
                 style="@style/BottomText"
-                tools:text="3:45" />
+                tools:text="12:34" />
         </LinearLayout>
     </LinearLayout>
 

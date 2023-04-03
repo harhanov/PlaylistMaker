@@ -28,24 +28,9 @@
 
     </RelativeLayout>
 
-
-    <RelativeLayout style="@style/MenuItem">
-
-        <TextView
-            android:id="@+id/themeSelection"
-            style="@style/ys_regular"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:text="@string/dark_theme" />
-
-        <Switch
-            android:id="@+id/selectionSwitch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true" />
-
-    </RelativeLayout>
+    <com.google.android.material.switchmaterial.SwitchMaterial style="@style/MenuItem"
+        android:id="@+id/themeSwitcher"
+        android:text="@string/dark_theme" />
 
     <RelativeLayout
         android:id="@+id/shareArea"

@@ -135,9 +135,9 @@
             android:backgroundTint="?attr/colorOnSecondary"
             android:fontFamily="@font/ys_display_medium"
             android:textFontWeight="500"
-            android:textAlignment = "center"
             android:text="@string/refresh"
             android:textColor="?attr/colorOnPrimary"
+            android:textAllCaps="false"
             android:textSize="14sp"
             app:cornerRadius="54dp"
             />
