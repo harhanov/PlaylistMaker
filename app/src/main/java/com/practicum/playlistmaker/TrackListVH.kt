@@ -9,7 +9,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import java.text.SimpleDateFormat
 import java.util.*
 
-class TrackListVH (itemView: View): RecyclerView.ViewHolder(itemView) {
+class TrackListVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     private val songCoverImage: ImageView = itemView.findViewById(R.id.song_cover_image)
     private val songTitle: TextView = itemView.findViewById(R.id.song_title)
@@ -28,7 +28,11 @@ class TrackListVH (itemView: View): RecyclerView.ViewHolder(itemView) {
 
         songTitle.text = item.trackName
         songArtist.text = item.artistName
-        val trackTime = Date(item.trackTime.toLong())
-        songDuration.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTime)
+        if (item.trackTime != null) {
+            val trackTime = Date(item.trackTime.toLong())
+            songDuration.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTime)
+        } else {
+            songDuration.text = "00:00"
+        }
     }
 }

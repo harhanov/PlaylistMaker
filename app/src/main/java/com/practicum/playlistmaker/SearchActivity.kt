@@ -10,6 +10,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.*
@@ -100,26 +101,33 @@ class SearchActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     if (response.body()?.results?.isNotEmpty() == true) {
                         trackListAdapter.setTracks(response.body()?.results!!)
-                        errorMessage.visibility = View.GONE
-                        refreshButton.visibility = View.GONE
+                        errorMessage.isVisible = false
+                        refreshButton.isVisible = false
                     } else {
-                        trackListAdapter.setTracks(null)
-                        errorMessage.visibility = View.VISIBLE
-                        errorViewHolder.setImageResource(R.drawable.bad_request)
-                        errorText.text = getString(R.string.nothing_found)
-                        refreshButton.visibility = View.GONE
+                        showNetworkErrorView(false)
                     }
+                } else {
+                    showNetworkErrorView(true)
                 }
             }
 
             override fun onFailure(call: Call<SearchResult>, t: Throwable) {
-                trackListAdapter.setTracks(null)
-                errorMessage.visibility = View.VISIBLE
-                errorViewHolder.setImageResource(R.drawable.no_connection)
-                errorText.text = getString(R.string.no_internet_error)
-                refreshButton.visibility = View.VISIBLE
+                showNetworkErrorView(true)
             }
         })
+    }
+
+    private fun showNetworkErrorView(isNetworkError: Boolean) {
+        errorMessage.isVisible = true
+        refreshButton.isVisible = isNetworkError
+        trackListAdapter.setTracks(null)
+        if (isNetworkError) {
+            errorViewHolder.setImageResource(R.drawable.no_connection)
+            errorText.text = getString(R.string.no_internet_error)
+        } else {
+            errorViewHolder.setImageResource(R.drawable.bad_request)
+            errorText.text = getString(R.string.nothing_found)
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
