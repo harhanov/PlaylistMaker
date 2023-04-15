@@ -20,5 +20,6 @@
         <dimen name="search_margin">24dp</dimen>
         <dimen name="artist_text_size">11sp</dimen>
         <dimen name="titlesMaxLengthSize">40</dimen>
+        <dimen name="button_side_boarder">14dp</dimen>
     <dimen name="margin8">8dp</dimen>
 </resources>

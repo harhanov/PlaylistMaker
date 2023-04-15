@@ -14,4 +14,7 @@
     <string name="mail_message">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="sharing_text">Поделиться</string>
     <string name="send_message_title">Отправить сообщение</string>
+    <string name="nothing_found">Ничего не нашлось</string>
+    <string name="no_internet_error">Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="refresh">Обновить</string>
 </resources>

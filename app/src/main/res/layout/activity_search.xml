@@ -48,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingEnd="@dimen/minPadding"
-            android:src="@drawable/search"
+            android:src="@drawable/search_mini"
             android:tint="?attr/searchHintColor"
             tools:ignore="UseAppTint" />
 
@@ -64,7 +64,9 @@
             android:maxLines="1"
             android:minHeight="@dimen/minimalHeight"
             android:textColorHint="?attr/searchHintColor"
-            android:textAppearance="@style/ys_regular"/>
+            android:textAppearance="@style/ys_regular"
+            android:imeOptions="actionDone"
+            android:singleLine="true"/>
 
         <ImageView
             android:id="@+id/clearIcon"
@@ -77,6 +79,16 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/placeholderMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/searchBackButton"
+        android:paddingStart="@dimen/largePadding"
+        android:text="@string/search"
+        android:textAppearance="@style/title2"
+        android:visibility="gone"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSongsList"
         android:layout_width="match_parent"
@@ -87,5 +99,34 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:itemCount="5"
         tools:listitem="@layout/list_item" />
+
+    <LinearLayout
+        android:id="@+id/various_errors"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingTop="110dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/error_wh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/bad_request" />
+
+        <TextView
+            android:id="@+id/error_text"
+            style="@style/ErrorMessage"
+            android:gravity="center"
+            android:layout_margin="20dp"
+            android:text="@string/nothing_found" />
+
+        <Button
+            android:id="@+id/search_refresh_button"
+            style="@style/EmergingButton"
+            android:text="@string/refresh"
+            />
+    </LinearLayout>
 
 </LinearLayout>
