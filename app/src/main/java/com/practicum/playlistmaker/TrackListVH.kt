@@ -6,8 +6,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import java.text.SimpleDateFormat
-import java.util.*
+import com.practicum.playlistmaker.utils.DateUtils
+
 
 class TrackListVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -28,11 +28,8 @@ class TrackListVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         songTitle.text = item.trackName
         songArtist.text = item.artistName
-        if (item.trackTime != null) {
-            val trackTime = Date(item.trackTime.toLong())
-            songDuration.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTime)
-        } else {
-            songDuration.text = "00:00"
-        }
+        songDuration.text = DateUtils.formatTrackTime(item.trackTime?.toLong())
+
     }
+
 }

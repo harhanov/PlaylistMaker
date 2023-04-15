@@ -59,14 +59,14 @@
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:hint="@string/search"
+            android:imeOptions="actionDone"
             android:inputType="text"
-            android:textColor="@android:color/black"
             android:maxLines="1"
             android:minHeight="@dimen/minimalHeight"
-            android:textColorHint="?attr/searchHintColor"
+            android:singleLine="true"
             android:textAppearance="@style/ys_regular"
-            android:imeOptions="actionDone"
-            android:singleLine="true"/>
+            android:textColor="@android:color/black"
+            android:textColorHint="?attr/searchHintColor" />
 
         <ImageView
             android:id="@+id/clearIcon"
@@ -83,11 +83,10 @@
         android:id="@+id/placeholderMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/searchBackButton"
         android:paddingStart="@dimen/largePadding"
         android:text="@string/search"
         android:textAppearance="@style/title2"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSongsList"
@@ -118,15 +117,52 @@
         <TextView
             android:id="@+id/error_text"
             style="@style/ErrorMessage"
-            android:gravity="center"
             android:layout_margin="20dp"
+            android:gravity="center"
             android:text="@string/nothing_found" />
 
         <Button
             android:id="@+id/search_refresh_button"
             style="@style/EmergingButton"
-            android:text="@string/refresh"
-            />
+            android:text="@string/refresh" />
+
     </LinearLayout>
 
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/search_history_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/history_title"
+                style="@style/ErrorMessage"
+                android:layout_margin="20dp"
+                android:gravity="center"
+                android:text="@string/you_searched" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvHistoryList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="20dp"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:itemCount="5"
+                tools:listitem="@layout/list_item" />
+
+            <Button
+                android:id="@+id/clear_history_button"
+                style="@style/EmergingButton"
+                android:text="@string/clear_history" />
+
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
