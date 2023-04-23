@@ -2,7 +2,9 @@ package com.practicum.playlistmaker
 
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -111,6 +113,8 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.OnTrackClickListene
                 true
             } else false
         }
+
+        historyListAdapter.onTrackClickListener = this
     }
 
     private fun trackSearch() {
@@ -133,9 +137,10 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.OnTrackClickListene
 
             override fun onFailure(call: Call<SearchResult>, t: Throwable) {
                 showNetworkErrorView(true)
+                Log.e("API_ERROR", t.message ?: "Unknown error")
+                showNetworkErrorView(true)
             }
         })
-
     }
 
     private fun showNetworkErrorView(isNetworkError: Boolean) {
@@ -190,6 +195,17 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.OnTrackClickListene
     override fun onTrackClick(track: Track) {
         searchHistoryManager.addToHistory(track)
         historyListAdapter.setTracks(searchHistoryManager.getSearchHistory())
+        val intent = Intent(this, PlayerActivity::class.java).apply {
+            putExtra("trackName", track.trackName)
+            putExtra("artistName", track.artistName)
+            putExtra("trackTime", track.trackTime)
+            putExtra("artworkUrl100", track.artworkUrl100)
+            putExtra("collectionName", track.collectionName)
+            putExtra("releaseDate", track.releaseDate)
+            putExtra("primaryGenreName", track.primaryGenreName)
+            putExtra("country", track.country)
+        }
+        startActivity(intent)
     }
 
     private fun updateTrackList() {

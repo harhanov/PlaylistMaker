@@ -42,7 +42,7 @@
             <TextView
                 android:id="@+id/song_artist"
                 android:layout_gravity="start"
-                style="@style/BottomText"
+                style="@style/bottomText"
                 tools:text="Song Artist" />
 
             <ImageView
@@ -56,7 +56,7 @@
 
             <TextView
                 android:id="@+id/song_duration"
-                style="@style/BottomText"
+                style="@style/bottomText"
                 tools:text="12:34" />
         </LinearLayout>
     </LinearLayout>

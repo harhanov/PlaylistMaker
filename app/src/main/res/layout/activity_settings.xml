@@ -28,13 +28,13 @@
 
     </RelativeLayout>
 
-    <com.google.android.material.switchmaterial.SwitchMaterial style="@style/MenuItem"
+    <com.google.android.material.switchmaterial.SwitchMaterial style="@style/menuItem"
         android:id="@+id/themeSwitcher"
         android:text="@string/dark_theme" />
 
     <RelativeLayout
         android:id="@+id/shareArea"
-        style="@style/MenuItem">
+        style="@style/menuItem">
 
         <TextView
             android:id="@+id/sharing"
@@ -53,7 +53,7 @@
 
     <RelativeLayout
         android:id="@+id/writeToSupport"
-        style="@style/MenuItem">
+        style="@style/menuItem">
 
         <TextView
             android:id="@+id/writeSupport"
@@ -71,7 +71,7 @@
 
     <RelativeLayout
         android:id="@+id/serviceTerms"
-        style="@style/MenuItem">
+        style="@style/menuItem">
 
         <TextView
             android:id="@+id/ys_regular_"

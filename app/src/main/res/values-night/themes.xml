@@ -15,5 +15,6 @@
         <item name="searchHintColor">@color/black</item>
         <item name="titleColor">@color/white</item>
         <item name="bandColor">@color/white</item>
+        <item name="addToPlaylistButtonColor">@color/darkest_gray</item>
     </style>
 </resources>
