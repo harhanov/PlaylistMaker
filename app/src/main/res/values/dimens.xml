@@ -23,4 +23,5 @@
         <dimen name="titlesMaxLengthSize">40</dimen>
         <dimen name="button_side_boarder">14dp</dimen>
     <dimen name="margin8">8dp</dimen>
+        <dimen name="margin_of_information_lines">17dp</dimen>
 </resources>

@@ -34,7 +34,7 @@ class TrackListAdapter: RecyclerView.Adapter<TrackListVH>() {
         notifyDataSetChanged()
     }
 
-    interface OnTrackClickListener {
+    fun interface OnTrackClickListener {
         fun onTrackClick(track: Track)
     }
 }

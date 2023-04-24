@@ -4,7 +4,6 @@ package com.practicum.playlistmaker
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -65,7 +64,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.OnTrackClickListene
 
         trackListAdapter.onTrackClickListener = this
 
-        if (inputEditText.hasFocus()) updateTrackList()
+        updateTrackList()
 
         inputEditText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) updateTrackList()
@@ -137,7 +136,6 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.OnTrackClickListene
 
             override fun onFailure(call: Call<SearchResult>, t: Throwable) {
                 showNetworkErrorView(true)
-                Log.e("API_ERROR", t.message ?: "Unknown error")
                 showNetworkErrorView(true)
             }
         })
