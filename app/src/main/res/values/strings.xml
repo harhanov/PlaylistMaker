@@ -17,4 +17,14 @@
     <string name="nothing_found">Ничего не нашлось</string>
     <string name="no_internet_error">Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
     <string name="refresh">Обновить</string>
+    <string name="you_searched">Вы искали</string>
+    <string name="clear_history">Очистить историю</string>
+    <string name="back_button">кнопка назад</string>
+    <string name="cover_image">обложка альбома</string>
+    <string name="duration_label">Длительность</string>
+    <string name="album_label">Альбом</string>
+    <string name="release_year_label">Год</string>
+    <string name="genre_label">Жанр</string>
+    <string name="country_label">Страна</string>
+
 </resources>

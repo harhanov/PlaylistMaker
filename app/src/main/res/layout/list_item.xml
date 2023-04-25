@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/list_item_padding"
     android:layout_marginBottom="@dimen/list_item_padding"
-    android:gravity="center_vertical">
+    android:gravity="center_vertical"
+    android:foreground = "?attr/selectableItemBackground">
 
     <ImageView
         android:id="@+id/song_cover_image"
@@ -41,7 +42,7 @@
             <TextView
                 android:id="@+id/song_artist"
                 android:layout_gravity="start"
-                style="@style/BottomText"
+                style="@style/bottomText"
                 tools:text="Song Artist" />
 
             <ImageView
@@ -55,7 +56,7 @@
 
             <TextView
                 android:id="@+id/song_duration"
-                style="@style/BottomText"
+                style="@style/bottomText"
                 tools:text="12:34" />
         </LinearLayout>
     </LinearLayout>
@@ -65,8 +66,6 @@
         android:layout_marginStart="@dimen/margin8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
         android:src="@drawable/arrow_forward"
         app:tint="?attr/titleColor" />
 

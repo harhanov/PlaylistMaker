@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/left_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="24dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/right_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="24dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/left_guidelineMini"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="16dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/right_guidelineMini"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="16dp" />
+
+        <ImageView
+            android:id="@+id/playerBackButton"
+            style="@style/backArrow"
+            android:layout_marginTop="16dp"
+            android:contentDescription="@string/back_button"
+            app:layout_constraintStart_toStartOf="@id/left_guidelineMini"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/cover"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="46dp"
+            android:contentDescription="@string/cover_image"
+            android:scaleType="centerCrop"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@id/right_guideline"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@id/left_guideline"
+            app:layout_constraintTop_toBottomOf="@id/playerBackButton"
+            app:srcCompat="@drawable/crocozebra" />
+
+        <TextView
+            android:id="@+id/songTitle"
+            style="@style/songTitle"
+            android:layout_marginTop="24dp"
+            app:layout_constraintEnd_toStartOf="@id/right_guideline"
+            app:layout_constraintStart_toStartOf="@id/left_guideline"
+            app:layout_constraintTop_toBottomOf="@id/cover"
+            tools:text="Song Title" />
+
+        <TextView
+            android:id="@+id/artistName"
+            style="@style/artistName"
+            app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+            app:layout_constraintStart_toStartOf="@+id/left_guideline"
+            app:layout_constraintTop_toBottomOf="@id/songTitle"
+            tools:text="Artist Name" />
+
+        <Button
+            android:id="@+id/add_to_playlist_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_add_to_playlist"
+            app:backgroundTint="@null"
+            app:layout_constraintBottom_toTopOf="@id/playback_progress"
+            app:layout_constraintStart_toStartOf="@id/left_guideline"
+            app:layout_constraintTop_toBottomOf="@id/artistName"
+            app:layout_constraintVertical_chainStyle="spread_inside"
+            app:layout_constraintWidth_max="51dp" />
+
+        <Button
+            android:id="@+id/playback_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_play_arrow"
+            app:backgroundTint="?attr/colorOnSecondary"
+            app:layout_constraintBottom_toBottomOf="@id/add_to_playlist_button"
+            app:layout_constraintBottom_toTopOf="@id/playback_progress"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/artistName" />
+
+        <Button
+            android:id="@+id/favorite_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_favorite"
+            app:backgroundTint="@null"
+            app:layout_constraintBottom_toTopOf="@id/playback_progress"
+            app:layout_constraintEnd_toEndOf="@id/right_guideline"
+            app:layout_constraintTop_toBottomOf="@id/artistName"
+            app:layout_constraintWidth_max="51dp" />
+
+        <TextView
+            android:id="@+id/playback_progress"
+            style="@style/artistName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12:34"
+            app:layout_constraintBottom_toTopOf="@id/tvDurationLabel"
+            app:layout_constraintEnd_toEndOf="@id/playback_button"
+            app:layout_constraintStart_toEndOf="@id/favorite_button"
+            app:layout_constraintStart_toStartOf="@id/playback_button"
+            app:layout_constraintTop_toBottomOf="@id/playback_button" />
+
+        <TextView
+            android:id="@+id/tvDurationLabel"
+            style="@style/songAttributesLabel"
+            android:layout_marginTop="39dp"
+            android:text="@string/duration_label"
+            app:layout_constraintBottom_toTopOf="@id/tvAlbumLabel"
+            app:layout_constraintStart_toStartOf="@id/left_guidelineMini"
+            app:layout_constraintTop_toBottomOf="@id/playback_progress"
+            app:layout_constraintVertical_chainStyle="spread" />
+
+        <TextView
+            android:id="@+id/tvDurationValue"
+            style="@style/songAttributesValue"
+            android:text="12:34"
+            app:layout_constraintEnd_toStartOf="@id/right_guidelineMini"
+            app:layout_constraintTop_toTopOf="@id/tvDurationLabel"
+            tools:text="12:34" />
+
+        <TextView
+            android:id="@+id/tvAlbumLabel"
+            style="@style/songAttributesLabel"
+            android:layout_marginTop="@dimen/margin_of_information_lines"
+            android:text="@string/album_label"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toTopOf="@id/tvReleaseYearLabel"
+            app:layout_constraintStart_toStartOf="@id/left_guidelineMini"
+            app:layout_constraintTop_toBottomOf="@id/tvDurationLabel" />
+
+        <TextView
+            android:id="@+id/tvAlbumValue"
+            style="@style/songAttributesValue"
+            app:layout_constraintEnd_toStartOf="@id/right_guidelineMini"
+            app:layout_constraintTop_toTopOf="@id/tvAlbumLabel"
+            tools:text="Название альбома" />
+
+        <TextView
+            android:id="@+id/tvReleaseYearLabel"
+            style="@style/songAttributesLabel"
+            android:layout_marginTop="@dimen/margin_of_information_lines"
+            android:text="@string/release_year_label"
+            app:layout_constraintBottom_toTopOf="@id/tvGenreLabel"
+            app:layout_constraintStart_toStartOf="@id/left_guidelineMini"
+            app:layout_constraintTop_toBottomOf="@id/tvAlbumLabel" />
+
+        <TextView
+            android:id="@+id/tvReleaseYearValue"
+            style="@style/songAttributesValue"
+            app:layout_constraintEnd_toStartOf="@id/right_guidelineMini"
+            app:layout_constraintTop_toTopOf="@id/tvReleaseYearLabel"
+            tools:text="2023" />
+
+        <TextView
+            android:id="@+id/tvGenreLabel"
+            style="@style/songAttributesLabel"
+            android:layout_marginTop="@dimen/margin_of_information_lines"
+            android:text="@string/genre_label"
+            app:layout_constraintBottom_toTopOf="@id/tvCountryLabel"
+            app:layout_constraintStart_toStartOf="@id/left_guidelineMini"
+            app:layout_constraintTop_toBottomOf="@id/tvReleaseYearLabel" />
+
+        <TextView
+            android:id="@+id/tvGenreValue"
+            style="@style/songAttributesValue"
+            app:layout_constraintEnd_toStartOf="@id/right_guidelineMini"
+            app:layout_constraintTop_toTopOf="@id/tvGenreLabel"
+            tools:text="Rock" />
+
+        <TextView
+            android:id="@+id/tvCountryLabel"
+            style="@style/songAttributesLabel"
+            android:layout_marginTop="@dimen/margin_of_information_lines"
+            android:layout_marginBottom="20dp"
+            android:text="@string/country_label"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/left_guidelineMini"
+            app:layout_constraintTop_toBottomOf="@id/tvGenreLabel" />
+
+        <TextView
+            android:id="@+id/tvCountryValue"
+            style="@style/songAttributesValue"
+            app:layout_constraintEnd_toStartOf="@id/right_guidelineMini"
+            app:layout_constraintTop_toTopOf="@id/tvCountryLabel"
+            tools:ignore="ExtraText"
+            tools:text="Великобритания" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

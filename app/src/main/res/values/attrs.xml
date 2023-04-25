@@ -4,4 +4,5 @@
     <attr name="searchHintColor" format="color" />
     <attr name="titleColor" format="color" />
     <attr name="bandColor" format="color" />
+    <attr name="addToPlaylistButtonColor" format="color" />
 </resources>
