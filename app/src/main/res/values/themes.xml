@@ -16,5 +16,6 @@
         <item name="titleColor">@color/dark_gray</item>
         <item name="bandColor">@color/dark_gray</item>
         <item name="addToPlaylistButtonColor">@color/gray</item>
+        <item name="colorAccent">@color/dorblu</item>
     </style>
 </resources>

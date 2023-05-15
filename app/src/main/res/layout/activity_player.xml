@@ -115,7 +115,6 @@
             style="@style/artistName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="12:34"
             app:layout_constraintBottom_toTopOf="@id/tvDurationLabel"
             app:layout_constraintEnd_toEndOf="@id/playback_button"
             app:layout_constraintStart_toEndOf="@id/favorite_button"
@@ -135,10 +134,8 @@
         <TextView
             android:id="@+id/tvDurationValue"
             style="@style/songAttributesValue"
-            android:text="12:34"
             app:layout_constraintEnd_toStartOf="@id/right_guidelineMini"
-            app:layout_constraintTop_toTopOf="@id/tvDurationLabel"
-            tools:text="12:34" />
+            app:layout_constraintTop_toTopOf="@id/tvDurationLabel" />
 
         <TextView
             android:id="@+id/tvAlbumLabel"
@@ -153,6 +150,10 @@
         <TextView
             android:id="@+id/tvAlbumValue"
             style="@style/songAttributesValue"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:gravity="end"
+            app:layout_constraintStart_toEndOf="@id/tvDurationLabel"
             app:layout_constraintEnd_toStartOf="@id/right_guidelineMini"
             app:layout_constraintTop_toTopOf="@id/tvAlbumLabel"
             tools:text="Название альбома" />
