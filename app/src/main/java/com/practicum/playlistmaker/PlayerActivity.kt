@@ -1,28 +1,23 @@
 package com.practicum.playlistmaker
 
-import android.content.Intent
+import android.content.ContentValues.TAG
 import android.media.MediaPlayer
 import android.os.*
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.practicum.playlistmaker.utils.DateUtils.formatTrackTime
-
+import com.practicum.playlistmaker.PlayerActivity.PlayerState.*
+import com.practicum.playlistmaker.domain.models.Track
+import com.practicum.playlistmaker.domain.utils.DateUtils.formatTrackTime
 
 class PlayerActivity : AppCompatActivity() {
 
-    companion object {
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
-        private const val CURRENT_POSITION_REFRESH = 200L
-    }
-
     private lateinit var trackNameTextView: TextView
+
     private lateinit var artistNameTextView: TextView
     private lateinit var trackTimeTextView: TextView
     private lateinit var artworkImageView: ImageView
@@ -30,19 +25,18 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var releaseDateTextView: TextView
     private lateinit var primaryGenreNameTextView: TextView
     private lateinit var countryTextView: TextView
-
     private lateinit var playPauseButton: Button
-    private lateinit var currentPositionView: TextView
 
+    private lateinit var currentPositionView: TextView
     private lateinit var timerRunnable: Runnable
+
     private lateinit var handler: Handler
-    private var playerState = STATE_DEFAULT
+    private var playerState = DEFAULT
     private var mediaPlayer = MediaPlayer()
     private var isPlaying = false
     private val playIcon = R.drawable.ic_play_arrow
     private val pauseIcon = R.drawable.pause_button
     private var currentPositionMillis: Int = 0
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
@@ -63,22 +57,27 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         currentPositionView = findViewById(R.id.playback_progress)
-        val url = intent.getStringExtra("previewUrl") ?: ""
-        preparePlayer(url)
+
 
         playPauseButton.setOnClickListener {
             playbackControl()
         }
 
-        val artworkUrl100 = intent.getStringExtra("artworkUrl100")
+        val track = intent.getParcelableExtra<Track>("track")
+        val url = track?.previewUrl
+        if (url != null) {
+            preparePlayer(url)
+        }
+
+        val artworkUrl100 = track?.artworkUrl100
         val coverArtworkUrl = artworkUrl100?.let { getCoverArtwork(it) }
-        val trackName = intent.getStringExtra("trackName")
-        val artistName = intent.getStringExtra("artistName")
-        val trackTime = intent.getStringExtra("trackTime")
-        val collectionName = intent.getStringExtra("collectionName")
-        val releaseDate = extractReleaseYear(intent)
-        val primaryGenreName = intent.getStringExtra("primaryGenreName")
-        val country = intent.getStringExtra("country")
+        val trackName = track?.trackName
+        val artistName = track?.artistName
+        val trackTime = track?.trackTime
+        val collectionName = track?.collectionName
+        val releaseDate = track?.let { extractReleaseYear(it.releaseDate) }
+        val primaryGenreName = track?.primaryGenreName
+        val country = track?.country
 
         trackNameTextView = findViewById(R.id.songTitle)
         artistNameTextView = findViewById(R.id.artistName)
@@ -116,7 +115,8 @@ class PlayerActivity : AppCompatActivity() {
             if (mediaPlayer.isPlaying) {
                 mediaPlayer.stop()
             }
-        } catch (_: IllegalStateException) {
+        } catch (e: IllegalStateException) {
+            Log.e(TAG, "Caught IllegalStateException: ${e.message}")
         }
     }
 
@@ -124,27 +124,23 @@ class PlayerActivity : AppCompatActivity() {
         return artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
     }
 
-    private fun extractReleaseYear(intent: Intent): String? {
-        val releaseDate = intent.getStringExtra("releaseDate")?.let {
-            if (it.length >= 4) {
-                it.substring(0, 4)
-            } else {
-                it
-            }
+    private fun extractReleaseYear(releaseDate: String): String? {
+        if (releaseDate.length >= 4) {
+            return releaseDate.substring(0, 4)
         }
-        return releaseDate
+        return null
     }
 
     private fun preparePlayer(url: String) {
         mediaPlayer.apply {
             setDataSource(url)
             setOnPreparedListener {
-                playerState = STATE_PREPARED
+                playerState = PREPARED
                 playPauseButton.setBackgroundResource(playIcon)
                 currentPositionView.text = formatTrackTime(currentPositionMillis.toLong())
             }
             setOnCompletionListener {
-                playerState = STATE_PREPARED
+                playerState = PREPARED
                 playPauseButton.setBackgroundResource(playIcon)
                 currentPositionMillis = 0
                 currentPositionView.text = getString(R.string.zero_time)
@@ -160,19 +156,20 @@ class PlayerActivity : AppCompatActivity() {
         }
         mediaPlayer.seekTo(currentPositionMillis)
         mediaPlayer.start()
-        playerState = STATE_PLAYING
+        playerState = PLAYING
         isPlaying = true
         updateCurrentPosition()
     }
 
     private fun playbackControl() {
         when (playerState) {
-            STATE_PLAYING -> {
+            PLAYING -> {
                 onPause()
             }
-            STATE_PREPARED, STATE_PAUSED -> {
+            PREPARED, PAUSED -> {
                 startPlayer()
             }
+            else -> {}
         }
     }
 
@@ -185,7 +182,6 @@ class PlayerActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         if (!isMediaPlayerReleased() && mediaPlayer.isPlaying) {
-            currentPositionMillis = mediaPlayer.currentPosition
             pauseMediaPlayer()
         }
     }
@@ -193,22 +189,15 @@ class PlayerActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if (!isMediaPlayerReleased() && !mediaPlayer.isPlaying) {
-            mediaPlayer.seekTo(currentPositionMillis)
             pauseMediaPlayer()
         }
     }
 
     private fun pauseMediaPlayer() {
         mediaPlayer.pause()
-        playerState = STATE_PAUSED
+        playerState = PAUSED
         playPauseButton.setBackgroundResource(playIcon)
         isPlaying = false
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putBoolean("isPlaying", isPlaying)
-        outState.putInt("currentPositionMillis", currentPositionMillis)
     }
 
     private fun isMediaPlayerReleased(): Boolean {
@@ -229,14 +218,15 @@ class PlayerActivity : AppCompatActivity() {
     private var isTimerRunning = false
 
     private fun updateCurrentPosition() {
-        if (playerState != STATE_PLAYING) return
+        if (playerState != PLAYING) return
 
         try {
             val currentPositionText = formatTrackTime(mediaPlayer.currentPosition.toLong())
             currentPositionView.text = currentPositionText
             currentPositionMillis = mediaPlayer.currentPosition
-        } catch (_: IllegalStateException) {
-        }
+        } catch (e: IllegalStateException) {
+        Log.e(TAG, "Caught IllegalStateException: ${e.message}")
+    }
 
         if (!isTimerRunning) {
             isTimerRunning = true
@@ -247,4 +237,11 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
+    enum class PlayerState {
+        DEFAULT, PREPARED, PLAYING, PAUSED
+    }
+
+    companion object {
+        private const val CURRENT_POSITION_REFRESH = 200L
+    }
 }

@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.practicum.playlistmaker.domain.models.Track
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -223,15 +224,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.OnTrackClickListene
         historyListAdapter.setTracks(searchHistoryManager.getSearchHistory())
         if (clickDebounce()) {
             val intent = Intent(this, PlayerActivity::class.java).apply {
-                putExtra("trackName", track.trackName)
-                putExtra("artistName", track.artistName)
-                putExtra("trackTime", track.trackTime)
-                putExtra("artworkUrl100", track.artworkUrl100)
-                putExtra("collectionName", track.collectionName)
-                putExtra("releaseDate", track.releaseDate)
-                putExtra("primaryGenreName", track.primaryGenreName)
-                putExtra("country", track.country)
-                putExtra("previewUrl", track.previewUrl)
+                putExtra("track", track)
             }
             startActivity(intent)
         }
