@@ -24,4 +24,7 @@
         <dimen name="button_side_boarder">14dp</dimen>
     <dimen name="margin8">8dp</dimen>
         <dimen name="margin_of_information_lines">17dp</dimen>
+    <dimen name="progress_bar_side">44dp</dimen>
+    <dimen name="mini_guide_line_margin">16dp</dimen>
+        <dimen name="guide_line_margin">24dp</dimen>
 </resources>

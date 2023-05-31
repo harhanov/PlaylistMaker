@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.utils
+package com.practicum.playlistmaker.domain.utils
 
 import java.text.SimpleDateFormat
 import java.util.*

@@ -91,6 +91,13 @@
             android:textAppearance="@style/title2"
             android:visibility="gone" />
 
+        <ProgressBar android:id="@+id/progressBar"
+            android:layout_width="@dimen/progress_bar_side"
+            android:layout_height="@dimen/progress_bar_side"
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/dorblu"
+            android:visibility="gone"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvSongsList"
             android:layout_width="match_parent"

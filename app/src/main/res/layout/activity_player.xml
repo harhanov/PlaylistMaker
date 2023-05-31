@@ -13,28 +13,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_begin="24dp" />
+            app:layout_constraintGuide_begin="@dimen/guide_line_margin" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/right_guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_end="24dp" />
+            app:layout_constraintGuide_end="@dimen/guide_line_margin" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/left_guidelineMini"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_begin="16dp" />
+            app:layout_constraintGuide_begin="@dimen/mini_guide_line_margin" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/right_guidelineMini"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_end="16dp" />
+            app:layout_constraintGuide_end="@dimen/mini_guide_line_margin" />
 
         <ImageView
             android:id="@+id/playerBackButton"
@@ -81,19 +81,19 @@
             android:layout_height="wrap_content"
             android:background="@drawable/ic_add_to_playlist"
             app:backgroundTint="@null"
-            app:layout_constraintBottom_toTopOf="@id/playback_progress"
+            app:layout_constraintBottom_toTopOf="@id/playPauseButton"
             app:layout_constraintStart_toStartOf="@id/left_guideline"
-            app:layout_constraintTop_toBottomOf="@id/artistName"
+            app:layout_constraintTop_toBottomOf="@id/playPauseButton"
             app:layout_constraintVertical_chainStyle="spread_inside"
             app:layout_constraintWidth_max="51dp" />
 
         <Button
-            android:id="@+id/playback_button"
+            android:id="@+id/playPauseButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_play_arrow"
             app:backgroundTint="?attr/colorOnSecondary"
-            app:layout_constraintBottom_toBottomOf="@id/add_to_playlist_button"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
             app:layout_constraintBottom_toTopOf="@id/playback_progress"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -105,9 +105,9 @@
             android:layout_height="wrap_content"
             android:background="@drawable/ic_favorite"
             app:backgroundTint="@null"
-            app:layout_constraintBottom_toTopOf="@id/playback_progress"
+            app:layout_constraintBottom_toTopOf="@id/playPauseButton"
             app:layout_constraintEnd_toEndOf="@id/right_guideline"
-            app:layout_constraintTop_toBottomOf="@id/artistName"
+            app:layout_constraintTop_toBottomOf="@id/playPauseButton"
             app:layout_constraintWidth_max="51dp" />
 
         <TextView
@@ -115,12 +115,11 @@
             style="@style/artistName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="12:34"
             app:layout_constraintBottom_toTopOf="@id/tvDurationLabel"
-            app:layout_constraintEnd_toEndOf="@id/playback_button"
+            app:layout_constraintEnd_toEndOf="@id/playPauseButton"
             app:layout_constraintStart_toEndOf="@id/favorite_button"
-            app:layout_constraintStart_toStartOf="@id/playback_button"
-            app:layout_constraintTop_toBottomOf="@id/playback_button" />
+            app:layout_constraintStart_toStartOf="@id/playPauseButton"
+            app:layout_constraintTop_toBottomOf="@id/playPauseButton" />
 
         <TextView
             android:id="@+id/tvDurationLabel"
@@ -135,10 +134,8 @@
         <TextView
             android:id="@+id/tvDurationValue"
             style="@style/songAttributesValue"
-            android:text="12:34"
             app:layout_constraintEnd_toStartOf="@id/right_guidelineMini"
-            app:layout_constraintTop_toTopOf="@id/tvDurationLabel"
-            tools:text="12:34" />
+            app:layout_constraintTop_toTopOf="@id/tvDurationLabel" />
 
         <TextView
             android:id="@+id/tvAlbumLabel"
@@ -153,6 +150,10 @@
         <TextView
             android:id="@+id/tvAlbumValue"
             style="@style/songAttributesValue"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:gravity="end"
+            app:layout_constraintStart_toEndOf="@id/tvDurationLabel"
             app:layout_constraintEnd_toStartOf="@id/right_guidelineMini"
             app:layout_constraintTop_toTopOf="@id/tvAlbumLabel"
             tools:text="Название альбома" />
