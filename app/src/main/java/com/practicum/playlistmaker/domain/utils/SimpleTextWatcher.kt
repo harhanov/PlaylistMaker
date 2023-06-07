@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.domain.utils
 
 import android.text.Editable
 import android.text.TextWatcher

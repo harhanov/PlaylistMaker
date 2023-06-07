@@ -16,7 +16,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.practicum.playlistmaker.data.dto.SearchResult
+import com.practicum.playlistmaker.data.network.iTunesAPIService
+import com.practicum.playlistmaker.data.storage.SearchHistoryManager
 import com.practicum.playlistmaker.domain.models.Track
+import com.practicum.playlistmaker.domain.utils.SimpleTextWatcher
+import com.practicum.playlistmaker.ui.search.TrackListAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -173,7 +178,7 @@ class SearchActivity : AppCompatActivity(), TrackListAdapter.OnTrackClickListene
         progressBar.isVisible = false
         errorMessage.isVisible = true
         refreshButton.isVisible = isNetworkError
-        trackListAdapter.setTracks(null)
+        trackListAdapter.setTracks(emptyList())
         if (isNetworkError) {
             errorPicture.setImageResource(R.drawable.no_connection)
             errorText.text = getString(R.string.no_internet_error)
