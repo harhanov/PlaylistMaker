@@ -4,7 +4,7 @@ import android.media.MediaPlayer
 import com.practicum.playlistmaker.domain.interactors.PlayerInteractor
 import com.practicum.playlistmaker.domain.models.Track
 
-class MediaPlayer (track: Track): PlayerInteractor {
+class PlayerInteractorImpl (track: Track): PlayerInteractor {
 
     private val mediaPlayer: MediaPlayer = MediaPlayer()
     init {
@@ -34,7 +34,7 @@ class MediaPlayer (track: Track): PlayerInteractor {
         return mediaPlayer.currentPosition
     }
 
-    override fun preparePlayer(prepare: () -> Unit) {
-        mediaPlayer.setOnPreparedListener { prepare() }
+    override fun preparePlayer(onPrepared: () -> Unit) {
+        mediaPlayer.setOnPreparedListener { onPrepared() }
     }
 }

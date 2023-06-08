@@ -1,13 +1,13 @@
 package com.practicum.playlistmaker.presentation.presenters
 
-import com.practicum.playlistmaker.data.mediaplayer.MediaPlayer
+import com.practicum.playlistmaker.data.mediaplayer.PlayerInteractorImpl
 import com.practicum.playlistmaker.domain.interactors.PlayerInteractor
 import com.practicum.playlistmaker.domain.models.Track
 import com.practicum.playlistmaker.domain.utils.DateUtils.formatTrackTime
-import com.practicum.playlistmaker.ui.player.PlayerView
+import com.practicum.playlistmaker.presentation.ui.player.PlayerView
 
 class PlayerPresenter(track: Track, private val playerView: PlayerView) {
-    private val mediaPlayer: PlayerInteractor = MediaPlayer(track)
+    private val playerInteractorImpl: PlayerInteractor = PlayerInteractorImpl(track)
     private var playerState = PlayerState.DEFAULT
 
     init {
@@ -16,14 +16,14 @@ class PlayerPresenter(track: Track, private val playerView: PlayerView) {
     }
 
     private fun start() {
-        mediaPlayer.start()
+        playerInteractorImpl.start()
         playerState = PlayerState.PLAYING
         playerView.setPlayButtonIcon(true)
         playerView.startPostDelay()
     }
 
     private fun pause() {
-        mediaPlayer.pause()
+        playerInteractorImpl.pause()
         playerState = PlayerState.PAUSED
         playerView.setPlayButtonIcon(false)
         playerView.removePostDelay()
@@ -31,7 +31,7 @@ class PlayerPresenter(track: Track, private val playerView: PlayerView) {
 
     fun stopPlayback() {
         if (isPlaybackPlaying()) {
-            mediaPlayer.onDestroy()
+            playerInteractorImpl.onDestroy()
             playerState = PlayerState.PREPARED
             playerView.setPlayButtonIcon(false)
             playerView.onCompletePlaying()
@@ -39,12 +39,12 @@ class PlayerPresenter(track: Track, private val playerView: PlayerView) {
     }
 
     fun getCurrentPosition(): String {
-        return formatTrackTime(mediaPlayer.getCurrentTime().toString())
+        return formatTrackTime(playerInteractorImpl.getCurrentTime().toString())
 
     }
 
     private fun setOnCompletionListener() {
-        mediaPlayer.setOnCompletionListener {
+        playerInteractorImpl.setOnCompletionListener {
             playerState = PlayerState.PREPARED
             playerView.setPlayButtonIcon(true)
             playerView.onCompletePlaying()
@@ -52,7 +52,7 @@ class PlayerPresenter(track: Track, private val playerView: PlayerView) {
     }
 
     private fun preparePlayer() {
-        mediaPlayer.preparePlayer {
+        playerInteractorImpl.preparePlayer {
             playerView.setPlayButtonIcon(false)
             playerState = PlayerState.PREPARED
         }
