@@ -6,5 +6,5 @@ interface PlayerInteractor {
     fun onDestroy()
     fun setOnCompletionListener(onComplete: ()->Unit)
     fun getCurrentTime(): Int
-    fun preparePlayer(prepare: () -> Unit)
+    fun onPrepare(prepare: () -> Unit)
 }

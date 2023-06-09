@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.presentation.ui.player
 
 import android.os.*
 import android.widget.Button
@@ -7,16 +7,15 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.domain.models.Track
 import com.practicum.playlistmaker.domain.utils.DateUtils.extractReleaseYear
 import com.practicum.playlistmaker.domain.utils.DateUtils.formatTrackTime
 import com.practicum.playlistmaker.presentation.presenters.PlayerPresenter
-import com.practicum.playlistmaker.presentation.ui.player.PlayerView
 
 class PlayerActivity : AppCompatActivity(), PlayerView {
 
     private lateinit var trackNameTextView: TextView
-
     private lateinit var artistNameTextView: TextView
     private lateinit var trackTimeTextView: TextView
     private lateinit var artworkImageView: ImageView
@@ -25,10 +24,8 @@ class PlayerActivity : AppCompatActivity(), PlayerView {
     private lateinit var primaryGenreNameTextView: TextView
     private lateinit var countryTextView: TextView
     private lateinit var playPauseButton: Button
-
     private lateinit var currentPositionView: TextView
 
-    private lateinit var handler: Handler
     private val playIcon = R.drawable.ic_play_arrow
     private val pauseIcon = R.drawable.pause_button
 
@@ -57,7 +54,7 @@ class PlayerActivity : AppCompatActivity(), PlayerView {
         }
 
         track = intent.getParcelableExtra("track")!!
-        playerPresenter = PlayerPresenter(track, this as PlayerView)
+        playerPresenter = PlayerPresenter(track, this)
 
 
         val artworkUrl100 = track.artworkUrl100
@@ -81,13 +78,11 @@ class PlayerActivity : AppCompatActivity(), PlayerView {
 
         trackNameTextView.text = trackName
         artistNameTextView.text = artistName
-        trackTimeTextView.text = trackTime?.let { formatTrackTime(it) }
+        trackTimeTextView.text = formatTrackTime(trackTime)
         collectionNameTextView.text = collectionName
         releaseDateTextView.text = releaseDate
         primaryGenreNameTextView.text = primaryGenreName
         countryTextView.text = country
-
-        handler = Handler(Looper.getMainLooper())
 
         val radiusInPixels = this.resources.getDimensionPixelSize(R.dimen.big_cover_corner_radius)
 
@@ -103,23 +98,13 @@ class PlayerActivity : AppCompatActivity(), PlayerView {
         return artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
     }
 
-    private val timerUpdater = object : Runnable {
-        override fun run() {
-            updateTimer(playerPresenter.getCurrentPosition())
-            handler.postDelayed(
-                this,
-                CURRENT_POSITION_REFRESH,
-            )
-        }
-    }
-
     override fun onDestroy() {
         super.onDestroy()
-        playerPresenter.stopPlayback()
+        playerPresenter.releasePlayer()
     }
 
     override fun startPostDelay() {
-        handler.postDelayed(timerUpdater, CURRENT_POSITION_REFRESH)
+        playerPresenter.startPostDelay()
     }
 
     override fun updateTimer(timerValue: String) {
@@ -132,16 +117,8 @@ class PlayerActivity : AppCompatActivity(), PlayerView {
     }
 
     override fun onCompletePlaying() {
-        handler.removeCallbacks(timerUpdater)
         currentPositionView.text = resources.getText(R.string.zero_time)
         playerPresenter.stopPlayback()
     }
 
-    override fun removePostDelay() {
-        handler.removeCallbacks(timerUpdater)
-    }
-
-    companion object {
-        private const val CURRENT_POSITION_REFRESH = 200L
-    }
 }

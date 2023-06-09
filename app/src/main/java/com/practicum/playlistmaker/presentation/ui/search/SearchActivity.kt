@@ -21,6 +21,7 @@ import com.practicum.playlistmaker.data.network.iTunesAPIService
 import com.practicum.playlistmaker.data.storage.SearchHistoryManager
 import com.practicum.playlistmaker.domain.models.Track
 import com.practicum.playlistmaker.domain.utils.SimpleTextWatcher
+import com.practicum.playlistmaker.presentation.ui.player.PlayerActivity
 import com.practicum.playlistmaker.presentation.ui.search.TrackListAdapter
 import retrofit2.Call
 import retrofit2.Callback

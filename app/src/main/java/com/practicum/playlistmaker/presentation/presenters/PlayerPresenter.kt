@@ -1,5 +1,7 @@
 package com.practicum.playlistmaker.presentation.presenters
 
+import android.os.Handler
+import android.os.Looper
 import com.practicum.playlistmaker.data.mediaplayer.PlayerInteractorImpl
 import com.practicum.playlistmaker.domain.interactors.PlayerInteractor
 import com.practicum.playlistmaker.domain.models.Track
@@ -9,10 +11,24 @@ import com.practicum.playlistmaker.presentation.ui.player.PlayerView
 class PlayerPresenter(track: Track, private val playerView: PlayerView) {
     private val playerInteractorImpl: PlayerInteractor = PlayerInteractorImpl(track)
     private var playerState = PlayerState.DEFAULT
+    private val handler = Handler(Looper.getMainLooper())
+    private val timerUpdater = object : Runnable {
+        override fun run() {
+            playerView.updateTimer(getCurrentPosition())
+            handler.postDelayed(
+                this,
+                CURRENT_POSITION_REFRESH,
+            )
+        }
+    }
 
     init {
         preparePlayer()
         setOnCompletionListener()
+    }
+
+    fun startPostDelay() {
+        handler.postDelayed(timerUpdater, CURRENT_POSITION_REFRESH)
     }
 
     private fun start() {
@@ -26,7 +42,6 @@ class PlayerPresenter(track: Track, private val playerView: PlayerView) {
         playerInteractorImpl.pause()
         playerState = PlayerState.PAUSED
         playerView.setPlayButtonIcon(false)
-        playerView.removePostDelay()
     }
 
     fun stopPlayback() {
@@ -36,6 +51,13 @@ class PlayerPresenter(track: Track, private val playerView: PlayerView) {
             playerView.setPlayButtonIcon(false)
             playerView.onCompletePlaying()
         }
+    }
+
+    fun releasePlayer() {
+        stopPlayback()
+        removePostDelay()
+        playerInteractorImpl.onDestroy()
+        handler.removeCallbacksAndMessages(null)
     }
 
     fun getCurrentPosition(): String {
@@ -48,11 +70,17 @@ class PlayerPresenter(track: Track, private val playerView: PlayerView) {
             playerState = PlayerState.PREPARED
             playerView.setPlayButtonIcon(true)
             playerView.onCompletePlaying()
+            removePostDelay()
+            playerView.setPlayButtonIcon(false)
         }
     }
 
+    private fun removePostDelay() {
+        handler.removeCallbacks(timerUpdater)
+    }
+
     private fun preparePlayer() {
-        playerInteractorImpl.preparePlayer {
+        playerInteractorImpl.onPrepare {
             playerView.setPlayButtonIcon(false)
             playerState = PlayerState.PREPARED
         }
@@ -74,6 +102,10 @@ class PlayerPresenter(track: Track, private val playerView: PlayerView) {
 
     private fun isPlaybackPlaying(): Boolean {
         return playerState == PlayerState.PLAYING
+    }
+
+    companion object {
+        private const val CURRENT_POSITION_REFRESH = 200L
     }
 }
 

@@ -34,7 +34,7 @@ class PlayerInteractorImpl (track: Track): PlayerInteractor {
         return mediaPlayer.currentPosition
     }
 
-    override fun preparePlayer(onPrepared: () -> Unit) {
-        mediaPlayer.setOnPreparedListener { onPrepared() }
+    override fun onPrepare(prepare: () -> Unit) {
+        mediaPlayer.setOnPreparedListener { prepare() }
     }
 }
