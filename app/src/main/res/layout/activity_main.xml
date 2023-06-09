@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/some_id"
+    android:background="?attr/backgroundColor"
     android:clipToOutline="true"
     android:orientation="vertical"
     tools:ignore="DuplicateIds">
@@ -14,8 +14,6 @@
         android:id="@+id/panel_header"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/relative_layout_height"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
         android:layout_marginStart="@dimen/standard_margin"
         android:layout_marginTop="@dimen/standard_margin"
         android:layout_marginEnd="@dimen/standard_margin">
