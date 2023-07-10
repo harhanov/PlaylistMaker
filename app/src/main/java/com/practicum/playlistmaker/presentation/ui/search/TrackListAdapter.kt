@@ -1,8 +1,9 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.presentation.ui.search
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.domain.models.Track
 
 class TrackListAdapter: RecyclerView.Adapter<TrackListVH>() {
@@ -27,7 +28,7 @@ class TrackListAdapter: RecyclerView.Adapter<TrackListVH>() {
         return tracks.size
     }
 
-    fun setTracks(newTracks: List<Track>?) {
+    fun setTracks(newTracks: List<Track>) {
         tracks.clear()
         if (!newTracks.isNullOrEmpty()) {
             tracks.addAll(newTracks)
