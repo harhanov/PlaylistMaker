@@ -9,12 +9,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.practicum.playlistmaker.SUCCESS_CODE
 import com.practicum.playlistmaker.creator.Creator
-import com.practicum.playlistmaker.search.domain.Track
+import com.practicum.playlistmaker.search.data.model.Track
 import com.practicum.playlistmaker.search.domain.TracksInteractor
 
 
 class SearchViewModel(application: Application) : AndroidViewModel(application) {
-    private val tracksInteractor = Creator.provideTracksInteractor(getApplication<Application>())
+    private val tracksInteractor = Creator.provideTracksInteractor(getApplication())
     private val screenState = MutableLiveData<SearchScreenState>()
     val screenStateLD: LiveData<SearchScreenState> = screenState
     private val handler = Handler(Looper.getMainLooper())
@@ -32,7 +32,7 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
                         override fun consume(foundTracks: List<Track>?, errorMessage: String?, code: Int) {
                             when (code) {
                                 SUCCESS_CODE -> {
-                                    if (foundTracks != null && foundTracks.isNotEmpty()) { // Добавлена проверка на null
+                                    if (!foundTracks.isNullOrEmpty()) {
                                         screenState.postValue(SearchScreenState.Success(foundTracks))
                                     } else {
                                         screenState.postValue(SearchScreenState.NothingFound())
@@ -89,17 +89,17 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun showHistory() {
-        if (tracksInteractor.getHistory().isNotEmpty()) {
+        if (!tracksInteractor.getHistory().isNullOrEmpty()) {
             screenState.value = SearchScreenState.ShowHistory(tracksInteractor.getHistory())
         } else {
             screenState.value = SearchScreenState.Success(null)
         }
     }
 
-    fun shouldDisplayScreenState(screenState: SearchScreenState, queryText: String): Boolean {
-        if ((screenState is SearchScreenState.Success
+    fun shouldDisplayScreenState(screenStateLD: SearchScreenState, queryText: String): Boolean {
+        if ((screenStateLD is SearchScreenState.Success
                     && queryText.isNotEmpty())
-            || (screenState !is SearchScreenState.Success)
+            || (screenStateLD !is SearchScreenState.Success)
         ) {
             return true
         }

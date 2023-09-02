@@ -1,28 +1,111 @@
 package com.practicum.playlistmaker.player.ui
 
-import android.util.Log
+
+import android.os.Handler
+import android.os.Looper
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.practicum.playlistmaker.creator.Creator
+import com.practicum.playlistmaker.search.data.model.Track
+import com.practicum.playlistmaker.utils.DateUtils.formatTrackTime
 
-class PlayerViewModel(
-    private val trackId: Int,
-) : ViewModel(){
+
+class PlayerViewModel(trackForPlayer: Track) : ViewModel() {
+    val screenState = MutableLiveData<PlayerScreenState>()
+    private val playerInteractor = Creator.providePlayerInteractor(trackForPlayer)
+    private var playerState = PlayerState.DEFAULT
+    private val handler: Handler = Handler(Looper.getMainLooper())
+
+    private val timerUpdater =
+        object : Runnable {
+            override fun run() {
+                updateTimer(getCurrentPosition())
+                handler.postDelayed(
+                    this,
+                    CURRENT_POSITION_REFRESH,
+                )
+            }
+        }
 
     init {
-        Log.d("TEST", "init!")
+        screenState.value = PlayerScreenState.BeginningState(trackForPlayer)
+        preparePlayer()
+        setOnCompletionListener()
+    }
+
+    private fun preparePlayer() {
+        playerInteractor.preparePlayer {
+            playerState = PlayerState.PREPARED
+            screenState.value = PlayerScreenState.Preparing()
+        }
+    }
+
+    private fun setOnCompletionListener() {
+        playerInteractor.setOnCompletionListener {
+            playerState = PlayerState.PREPARED
+            handler.removeCallbacks(timerUpdater)
+            screenState.value = PlayerScreenState.onCompletePlaying()
+        }
+    }
+
+    private fun start() {
+        playerInteractor.start()
+        playerState = PlayerState.PLAYING
+        handler.postDelayed(timerUpdater, CURRENT_POSITION_REFRESH)
+        screenState.value = PlayerScreenState.PlayButtonHandling(playerState)
+    }
+
+    fun pause() {
+        playerInteractor.pause()
+        playerState = PlayerState.PAUSED
+        handler.removeCallbacks(timerUpdater)
+        screenState.value = PlayerScreenState.PlayButtonHandling(playerState)
+    }
+
+    private fun updateTimer(time: String) {
+        screenState.postValue(PlayerScreenState.updateTimer(time))
+    }
+
+    fun getCurrentPosition(): String {
+        return formatTrackTime(playerInteractor.getCurrentTime().toString())
+    }
+
+    fun onDestroy() {
+        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+        playerInteractor.onDestroy()
+    }
+
+    fun playbackControl() {
+        when (playerState) {
+            PlayerState.PLAYING -> {
+                pause()
+            }
+            PlayerState.PREPARED, PlayerState.PAUSED -> {
+                start()
+            }
+            PlayerState.DEFAULT -> {
+
+            }
+        }
     }
 
     companion object {
-        fun getViewModelFactory(trackId: Int): ViewModelProvider.Factory =
+        private const val CURRENT_POSITION_REFRESH = 200L
+        private val SEARCH_REQUEST_TOKEN = Any()
+        fun getViewModelFactory(trackForPlayer: Track): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
-                // 1
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     return PlayerViewModel(
-                        trackId
+                        trackForPlayer
                     ) as T
                 }
             }
-
+    }
 }
+
+enum class PlayerState {
+    DEFAULT, PREPARED, PLAYING, PAUSED
 }

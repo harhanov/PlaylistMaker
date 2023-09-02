@@ -2,7 +2,7 @@ package com.practicum.playlistmaker.player.data
 
 import com.practicum.playlistmaker.player.PlayerRepository
 
-class PlayerRepositoryImpl(private val playerClient: PlayerRepository): PlayerRepository {
+class PlayerRepositoryImpl(private val playerClient: MediaPlayerControl): PlayerRepository {
     override fun preparePlayer(prepare: () -> Unit) {
         playerClient.preparePlayer(prepare)
     }

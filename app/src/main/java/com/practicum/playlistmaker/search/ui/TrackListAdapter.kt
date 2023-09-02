@@ -1,6 +1,6 @@
 package com.practicum.playlistmaker.search.ui
 
-import com.practicum.playlistmaker.search.domain.Track
+import com.practicum.playlistmaker.search.data.model.Track
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -9,7 +9,6 @@ import com.practicum.playlistmaker.R
 class TrackListAdapter(private val onClickListener: OnTrackClickListener): RecyclerView.Adapter<TrackListVH>() {
 
     private val tracks = mutableListOf<Track>()
-    var onTrackClickListener: OnTrackClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackListVH {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false)
@@ -20,7 +19,7 @@ class TrackListAdapter(private val onClickListener: OnTrackClickListener): Recyc
         val track = tracks[position]
         holder.bind(track)
         holder.itemView.setOnClickListener {
-            onTrackClickListener?.onTrackClick(track)
+            onClickListener.onTrackClick(track)
         }
     }
 

@@ -1,41 +1,35 @@
 package com.practicum.playlistmaker.player.domain.impl
 
-import com.practicum.playlistmaker.search.domain.Track
-import android.media.MediaPlayer
+import com.practicum.playlistmaker.player.PlayerRepository
 import com.practicum.playlistmaker.player.domain.PlayerInteractor
 
 
-class PlayerInteractorImpl (track: Track): PlayerInteractor {
+class PlayerInteractorImpl(private val track: PlayerRepository): PlayerInteractor {
 
-    private val mediaPlayer: MediaPlayer = MediaPlayer()
-    init {
-        mediaPlayer.setDataSource(track.previewUrl)
-        mediaPlayer.prepareAsync()
-    }
 
     override fun start() {
-        mediaPlayer.start()
+        track.start()
     }
 
     override fun pause() {
-        mediaPlayer.pause()
+        track.pause()
     }
 
     override fun onDestroy() {
-        mediaPlayer.release()
+        track.onDestroy()
     }
 
     override fun setOnCompletionListener(onComplete: () -> Unit) {
-        mediaPlayer.setOnCompletionListener {
+        track.setOnCompletionListener {
             onComplete()
         }
     }
 
     override fun getCurrentTime(): Int {
-        return mediaPlayer.currentPosition
+        return track.getCurrentTime()
     }
 
     override fun preparePlayer(prepare: () -> Unit) {
-        mediaPlayer.setOnPreparedListener { prepare() }
+        track.preparePlayer { prepare() }
     }
 }

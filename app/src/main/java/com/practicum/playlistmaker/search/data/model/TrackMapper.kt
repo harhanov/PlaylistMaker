@@ -1,7 +1,5 @@
 package com.practicum.playlistmaker.search.data.model
 
-import com.practicum.playlistmaker.search.domain.Track
-
 fun TrackDTO.mapToTrack(): Track {
     return Track(
         trackId = trackId,

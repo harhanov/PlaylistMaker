@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.search.domain
+package com.practicum.playlistmaker.search.data.model
 
 import android.os.Parcel
 import android.os.Parcelable
@@ -59,4 +59,9 @@ data class Track(
     override fun describeContents(): Int {
         return 0
     }
+
+    fun getCoverArtwork(): String {
+        return artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
+    }
+    
 }

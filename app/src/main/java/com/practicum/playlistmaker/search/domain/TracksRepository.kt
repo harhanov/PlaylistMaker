@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker.search.domain
 
+import com.practicum.playlistmaker.search.data.model.Track
 import com.practicum.playlistmaker.utils.Resource
 
 interface TracksRepository {

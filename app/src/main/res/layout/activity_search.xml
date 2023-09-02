@@ -72,7 +72,7 @@
                 android:textColorHint="?attr/searchHintColor" />
 
             <ImageView
-                android:id="@+id/clearIcon"
+                android:id="@+id/inputLineClearButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

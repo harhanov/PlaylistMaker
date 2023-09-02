@@ -11,13 +11,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
 import com.practicum.playlistmaker.player.ui.PlayerActivity
-import com.practicum.playlistmaker.search.domain.Track
+import com.practicum.playlistmaker.search.data.model.Track
 
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
     private lateinit var viewModel : SearchViewModel
-    private lateinit var trackAdapter : TrackListAdapter
+    private lateinit var historyListAdapter: TrackListAdapter
+    private lateinit var trackListAdapter: TrackListAdapter
     private var searchTextValue = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,10 +29,18 @@ class SearchActivity : AppCompatActivity() {
         binding.searchBackButton.apply {
             setOnClickListener { finish() }
         }
-        viewModel.screenStateLD.observe(this){screenState ->
-            if (viewModel.shouldDisplayScreenState(screenState,binding.searchEditText.text.toString())){
-                screenState.tracks?.let { trackAdapter.setTracks(it) }
-                screenState.render(binding)
+        viewModel.screenStateLD.observe(this) { screenStateLD ->
+            if (viewModel.shouldDisplayScreenState(screenStateLD, binding.searchEditText.text.toString())) {
+                when (screenStateLD) {
+                    is SearchScreenState.Success -> {
+                        screenStateLD.tracks?.let { trackListAdapter.setTracks(it) }
+                    }
+                    is SearchScreenState.ShowHistory -> {
+                        screenStateLD.tracks?.let { historyListAdapter.setTracks(it) }
+                    }
+                    else -> {}
+                }
+                screenStateLD.render(binding)
             }
         }
         initRecycler()
@@ -63,7 +72,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun handleButtons() {
-        binding.clearIcon.apply {
+        binding.inputLineClearButton.apply {
             setOnClickListener {
                 binding.searchEditText.text.clear()
                 binding.searchEditText.onEditorAction(EditorInfo.IME_ACTION_DONE)
@@ -85,17 +94,29 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun initRecycler() {
-        trackAdapter = TrackListAdapter {
+        historyListAdapter = TrackListAdapter {
+            if (viewModel.clickDebounce()) {
+                viewModel.addToHistory(it)
+                navigateTo(PlayerActivity::class.java, it)
+            }
+        }
+        binding.rvHistoryList.apply {
+            adapter = historyListAdapter
+            layoutManager = LinearLayoutManager(this.context)
+        }
+
+        trackListAdapter = TrackListAdapter {
             if (viewModel.clickDebounce()) {
                 viewModel.addToHistory(it)
                 navigateTo(PlayerActivity::class.java, it)
             }
         }
         binding.rvSongsList.apply {
-            adapter = trackAdapter
+            adapter = trackListAdapter
             layoutManager = LinearLayoutManager(this.context)
         }
     }
+
 
     private fun initEditText(savedInstanceState: Bundle?) {
         binding.searchEditText
@@ -112,7 +133,7 @@ class SearchActivity : AppCompatActivity() {
                         viewModel.showHistory()
                     }
                     viewModel.searchDebounce(binding.searchEditText.text.toString())
-                    binding.clearIcon.visibility = clearButtonVisibility(text.toString())
+                    binding.inputLineClearButton.visibility = clearButtonVisibility(text.toString())
                 }
             }
     }

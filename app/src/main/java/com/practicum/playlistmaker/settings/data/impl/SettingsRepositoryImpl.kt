@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.practicum.playlistmaker.settings.domain.SettingsRepository
+import com.practicum.playlistmaker.settings.data.SettingsRepository
 import com.practicum.playlistmaker.settings.domain.ThemeSettings
 
 class SettingsRepositoryImpl(private val sharedPreferences: SharedPreferences) :
