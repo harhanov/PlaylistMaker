@@ -13,7 +13,11 @@ import com.practicum.playlistmaker.utils.DateUtils.formatTrackTime
 
 
 class PlayerViewModel(trackForPlayer: Track) : ViewModel() {
-    val screenState = MutableLiveData<PlayerScreenState>()
+
+
+    private val _screenState = MutableLiveData<PlayerScreenState>()
+    val screenState: LiveData<PlayerScreenState> = _screenState
+
     private val playerInteractor = Creator.providePlayerInteractor(trackForPlayer)
     private var playerState = PlayerState.DEFAULT
     private val handler: Handler = Handler(Looper.getMainLooper())
@@ -22,15 +26,12 @@ class PlayerViewModel(trackForPlayer: Track) : ViewModel() {
         object : Runnable {
             override fun run() {
                 updateTimer(getCurrentPosition())
-                handler.postDelayed(
-                    this,
-                    CURRENT_POSITION_REFRESH,
-                )
+                handler.postDelayed(this, CURRENT_POSITION_REFRESH)
             }
         }
 
     init {
-        screenState.value = PlayerScreenState.BeginningState(trackForPlayer)
+        _screenState.value = PlayerScreenState.BeginningState(trackForPlayer)
         preparePlayer()
         setOnCompletionListener()
     }
@@ -38,7 +39,7 @@ class PlayerViewModel(trackForPlayer: Track) : ViewModel() {
     private fun preparePlayer() {
         playerInteractor.preparePlayer {
             playerState = PlayerState.PREPARED
-            screenState.value = PlayerScreenState.Preparing()
+            _screenState.value = PlayerScreenState.Preparing()
         }
     }
 
@@ -46,7 +47,7 @@ class PlayerViewModel(trackForPlayer: Track) : ViewModel() {
         playerInteractor.setOnCompletionListener {
             playerState = PlayerState.PREPARED
             handler.removeCallbacks(timerUpdater)
-            screenState.value = PlayerScreenState.onCompletePlaying()
+            _screenState.value = PlayerScreenState.onCompletePlaying()
         }
     }
 
@@ -54,18 +55,22 @@ class PlayerViewModel(trackForPlayer: Track) : ViewModel() {
         playerInteractor.start()
         playerState = PlayerState.PLAYING
         handler.postDelayed(timerUpdater, CURRENT_POSITION_REFRESH)
-        screenState.value = PlayerScreenState.PlayButtonHandling(playerState)
+        _screenState.value = PlayerScreenState.PlayButtonHandling(playerState)
     }
 
     fun pause() {
         playerInteractor.pause()
         playerState = PlayerState.PAUSED
         handler.removeCallbacks(timerUpdater)
-        screenState.value = PlayerScreenState.PlayButtonHandling(playerState)
+        _screenState.value = PlayerScreenState.PlayButtonHandling(playerState)
+    }
+
+    private fun updatePlayerState(newState: PlayerScreenState) {
+        _screenState.postValue(newState)
     }
 
     private fun updateTimer(time: String) {
-        screenState.postValue(PlayerScreenState.updateTimer(time))
+        updatePlayerState(PlayerScreenState.updateTimer(time))
     }
 
     fun getCurrentPosition(): String {

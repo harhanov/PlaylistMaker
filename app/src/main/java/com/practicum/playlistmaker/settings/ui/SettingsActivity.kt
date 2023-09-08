@@ -1,67 +1,66 @@
 package com.practicum.playlistmaker.settings.ui
 
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.Observer
-import com.google.android.material.switchmaterial.SwitchMaterial
-import com.practicum.playlistmaker.App
-import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.creator.Creator
+import com.practicum.playlistmaker.databinding.ActivitySettingsBinding
+import com.practicum.playlistmaker.settings.data.impl.SettingsLocalDataSourceImpl
 import com.practicum.playlistmaker.settings.domain.ThemeSettings
+import com.practicum.playlistmaker.settings.domain.impl.SettingsInteractorImpl
 import com.practicum.playlistmaker.sharing.data.ExternalNavigator
-import com.practicum.playlistmaker.sharing.domain.impl.SharingInteractorImpl
 
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var viewModel: SettingsViewModel
+    private lateinit var binding: ActivitySettingsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
+        binding = ActivitySettingsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val backFromSettings = findViewById<View>(R.id.exitSettings)
-        backFromSettings.setOnClickListener {
+        binding.exitSettings.setOnClickListener {
             finish()
         }
 
-        val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
+        val themeSwitcher = binding.themeSwitcher
 
-        val settingsRepository = (application as App).getSettingsRepository()
+        val settingsStorage = SettingsLocalDataSourceImpl(
+            getSharedPreferences("MyPrefs", MODE_PRIVATE)
+        )
 
-        val externalNavigator = ExternalNavigator(this)
-
-        val sharingInteractor = SharingInteractorImpl(externalNavigator)
+        val settingsRepository = Creator.createSettingsRepository(settingsStorage)
+        val sharingInteractor = Creator.createSharingInteractor(ExternalNavigator(this))
+        val settingsInteractor = SettingsInteractorImpl(settingsRepository)
 
         viewModel = ViewModelProvider(
             this,
-            SettingsViewModel.getViewModelFactory(sharingInteractor)
+            SettingsViewModel.getViewModelFactory(settingsInteractor, sharingInteractor)
         )[SettingsViewModel::class.java]
 
         viewModel.setSettingsRepository(settingsRepository)
 
-        viewModel.getThemeSettingsLiveData().observe(this, Observer { themeSettings ->
+        viewModel.getThemeSettingsLiveData().observe(this) { themeSettings ->
             themeSwitcher.isChecked = themeSettings.isNightModeEnabled
-        })
+        }
 
         themeSwitcher.setOnCheckedChangeListener { _, checked ->
             val newThemeSettings = ThemeSettings(checked)
             viewModel.updateThemeSetting(newThemeSettings)
         }
 
-        val shareApp = findViewById<View>(R.id.shareArea)
-        shareApp.setOnClickListener {
+        binding.shareArea.setOnClickListener {
             viewModel.shareApp()
         }
 
-        val supportWrite = findViewById<View>(R.id.writeToSupport)
-        supportWrite.setOnClickListener {
+        binding.writeToSupport.setOnClickListener {
             viewModel.writeToSupport()
         }
 
-        val termsOfService = findViewById<View>(R.id.serviceTerms)
-        termsOfService.setOnClickListener {
+        binding.serviceTerms.setOnClickListener {
             viewModel.openTermsOfService()
         }
     }
 }
+

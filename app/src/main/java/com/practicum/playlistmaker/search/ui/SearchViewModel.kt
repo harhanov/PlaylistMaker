@@ -4,9 +4,7 @@ import android.app.Application
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.*
 import com.practicum.playlistmaker.SUCCESS_CODE
 import com.practicum.playlistmaker.creator.Creator
 import com.practicum.playlistmaker.search.data.model.Track
@@ -26,20 +24,20 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
         val searchRunnable = Runnable {
             handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
             searchText.let { query ->
-                screenState.postValue(SearchScreenState.Loading())
+                updateScreenState(SearchScreenState.Loading())
                 if (query != null) {
                     tracksInteractor.searchTracks(query, object : TracksInteractor.TracksConsumer {
                         override fun consume(foundTracks: List<Track>?, errorMessage: String?, code: Int) {
                             when (code) {
                                 SUCCESS_CODE -> {
                                     if (!foundTracks.isNullOrEmpty()) {
-                                        screenState.postValue(SearchScreenState.Success(foundTracks))
+                                        updateScreenState(SearchScreenState.Success(foundTracks))
                                     } else {
-                                        screenState.postValue(SearchScreenState.NothingFound())
+                                        updateScreenState(SearchScreenState.NothingFound())
                                     }
                                 }
                                 else -> {
-                                    screenState.postValue(SearchScreenState.Error(errorMessage))
+                                    updateScreenState(SearchScreenState.Error(errorMessage))
                                 }
                             }
                         }
@@ -53,6 +51,10 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
             SEARCH_REQUEST_TOKEN,
             postTime
         )
+    }
+
+    private fun updateScreenState(newState: SearchScreenState) {
+        screenState.postValue(newState)
     }
 
     fun clickDebounce(): Boolean {
@@ -110,5 +112,14 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private const val CLICK_DEBOUNCE_DELAY = 1000L
         private val SEARCH_REQUEST_TOKEN = Any()
+
+        fun getViewModelFactory(application: Application): ViewModelProvider.Factory =
+            object : ViewModelProvider.Factory {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return SearchViewModel(application) as T
+                }
+            }
     }
 }
+

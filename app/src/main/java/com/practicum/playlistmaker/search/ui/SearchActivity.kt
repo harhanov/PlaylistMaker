@@ -25,7 +25,8 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        viewModel = ViewModelProvider(this)[SearchViewModel::class.java]
+        val viewModelFactory = SearchViewModel.getViewModelFactory(application)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(SearchViewModel::class.java)
         binding.searchBackButton.apply {
             setOnClickListener { finish() }
         }

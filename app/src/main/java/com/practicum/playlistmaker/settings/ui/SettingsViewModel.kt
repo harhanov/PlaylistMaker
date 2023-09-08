@@ -5,11 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.practicum.playlistmaker.settings.data.SettingsRepository
+import com.practicum.playlistmaker.settings.domain.SettingsInteractor
+import com.practicum.playlistmaker.settings.domain.SettingsRepository
 import com.practicum.playlistmaker.settings.domain.ThemeSettings
 import com.practicum.playlistmaker.sharing.domain.SharingInteractor
 
 class SettingsViewModel(
+    private val settingsInteractor: SettingsInteractor,
     private val sharingInteractor: SharingInteractor,
 ) : ViewModel() {
 
@@ -40,11 +42,12 @@ class SettingsViewModel(
     }
 
     companion object {
-        fun getViewModelFactory(sharingInteractor: SharingInteractor): ViewModelProvider.Factory = viewModelFactory {
+        fun getViewModelFactory(settingsInteractor: SettingsInteractor, sharingInteractor: SharingInteractor): ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 SettingsViewModel(
+                    settingsInteractor,
                     sharingInteractor,
-                                    )
+                )
             }
         }
     }

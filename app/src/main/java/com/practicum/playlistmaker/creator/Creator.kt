@@ -13,6 +13,12 @@ import com.practicum.playlistmaker.search.data.model.Track
 import com.practicum.playlistmaker.search.domain.TracksInteractor
 import com.practicum.playlistmaker.search.domain.TracksRepository
 import com.practicum.playlistmaker.search.domain.impl.TracksInteractorImpl
+import com.practicum.playlistmaker.settings.data.SettingsLocalDataSource
+import com.practicum.playlistmaker.settings.data.impl.SettingsRepositoryImpl
+import com.practicum.playlistmaker.settings.domain.SettingsRepository
+import com.practicum.playlistmaker.sharing.data.ExternalNavigator
+import com.practicum.playlistmaker.sharing.domain.SharingInteractor
+import com.practicum.playlistmaker.sharing.domain.impl.SharingInteractorImpl
 
 object Creator {
     private const val LOCAL_STORAGE = "local_storage"
@@ -34,4 +40,13 @@ object Creator {
     private fun getPlayerRepository(trackForPlayer: Track): PlayerRepository {
         return PlayerRepositoryImpl(MediaPlayerControl(trackForPlayer))
     }
+
+    fun createSettingsRepository(dataSource: SettingsLocalDataSource): SettingsRepository {
+        return SettingsRepositoryImpl(dataSource)
+    }
+
+    fun createSharingInteractor(externalNavigator: ExternalNavigator): SharingInteractor {
+        return SharingInteractorImpl(externalNavigator)
+    }
+
 }
