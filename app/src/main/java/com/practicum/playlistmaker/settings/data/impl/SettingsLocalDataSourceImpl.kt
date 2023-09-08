@@ -2,7 +2,6 @@ package com.practicum.playlistmaker.settings.data.impl
 
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.practicum.playlistmaker.settings.data.SettingsLocalDataSource
 import com.practicum.playlistmaker.settings.domain.ThemeSettings
@@ -35,8 +34,9 @@ class SettingsLocalDataSourceImpl(private val sharedPreferences: SharedPreferenc
         AppCompatDelegate.setDefaultNightMode(nightMode)
     }
 
-    override fun getThemeSettingsLiveData(): LiveData<ThemeSettings> {
-        return themeSettingsLiveData
+    override fun getThemeSettings(): ThemeSettings {
+        val isNightModeEnabled = sharedPreferences.getBoolean(KEY_DARK_THEME, false)
+        return ThemeSettings(isNightModeEnabled)
     }
 
     companion object {

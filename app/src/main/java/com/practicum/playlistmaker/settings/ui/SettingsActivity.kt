@@ -5,9 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.practicum.playlistmaker.creator.Creator
 import com.practicum.playlistmaker.databinding.ActivitySettingsBinding
-import com.practicum.playlistmaker.settings.data.impl.SettingsLocalDataSourceImpl
 import com.practicum.playlistmaker.settings.domain.ThemeSettings
-import com.practicum.playlistmaker.settings.domain.impl.SettingsInteractorImpl
 import com.practicum.playlistmaker.sharing.data.ExternalNavigator
 
 class SettingsActivity : AppCompatActivity() {
@@ -26,20 +24,15 @@ class SettingsActivity : AppCompatActivity() {
 
         val themeSwitcher = binding.themeSwitcher
 
-        val settingsStorage = SettingsLocalDataSourceImpl(
-            getSharedPreferences("MyPrefs", MODE_PRIVATE)
-        )
-
-        val settingsRepository = Creator.createSettingsRepository(settingsStorage)
         val sharingInteractor = Creator.createSharingInteractor(ExternalNavigator(this))
-        val settingsInteractor = SettingsInteractorImpl(settingsRepository)
+        val settingsInteractor = Creator.createSettingsInteractor(this)
 
         viewModel = ViewModelProvider(
             this,
             SettingsViewModel.getViewModelFactory(settingsInteractor, sharingInteractor)
         )[SettingsViewModel::class.java]
 
-        viewModel.setSettingsRepository(settingsRepository)
+        viewModel.setSettingsInteractor(settingsInteractor)
 
         viewModel.getThemeSettingsLiveData().observe(this) { themeSettings ->
             themeSwitcher.isChecked = themeSettings.isNightModeEnabled

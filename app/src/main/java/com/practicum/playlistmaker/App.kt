@@ -17,11 +17,11 @@ class App : Application() {
         settingsRepository = SettingsRepositoryImpl(settingsStorage)
 
         switchTheme(
-            settingsRepository.getThemeSettingsLiveData().value?.isNightModeEnabled ?: false
+            settingsRepository.getThemeSettings().isNightModeEnabled
         )
     }
 
-    fun switchTheme(darkThemeEnabled: Boolean) {
+    private fun switchTheme(darkThemeEnabled: Boolean) {
         AppCompatDelegate.setDefaultNightMode(
             if (darkThemeEnabled) {
                 AppCompatDelegate.MODE_NIGHT_YES
