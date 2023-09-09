@@ -15,9 +15,10 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
     private val tracksInteractor = Creator.provideTracksInteractor(getApplication())
     private val screenState = MutableLiveData<SearchScreenState>()
     val screenStateLD: LiveData<SearchScreenState> = screenState
+    private val _isClickAllowed = MutableLiveData<Boolean>()
+    val isClickAllowed: LiveData<Boolean> = _isClickAllowed
     private val handler = Handler(Looper.getMainLooper())
     private var lastQuery: String? = null
-    private var isClickAllowed = true
 
 
     fun trackSearch(searchText: String? = lastQuery) {
@@ -27,7 +28,11 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
                 updateScreenState(SearchScreenState.Loading())
                 if (query != null) {
                     tracksInteractor.searchTracks(query, object : TracksInteractor.TracksConsumer {
-                        override fun consume(foundTracks: List<Track>?, errorMessage: String?, code: Int) {
+                        override fun consume(
+                            foundTracks: List<Track>?,
+                            errorMessage: String?,
+                            code: Int
+                        ) {
                             when (code) {
                                 SUCCESS_CODE -> {
                                     if (!foundTracks.isNullOrEmpty()) {
@@ -57,13 +62,11 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
         screenState.postValue(newState)
     }
 
-    fun clickDebounce(): Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+    fun setClickAllowed(allowed: Boolean) {
+        _isClickAllowed.value = allowed
+        if (allowed) {
+            handler.postDelayed({ _isClickAllowed.value = true }, CLICK_DEBOUNCE_DELAY)
         }
-        return current
     }
 
     fun onDestroy() {

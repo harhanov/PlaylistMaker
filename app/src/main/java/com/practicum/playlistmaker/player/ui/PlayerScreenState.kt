@@ -10,19 +10,15 @@ import com.practicum.playlistmaker.utils.DateUtils
 
 
 sealed class PlayerScreenState {
-    class BeginningState(val track: Track) : PlayerScreenState() {
+    class BeginningState(val track: Track, private val currentPosition: String) :
+        PlayerScreenState() {
         override fun render(binding: ActivityPlayerBinding) {
             binding.songTitle.text = track.trackName
             binding.artistName.text = track.artistName
             binding.tvDurationValue.text = DateUtils.formatTrackTime(track.trackTime)
             binding.tvAlbumValue.text = track.collectionName
-            binding.tvReleaseYearValue.text = track.let {
-                it.releaseDate?.let { it1 ->
-                    DateUtils.extractReleaseYear(
-                        it1
-                    )
-                }
-            }
+            binding.tvReleaseYearValue.text =
+                track.releaseDate?.let { DateUtils.extractReleaseYear(it) }
             binding.tvGenreValue.text = track.primaryGenreName
             binding.tvCountryValue.text = track.country
 
@@ -35,6 +31,8 @@ sealed class PlayerScreenState {
                     RoundedCorners(binding.cover.resources.getDimensionPixelSize(R.dimen.big_cover_corner_radius))
                 )
                 .into(binding.cover)
+
+            binding.playbackProgress.text = currentPosition
         }
     }
 
@@ -58,15 +56,10 @@ sealed class PlayerScreenState {
         }
     }
 
-    class updateTimer(private val timerValue: String) : PlayerScreenState() {
+    class OnCompletePlaying : PlayerScreenState() {
         override fun render(binding: ActivityPlayerBinding) {
-            binding.playbackProgress.text = timerValue
-        }
-    }
-
-    class onCompletePlaying : PlayerScreenState() {
-        override fun render(binding: ActivityPlayerBinding) {
-            binding.playbackProgress.text = binding.playbackProgress.resources.getText(R.string.zero_time)
+            binding.playbackProgress.text =
+                binding.playbackProgress.resources.getText(R.string.zero_time)
             binding.playPauseButton.setBackgroundResource(R.drawable.ic_play_arrow)
         }
     }

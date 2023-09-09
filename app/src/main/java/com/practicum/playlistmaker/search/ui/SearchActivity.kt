@@ -16,7 +16,7 @@ import com.practicum.playlistmaker.search.data.model.Track
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
-    private lateinit var viewModel : SearchViewModel
+    private lateinit var viewModel: SearchViewModel
     private lateinit var historyListAdapter: TrackListAdapter
     private lateinit var trackListAdapter: TrackListAdapter
     private var searchTextValue = ""
@@ -26,12 +26,18 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val viewModelFactory = SearchViewModel.getViewModelFactory(application)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(SearchViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory)[SearchViewModel::class.java]
         binding.searchBackButton.apply {
             setOnClickListener { finish() }
         }
         viewModel.screenStateLD.observe(this) { screenStateLD ->
-            if (viewModel.shouldDisplayScreenState(screenStateLD, binding.searchEditText.text.toString())) {
+            if (viewModel.shouldDisplayScreenState(
+                    screenStateLD,
+                    binding.searchEditText.text.toString()
+                ) &&
+                viewModel.isClickAllowed.value == true
+            ) {
+
                 when (screenStateLD) {
                     is SearchScreenState.Success -> {
                         screenStateLD.tracks?.let { trackListAdapter.setTracks(it) }
@@ -51,12 +57,14 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (binding.searchEditText.text.toString().isNotEmpty()){
+        viewModel.setClickAllowed(true)
+        if (binding.searchEditText.text.toString().isNotEmpty()) {
             viewModel.trackSearch(binding.searchEditText.text.toString())
-        }else{
+        } else {
             viewModel.showHistory()
         }
     }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(INPUT_TEXT, binding.searchEditText.text.toString())
@@ -96,8 +104,9 @@ class SearchActivity : AppCompatActivity() {
 
     private fun initRecycler() {
         historyListAdapter = TrackListAdapter {
-            if (viewModel.clickDebounce()) {
+            if (viewModel.isClickAllowed.value == true) {
                 viewModel.addToHistory(it)
+                viewModel.setClickAllowed(false)
                 navigateTo(PlayerActivity::class.java, it)
             }
         }
@@ -107,8 +116,9 @@ class SearchActivity : AppCompatActivity() {
         }
 
         trackListAdapter = TrackListAdapter {
-            if (viewModel.clickDebounce()) {
+            if (viewModel.isClickAllowed.value == true) {
                 viewModel.addToHistory(it)
+                viewModel.setClickAllowed(false)
                 navigateTo(PlayerActivity::class.java, it)
             }
         }
@@ -147,7 +157,7 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun restoreTextFromBundle(textField: EditText, savedInstanceState: Bundle?){
+    private fun restoreTextFromBundle(textField: EditText, savedInstanceState: Bundle?) {
         if (savedInstanceState != null) {
             if (savedInstanceState.getString(INPUT_TEXT)!!.isNotEmpty()) {
                 textField.setText(savedInstanceState.getString(INPUT_TEXT)!!)
@@ -155,7 +165,8 @@ class SearchActivity : AppCompatActivity() {
             }
         }
     }
-    private fun onClickOnEnterOnVirtualKeyboard(actionId: Int): Boolean{
+
+    private fun onClickOnEnterOnVirtualKeyboard(actionId: Int): Boolean {
         if (actionId == EditorInfo.IME_ACTION_DONE) {
             if (binding.searchEditText.text.toString().isNotEmpty()) {
                 viewModel.trackSearch(binding.searchEditText.text.toString())
@@ -170,7 +181,7 @@ class SearchActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    companion object{
+    companion object {
         private const val INPUT_TEXT = "searchTextValue"
         private const val TRACK = "track"
     }

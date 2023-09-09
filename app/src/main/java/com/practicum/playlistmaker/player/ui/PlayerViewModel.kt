@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker.player.ui
 
-
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.LiveData
@@ -11,9 +10,7 @@ import com.practicum.playlistmaker.creator.Creator
 import com.practicum.playlistmaker.search.data.model.Track
 import com.practicum.playlistmaker.utils.DateUtils.formatTrackTime
 
-
-class PlayerViewModel(trackForPlayer: Track) : ViewModel() {
-
+class PlayerViewModel(private val trackForPlayer: Track) : ViewModel() {
 
     private val _screenState = MutableLiveData<PlayerScreenState>()
     val screenState: LiveData<PlayerScreenState> = _screenState
@@ -22,16 +19,16 @@ class PlayerViewModel(trackForPlayer: Track) : ViewModel() {
     private var playerState = PlayerState.DEFAULT
     private val handler: Handler = Handler(Looper.getMainLooper())
 
-    private val timerUpdater =
-        object : Runnable {
-            override fun run() {
-                updateTimer(getCurrentPosition())
-                handler.postDelayed(this, CURRENT_POSITION_REFRESH)
-            }
+    private val timerUpdater = object : Runnable {
+        override fun run() {
+            updateTimer()
+            handler.postDelayed(this, CURRENT_POSITION_REFRESH)
         }
+    }
 
     init {
-        _screenState.value = PlayerScreenState.BeginningState(trackForPlayer)
+        val initialPosition = formatTrackTime(playerInteractor.getCurrentTime().toString())
+        _screenState.value = PlayerScreenState.BeginningState(trackForPlayer, initialPosition)
         preparePlayer()
         setOnCompletionListener()
     }
@@ -47,7 +44,7 @@ class PlayerViewModel(trackForPlayer: Track) : ViewModel() {
         playerInteractor.setOnCompletionListener {
             playerState = PlayerState.PREPARED
             handler.removeCallbacks(timerUpdater)
-            _screenState.value = PlayerScreenState.onCompletePlaying()
+            _screenState.value = PlayerScreenState.OnCompletePlaying()
         }
     }
 
@@ -65,16 +62,10 @@ class PlayerViewModel(trackForPlayer: Track) : ViewModel() {
         _screenState.value = PlayerScreenState.PlayButtonHandling(playerState)
     }
 
-    private fun updatePlayerState(newState: PlayerScreenState) {
-        _screenState.postValue(newState)
-    }
-
-    private fun updateTimer(time: String) {
-        updatePlayerState(PlayerScreenState.updateTimer(time))
-    }
-
-    fun getCurrentPosition(): String {
-        return formatTrackTime(playerInteractor.getCurrentTime().toString())
+    private fun updateTimer() {
+        val time = formatTrackTime(playerInteractor.getCurrentTime().toString())
+        val currentState = PlayerScreenState.BeginningState(trackForPlayer, time)
+        updatePlayerState(currentState)
     }
 
     fun onDestroy() {
@@ -94,6 +85,10 @@ class PlayerViewModel(trackForPlayer: Track) : ViewModel() {
 
             }
         }
+    }
+
+    private fun updatePlayerState(newState: PlayerScreenState) {
+        _screenState.postValue(newState)
     }
 
     companion object {
