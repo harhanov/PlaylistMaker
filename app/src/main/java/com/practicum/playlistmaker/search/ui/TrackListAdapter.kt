@@ -6,10 +6,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.R
 
-class TrackListAdapter(private val onClickListener: OnTrackClickListener): RecyclerView.Adapter<TrackListVH>() {
+class TrackListAdapter : RecyclerView.Adapter<TrackListVH>() {
 
     private val tracks = mutableListOf<Track>()
-
+    var onClickListener: ((Track) -> Unit)? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackListVH {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false)
         return TrackListVH(view)
@@ -19,7 +19,7 @@ class TrackListAdapter(private val onClickListener: OnTrackClickListener): Recyc
         val track = tracks[position]
         holder.bind(track)
         holder.itemView.setOnClickListener {
-            onClickListener.onTrackClick(track)
+            onClickListener?.invoke(track)
         }
     }
 
@@ -35,7 +35,4 @@ class TrackListAdapter(private val onClickListener: OnTrackClickListener): Recyc
         notifyDataSetChanged()
     }
 
-    fun interface OnTrackClickListener {
-        fun onTrackClick(track: Track)
-    }
 }

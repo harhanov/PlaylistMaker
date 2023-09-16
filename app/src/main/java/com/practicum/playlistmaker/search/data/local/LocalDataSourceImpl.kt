@@ -5,7 +5,7 @@ import com.google.gson.Gson
 import com.practicum.playlistmaker.search.data.LocalDataSource
 import com.practicum.playlistmaker.search.data.model.Track
 
-class LocalDataSourceImpl(private val sharedPreferences: SharedPreferences): LocalDataSource {
+class LocalDataSourceImpl(private val sharedPreferences: SharedPreferences) : LocalDataSource {
 
     private val gson: Gson = Gson()
 

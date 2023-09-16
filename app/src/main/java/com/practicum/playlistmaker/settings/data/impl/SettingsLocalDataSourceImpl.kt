@@ -35,7 +35,7 @@ class SettingsLocalDataSourceImpl(private val sharedPreferences: SharedPreferenc
     }
 
     override fun getThemeSettings(): ThemeSettings {
-        val isNightModeEnabled = sharedPreferences.getBoolean(KEY_DARK_THEME, false)
+        val isNightModeEnabled = sharedPreferences.getBoolean(KEY_DARK_THEME, true)
         return ThemeSettings(isNightModeEnabled)
     }
 

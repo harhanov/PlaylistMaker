@@ -1,11 +1,10 @@
-package com.practicum.playlistmaker.search.data.model
+package com.practicum.playlistmaker.player.domain
 
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import com.practicum.playlistmaker.player.domain.TrackForPlayer
 
-data class Track(
+data class TrackForPlayer(
     val trackId: Int,
     val trackName: String,
     val artistName: String,
@@ -31,10 +30,10 @@ data class Track(
         parcel.writeString(previewUrl)
     }
 
-    companion object CREATOR : Parcelable.Creator<Track> {
-        override fun createFromParcel(parcel: Parcel): Track? {
+    companion object CREATOR : Parcelable.Creator<TrackForPlayer> {
+        override fun createFromParcel(parcel: Parcel): TrackForPlayer? {
             return try {
-                Track(
+                TrackForPlayer(
                     parcel.readInt(),
                     parcel.readString()!!,
                     parcel.readString()!!,
@@ -52,7 +51,7 @@ data class Track(
             }
         }
 
-        override fun newArray(size: Int): Array<Track?> {
+        override fun newArray(size: Int): Array<TrackForPlayer?> {
             return arrayOfNulls(size)
         }
     }
@@ -61,17 +60,8 @@ data class Track(
         return 0
     }
 
-    fun mapTrackToTrackForPlayer() = TrackForPlayer(
-        trackId,
-        trackName,
-        artistName,
-        trackTime,
-        artworkUrl100,
-        collectionName,
-        releaseDate,
-        primaryGenreName,
-        country,
-        previewUrl
-    )
+    fun getCoverArtwork(): String {
+        return artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
+    }
 
 }

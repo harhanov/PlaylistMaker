@@ -1,28 +1,26 @@
 package com.practicum.playlistmaker.player.ui
 
 import android.os.*
-import android.util.Log
-
-import androidx.activity.ComponentActivity
-import androidx.lifecycle.ViewModelProvider
+import androidx.appcompat.app.AppCompatActivity
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
+import com.practicum.playlistmaker.player.domain.TrackForPlayer
 import com.practicum.playlistmaker.search.data.model.Track
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
-class PlayerActivity : ComponentActivity() {
+class PlayerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlayerBinding
-    private lateinit var viewModel: PlayerViewModel
+    private val viewModel: PlayerViewModel by viewModel {
+        parametersOf(parseIntent())
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val track = intent.getParcelableExtra<Track?>("track")
-        Log.d("PlayerActivity", "Received intent data: $track")
-        if (track != null) {
-            viewModel = ViewModelProvider(
-                this,
-                PlayerViewModel.getViewModelFactory(trackForPlayer = track)
-            )[PlayerViewModel::class.java]
-        }
+
+
+
         binding.playerBackButton.apply {
             setOnClickListener { finish() }
         }
@@ -44,5 +42,21 @@ class PlayerActivity : ComponentActivity() {
     override fun onDestroy() {
         super.onDestroy()
         viewModel.onDestroy()
+    }
+
+    private fun parseIntent(): TrackForPlayer {
+        if (!intent.hasExtra(TRACK_KEY)) {
+            throw RuntimeException("Track is absent")
+        }
+        return try {
+            val track = intent.getParcelableExtra<Track?>(TRACK_KEY) as Track
+            track.mapTrackToTrackForPlayer()
+        } catch (e: Exception) {
+            throw RuntimeException("Unknown param format in extra")
+        }
+    }
+
+    companion object {
+        private const val TRACK_KEY = "track"
     }
 }

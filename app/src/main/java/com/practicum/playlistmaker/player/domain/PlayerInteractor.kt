@@ -4,7 +4,7 @@ interface PlayerInteractor {
     fun start()
     fun pause()
     fun onDestroy()
-    fun setOnCompletionListener(onComplete: ()->Unit)
+    fun setOnCompletionListener(onComplete: () -> Unit)
     fun getCurrentTime(): Int
-    fun preparePlayer(prepare: () -> Unit)
+    fun preparePlayer(playerTrack: TrackForPlayer, prepare: () -> Unit)
 }

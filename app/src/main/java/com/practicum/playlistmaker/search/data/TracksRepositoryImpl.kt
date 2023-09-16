@@ -1,10 +1,9 @@
 package com.practicum.playlistmaker.search.data
 
-import com.practicum.playlistmaker.INTERNET_CONNECTION_ERROR
-import com.practicum.playlistmaker.NO_INTERNET_CONNECTION_CODE
-import com.practicum.playlistmaker.SERVER_ERROR
-import com.practicum.playlistmaker.SUCCESS_CODE
-import com.practicum.playlistmaker.search.data.local.LocalDataSourceImpl
+import com.practicum.playlistmaker.search.data.network.INTERNET_CONNECTION_ERROR
+import com.practicum.playlistmaker.search.data.network.NO_INTERNET_CONNECTION_CODE
+import com.practicum.playlistmaker.search.data.network.SERVER_ERROR
+import com.practicum.playlistmaker.search.data.network.SUCCESS_CODE
 import com.practicum.playlistmaker.search.data.model.mapToTrack
 import com.practicum.playlistmaker.search.data.network.NetworkClient
 import com.practicum.playlistmaker.search.data.network.TracksSearchResponse
@@ -15,7 +14,7 @@ import com.practicum.playlistmaker.utils.Resource
 
 class TracksRepositoryImpl(
     private val networkClient: NetworkClient,
-    private val localStorage: LocalDataSourceImpl
+    private val localStorage: LocalDataSource
 ) :
     TracksRepository {
     override fun searchTracks(query: String): Resource<List<Track>> {

@@ -1,10 +1,11 @@
 package com.practicum.playlistmaker.player.data
 
-import com.practicum.playlistmaker.player.PlayerRepository
+import com.practicum.playlistmaker.player.domain.PlayerRepository
+import com.practicum.playlistmaker.player.domain.TrackForPlayer
 
-class PlayerRepositoryImpl(private val playerClient: MediaPlayerControl): PlayerRepository {
-    override fun preparePlayer(prepare: () -> Unit) {
-        playerClient.preparePlayer(prepare)
+class PlayerRepositoryImpl(private val playerClient: PlayerControl) : PlayerRepository {
+    override fun preparePlayer(playerTrack: TrackForPlayer, prepare: () -> Unit) {
+        playerClient.preparePlayer(playerTrack, prepare)
     }
 
     override fun setOnCompletionListener(onComplete: () -> Unit) {

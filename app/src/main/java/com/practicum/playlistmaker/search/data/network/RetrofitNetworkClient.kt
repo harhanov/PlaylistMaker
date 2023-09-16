@@ -5,12 +5,8 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.practicum.playlistmaker.BAD_REQUEST_CODE
-import com.practicum.playlistmaker.ITUNES_BASE_URL
-import com.practicum.playlistmaker.NO_INTERNET_CONNECTION_CODE
 import com.practicum.playlistmaker.search.data.Response
 import com.practicum.playlistmaker.search.data.TracksSearchRequest
-import com.practicum.playlistmaker.search.data.iTunesAPIService
 
 
 import retrofit2.Retrofit
@@ -27,7 +23,7 @@ class RetrofitNetworkClient(private val context: Context) : NetworkClient {
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun doSearch(request: Any): Response {
-        if (!isConnected()){
+        if (!isConnected()) {
             return Response()
                 .apply { resultCode = NO_INTERNET_CONNECTION_CODE }
         }
@@ -35,7 +31,7 @@ class RetrofitNetworkClient(private val context: Context) : NetworkClient {
             val resp = iTunesService.search(request.text).execute()
             val body = resp.body() ?: Response()
             body.apply { resultCode = resp.code() }
-        }else{
+        } else {
             Response().apply { resultCode = BAD_REQUEST_CODE }
         }
     }

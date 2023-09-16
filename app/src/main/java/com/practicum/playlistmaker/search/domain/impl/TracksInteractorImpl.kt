@@ -6,13 +6,17 @@ import com.practicum.playlistmaker.search.domain.TracksRepository
 import com.practicum.playlistmaker.utils.Resource
 import java.util.concurrent.Executors
 
-class TracksInteractorImpl(private val repository: TracksRepository): TracksInteractor {
+class TracksInteractorImpl(private val repository: TracksRepository) : TracksInteractor {
     private val executor = Executors.newCachedThreadPool()
     override fun searchTracks(query: String, consumer: TracksInteractor.TracksConsumer) {
         executor.execute {
-            when (val resource = repository.searchTracks(query)){
-                is Resource.Success ->{consumer.consume(resource.data, null, resource.code)}
-                is Resource.Error -> {consumer.consume(null, resource.message, resource.code)}
+            when (val resource = repository.searchTracks(query)) {
+                is Resource.Success -> {
+                    consumer.consume(resource.data, null, resource.code)
+                }
+                is Resource.Error -> {
+                    consumer.consume(null, resource.message, resource.code)
+                }
             }
         }
     }
@@ -24,6 +28,7 @@ class TracksInteractorImpl(private val repository: TracksRepository): TracksInte
     override fun clearHistory() {
         repository.clearHistory()
     }
+
     override fun getHistory(): List<Track> {
         return repository.getHistory()
     }

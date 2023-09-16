@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.search.data.network
 
 const val ITUNES_BASE_URL = "https://itunes.apple.com"
 const val BAD_REQUEST_CODE = 400

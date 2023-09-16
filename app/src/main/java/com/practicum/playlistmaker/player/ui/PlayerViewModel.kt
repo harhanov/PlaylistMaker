@@ -5,17 +5,19 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import com.practicum.playlistmaker.creator.Creator
-import com.practicum.playlistmaker.search.data.model.Track
+import com.practicum.playlistmaker.player.domain.PlayerInteractor
+import com.practicum.playlistmaker.player.domain.TrackForPlayer
 import com.practicum.playlistmaker.utils.DateUtils.formatTrackTime
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class PlayerViewModel(private val trackForPlayer: Track) : ViewModel() {
+
+class PlayerViewModel(private val trackForPlayer: TrackForPlayer) : ViewModel(), KoinComponent {
 
     private val _screenState = MutableLiveData<PlayerScreenState>()
     val screenState: LiveData<PlayerScreenState> = _screenState
 
-    private val playerInteractor = Creator.providePlayerInteractor(trackForPlayer)
+    private val playerInteractor: PlayerInteractor by inject()
     private var playerState = PlayerState.DEFAULT
     private val handler: Handler = Handler(Looper.getMainLooper())
 
@@ -34,7 +36,7 @@ class PlayerViewModel(private val trackForPlayer: Track) : ViewModel() {
     }
 
     private fun preparePlayer() {
-        playerInteractor.preparePlayer {
+        playerInteractor.preparePlayer(trackForPlayer) {
             playerState = PlayerState.PREPARED
             _screenState.value = PlayerScreenState.Preparing()
         }
@@ -94,15 +96,6 @@ class PlayerViewModel(private val trackForPlayer: Track) : ViewModel() {
     companion object {
         private const val CURRENT_POSITION_REFRESH = 200L
         private val SEARCH_REQUEST_TOKEN = Any()
-        fun getViewModelFactory(trackForPlayer: Track): ViewModelProvider.Factory =
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return PlayerViewModel(
-                        trackForPlayer
-                    ) as T
-                }
-            }
     }
 }
 
