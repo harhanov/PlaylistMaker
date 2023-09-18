@@ -2,7 +2,7 @@ package com.practicum.playlistmaker.player.domain.impl
 
 import com.practicum.playlistmaker.player.domain.PlayerRepository
 import com.practicum.playlistmaker.player.domain.PlayerInteractor
-import com.practicum.playlistmaker.player.domain.TrackForPlayer
+import com.practicum.playlistmaker.player.domain.TrackModel
 
 
 class PlayerInteractorImpl(private val playerRepository: PlayerRepository) : PlayerInteractor {
@@ -30,7 +30,7 @@ class PlayerInteractorImpl(private val playerRepository: PlayerRepository) : Pla
         return playerRepository.getCurrentTime()
     }
 
-    override fun preparePlayer(playerTrack: TrackForPlayer, prepare: () -> Unit) {
+    override fun preparePlayer(playerTrack: TrackModel, prepare: () -> Unit) {
         playerRepository.preparePlayer(playerTrack, prepare)
     }
 

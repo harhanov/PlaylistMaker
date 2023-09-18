@@ -1,10 +1,10 @@
 package com.practicum.playlistmaker.player.data
 
 import com.practicum.playlistmaker.player.domain.PlayerRepository
-import com.practicum.playlistmaker.player.domain.TrackForPlayer
+import com.practicum.playlistmaker.player.domain.TrackModel
 
 class PlayerRepositoryImpl(private val playerClient: PlayerControl) : PlayerRepository {
-    override fun preparePlayer(playerTrack: TrackForPlayer, prepare: () -> Unit) {
+    override fun preparePlayer(playerTrack: TrackModel, prepare: () -> Unit) {
         playerClient.preparePlayer(playerTrack, prepare)
     }
 

@@ -3,7 +3,7 @@ package com.practicum.playlistmaker.player.ui
 import android.os.*
 import androidx.appcompat.app.AppCompatActivity
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
-import com.practicum.playlistmaker.player.domain.TrackForPlayer
+import com.practicum.playlistmaker.player.domain.TrackModel
 import com.practicum.playlistmaker.search.data.model.Track
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -44,7 +44,7 @@ class PlayerActivity : AppCompatActivity() {
         viewModel.onDestroy()
     }
 
-    private fun parseIntent(): TrackForPlayer {
+    private fun parseIntent(): TrackModel {
         if (!intent.hasExtra(TRACK_KEY)) {
             throw RuntimeException("Track is absent")
         }

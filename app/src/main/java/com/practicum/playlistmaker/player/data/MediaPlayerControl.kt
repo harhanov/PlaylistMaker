@@ -1,11 +1,11 @@
 package com.practicum.playlistmaker.player.data
 
 import android.media.MediaPlayer
-import com.practicum.playlistmaker.player.domain.TrackForPlayer
+import com.practicum.playlistmaker.player.domain.TrackModel
 
 class MediaPlayerControl(private val mediaPlayer: MediaPlayer) : PlayerControl {
 
-    override fun preparePlayer(track: TrackForPlayer, prepare: () -> Unit) {
+    override fun preparePlayer(track: TrackModel, prepare: () -> Unit) {
         mediaPlayer.setOnPreparedListener { prepare() }
         mediaPlayer.setDataSource(track.previewUrl)
         mediaPlayer.prepareAsync()

@@ -7,6 +7,7 @@ import com.practicum.playlistmaker.player.di.playerInteractorModule
 import com.practicum.playlistmaker.player.di.playerRepositoryModule
 import com.practicum.playlistmaker.player.di.playerViewModelModule
 import com.practicum.playlistmaker.search.di.*
+import com.practicum.playlistmaker.settings.data.SettingsLocalDataSource
 import com.practicum.playlistmaker.settings.data.impl.SettingsRepositoryImpl
 import com.practicum.playlistmaker.settings.data.impl.SettingsLocalDataSourceImpl
 import com.practicum.playlistmaker.settings.di.settingsDataModule
@@ -19,17 +20,21 @@ import org.koin.core.context.startKoin
 
 class App : Application() {
     lateinit var settingsRepository: SettingsRepository
+    lateinit var settingsLocalDataSource: SettingsLocalDataSource
 
     override fun onCreate() {
         super.onCreate()
-
+        settingsLocalDataSource = SettingsLocalDataSourceImpl(
+            getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+        )
         val settingsStorage =
-            SettingsLocalDataSourceImpl(getSharedPreferences("local_storage", MODE_PRIVATE))
+            SettingsLocalDataSourceImpl(getSharedPreferences(PREFS_NAME, MODE_PRIVATE))
         settingsRepository = SettingsRepositoryImpl(settingsStorage)
 
         switchTheme(
             settingsRepository.getThemeSettings().isNightModeEnabled
         )
+
         startKoin {
             androidContext(this@App)
             modules(
@@ -53,6 +58,7 @@ class App : Application() {
                 settingsViewModelModule,
             )
         }
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
     }
 
     private fun switchTheme(darkThemeEnabled: Boolean) {
@@ -62,6 +68,11 @@ class App : Application() {
             } else {
                 AppCompatDelegate.MODE_NIGHT_NO
             }
+
         )
+    }
+
+    companion object {
+        private const val PREFS_NAME = "local_storage"
     }
 }

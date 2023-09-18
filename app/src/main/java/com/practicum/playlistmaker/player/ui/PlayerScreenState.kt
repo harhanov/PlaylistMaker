@@ -5,12 +5,12 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
-import com.practicum.playlistmaker.player.domain.TrackForPlayer
+import com.practicum.playlistmaker.player.domain.TrackModel
 import com.practicum.playlistmaker.utils.DateUtils
 
 
 sealed class PlayerScreenState {
-    class BeginningState(val track: TrackForPlayer, private val currentPosition: String) :
+    class BeginningState(val track: TrackModel, private val currentPosition: String) :
         PlayerScreenState() {
         override fun render(binding: ActivityPlayerBinding) {
             binding.songTitle.text = track.trackName

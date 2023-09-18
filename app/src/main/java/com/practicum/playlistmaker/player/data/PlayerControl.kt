@@ -1,9 +1,9 @@
 package com.practicum.playlistmaker.player.data
 
-import com.practicum.playlistmaker.player.domain.TrackForPlayer
+import com.practicum.playlistmaker.player.domain.TrackModel
 
 interface PlayerControl {
-    fun preparePlayer(track: TrackForPlayer, prepare: () -> Unit)
+    fun preparePlayer(track: TrackModel, prepare: () -> Unit)
 
     fun setOnCompletionListener(onComplete: () -> Unit)
 

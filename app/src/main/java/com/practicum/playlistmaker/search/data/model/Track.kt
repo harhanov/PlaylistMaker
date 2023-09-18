@@ -3,7 +3,7 @@ package com.practicum.playlistmaker.search.data.model
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import com.practicum.playlistmaker.player.domain.TrackForPlayer
+import com.practicum.playlistmaker.player.domain.TrackModel
 
 data class Track(
     val trackId: Int,
@@ -61,7 +61,7 @@ data class Track(
         return 0
     }
 
-    fun mapTrackToTrackForPlayer() = TrackForPlayer(
+    fun mapTrackToTrackForPlayer() = TrackModel(
         trackId,
         trackName,
         artistName,

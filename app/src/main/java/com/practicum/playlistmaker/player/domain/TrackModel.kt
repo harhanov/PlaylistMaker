@@ -4,7 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
-data class TrackForPlayer(
+data class TrackModel(
     val trackId: Int,
     val trackName: String,
     val artistName: String,
@@ -30,10 +30,10 @@ data class TrackForPlayer(
         parcel.writeString(previewUrl)
     }
 
-    companion object CREATOR : Parcelable.Creator<TrackForPlayer> {
-        override fun createFromParcel(parcel: Parcel): TrackForPlayer? {
+    companion object CREATOR : Parcelable.Creator<TrackModel> {
+        override fun createFromParcel(parcel: Parcel): TrackModel? {
             return try {
-                TrackForPlayer(
+                TrackModel(
                     parcel.readInt(),
                     parcel.readString()!!,
                     parcel.readString()!!,
@@ -51,7 +51,7 @@ data class TrackForPlayer(
             }
         }
 
-        override fun newArray(size: Int): Array<TrackForPlayer?> {
+        override fun newArray(size: Int): Array<TrackModel?> {
             return arrayOfNulls(size)
         }
     }
