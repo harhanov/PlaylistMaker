@@ -91,7 +91,6 @@ class SearchViewModel : ViewModel(), KoinComponent {
     fun clearSearchHistory() {
         tracksInteractor.clearHistory()
         screenState.postValue(SearchScreenState.ShowHistory(null))
-        updateScreenState(SearchScreenState.Success(null))
     }
 
     fun showHistory() {
