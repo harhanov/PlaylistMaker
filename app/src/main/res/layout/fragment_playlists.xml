@@ -1,0 +1,42 @@
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/new_playlist_button"
+            style="@style/emergingButton"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="46dp"
+            android:text="@string/new_playlist" />
+
+        <LinearLayout
+            android:id="@+id/playlist_error_ph"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+
+            <ImageView
+                android:id="@+id/pl_error_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/bad_request" />
+
+            <TextView
+                android:id="@+id/pl_error_text"
+                style="@style/errorMessage"
+                android:gravity="center"
+                android:text="@string/no_playlists_created" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

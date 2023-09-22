@@ -2,6 +2,8 @@ package com.practicum.playlistmaker
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import com.practicum.playlistmaker.media_library.di.favTracksViewModelModule
+import com.practicum.playlistmaker.media_library.di.playlistsViewModel
 import com.practicum.playlistmaker.player.di.playerDataModule
 import com.practicum.playlistmaker.player.di.playerInteractorModule
 import com.practicum.playlistmaker.player.di.playerRepositoryModule
@@ -56,6 +58,10 @@ class App : Application() {
                 settingsInteractorsModule,
                 settingsRepositoryModule,
                 settingsViewModelModule,
+            )
+            modules(
+                favTracksViewModelModule,
+                playlistsViewModel,
             )
         }
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)

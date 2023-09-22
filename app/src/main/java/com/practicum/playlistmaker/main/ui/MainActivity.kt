@@ -5,11 +5,10 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import androidx.appcompat.app.AppCompatDelegate
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.settings.ui.SettingsActivity
 import com.practicum.playlistmaker.search.ui.SearchActivity
-import com.practicum.playlistmaker.MediaLibrary
+import com.practicum.playlistmaker.media_library.ui.MediaLibraryActivity
 
 
 class MainActivity : AppCompatActivity() {
@@ -22,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         val imageSettings = findViewById<Button>(R.id.button_settings)
 
         imageMedia.setOnClickListener {
-            navigateTo(MediaLibrary::class.java)
+            navigateTo(MediaLibraryActivity::class.java)
         }
 
         imageSettings.setOnClickListener {

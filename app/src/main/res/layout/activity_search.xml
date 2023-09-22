@@ -19,11 +19,11 @@
             <ImageView
                 android:id="@+id/searchBackButton"
                 style="@style/backArrow"
-                android:layout_alignTop="@id/searchText"
-                android:layout_alignBottom="@id/searchText" />
+                android:layout_alignTop="@id/mediaLibraryHeader"
+                android:layout_alignBottom="@id/mediaLibraryHeader" />
 
             <TextView
-                android:id="@+id/searchText"
+                android:id="@+id/mediaLibraryHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/searchBackButton"
@@ -91,12 +91,13 @@
             android:textAppearance="@style/title2"
             android:visibility="gone" />
 
-        <ProgressBar android:id="@+id/progressBar"
+        <ProgressBar
+            android:id="@+id/progressBar"
             android:layout_width="@dimen/progress_bar_side"
             android:layout_height="@dimen/progress_bar_side"
             android:layout_gravity="center"
             android:indeterminateTint="@color/dorblu"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvSongsList"
