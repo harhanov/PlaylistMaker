@@ -1,3 +1,5 @@
+@file:Suppress("UNREACHABLE_CODE")
+
 package com.practicum.playlistmaker.search.data.model
 
 fun TrackDTO.mapToTrack(): Track {

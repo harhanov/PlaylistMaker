@@ -2,31 +2,33 @@ package com.practicum.playlistmaker.search.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
 import com.practicum.playlistmaker.player.ui.PlayerActivity
 import com.practicum.playlistmaker.search.data.model.Track
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
-    private lateinit var viewModel: SearchViewModel
-    private lateinit var historyListAdapter: TrackListAdapter
-    private lateinit var trackListAdapter: TrackListAdapter
+    private val viewModel: SearchViewModel by viewModel()
+    private val historyListAdapter: TrackListAdapter by inject()
+    private val trackListAdapter: TrackListAdapter by inject()
     private var searchTextValue = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val viewModelFactory = SearchViewModel.getViewModelFactory(application)
-        viewModel = ViewModelProvider(this, viewModelFactory)[SearchViewModel::class.java]
         binding.searchBackButton.apply {
             setOnClickListener { finish() }
         }
@@ -85,6 +87,7 @@ class SearchActivity : AppCompatActivity() {
             setOnClickListener {
                 binding.searchEditText.text.clear()
                 binding.searchEditText.onEditorAction(EditorInfo.IME_ACTION_DONE)
+                trackListAdapter.setTracks(emptyList())
                 viewModel.showHistory()
             }
         }
@@ -103,31 +106,33 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun initRecycler() {
-        historyListAdapter = TrackListAdapter {
+
+        trackListAdapter.onClickListener = { track ->
             if (viewModel.isClickAllowed.value == true) {
-                viewModel.addToHistory(it)
+                viewModel.addToHistory(track)
                 viewModel.setClickAllowed(false)
-                navigateTo(PlayerActivity::class.java, it)
+                navigateTo(PlayerActivity::class.java, track)
             }
         }
+
+        historyListAdapter.onClickListener = { track ->
+            if (viewModel.isClickAllowed.value == true) {
+                viewModel.addToHistory(track)
+                viewModel.setClickAllowed(false)
+                navigateTo(PlayerActivity::class.java, track)
+            }
+        }
+
         binding.rvHistoryList.apply {
             adapter = historyListAdapter
             layoutManager = LinearLayoutManager(this.context)
         }
 
-        trackListAdapter = TrackListAdapter {
-            if (viewModel.isClickAllowed.value == true) {
-                viewModel.addToHistory(it)
-                viewModel.setClickAllowed(false)
-                navigateTo(PlayerActivity::class.java, it)
-            }
-        }
         binding.rvSongsList.apply {
             adapter = trackListAdapter
             layoutManager = LinearLayoutManager(this.context)
         }
     }
-
 
     private fun initEditText(savedInstanceState: Bundle?) {
         binding.searchEditText

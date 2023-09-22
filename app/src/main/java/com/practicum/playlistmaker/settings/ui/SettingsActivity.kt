@@ -2,15 +2,14 @@ package com.practicum.playlistmaker.settings.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
-import com.practicum.playlistmaker.creator.Creator
 import com.practicum.playlistmaker.databinding.ActivitySettingsBinding
 import com.practicum.playlistmaker.settings.domain.ThemeSettings
-import com.practicum.playlistmaker.sharing.data.ExternalNavigator
+import org.koin.core.component.KoinComponent
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : AppCompatActivity(), KoinComponent {
 
-    private lateinit var viewModel: SettingsViewModel
+    private val viewModel: SettingsViewModel by viewModel()
     private lateinit var binding: ActivitySettingsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,16 +22,6 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         val themeSwitcher = binding.themeSwitcher
-
-        val sharingInteractor = Creator.createSharingInteractor(ExternalNavigator(this))
-        val settingsInteractor = Creator.createSettingsInteractor(this)
-
-        viewModel = ViewModelProvider(
-            this,
-            SettingsViewModel.getViewModelFactory(settingsInteractor, sharingInteractor)
-        )[SettingsViewModel::class.java]
-
-        viewModel.setSettingsInteractor(settingsInteractor)
 
         viewModel.getThemeSettingsLiveData().observe(this) { themeSettings ->
             themeSwitcher.isChecked = themeSettings.isNightModeEnabled

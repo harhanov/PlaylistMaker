@@ -1,18 +1,18 @@
 package com.practicum.playlistmaker.search.ui
 
-import android.app.Application
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
 import androidx.lifecycle.*
-import com.practicum.playlistmaker.SUCCESS_CODE
-import com.practicum.playlistmaker.creator.Creator
+import com.practicum.playlistmaker.search.data.network.SUCCESS_CODE
 import com.practicum.playlistmaker.search.data.model.Track
 import com.practicum.playlistmaker.search.domain.TracksInteractor
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 
-class SearchViewModel(application: Application) : AndroidViewModel(application) {
-    private val tracksInteractor = Creator.provideTracksInteractor(getApplication())
+class SearchViewModel : ViewModel(), KoinComponent {
+    private val tracksInteractor: TracksInteractor by inject()
     private val screenState = MutableLiveData<SearchScreenState>()
     val screenStateLD: LiveData<SearchScreenState> = screenState
     private val _isClickAllowed = MutableLiveData<Boolean>()
@@ -50,7 +50,7 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
                 }
             }
         }
-        val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
+        val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY_MILLIS
         handler.postAtTime(
             searchRunnable,
             SEARCH_REQUEST_TOKEN,
@@ -65,7 +65,7 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
     fun setClickAllowed(allowed: Boolean) {
         _isClickAllowed.value = allowed
         if (allowed) {
-            handler.postDelayed({ _isClickAllowed.value = true }, CLICK_DEBOUNCE_DELAY)
+            handler.postDelayed({ _isClickAllowed.value = true }, CLICK_DEBOUNCE_DELAY_MILLIS)
         }
     }
 
@@ -112,17 +112,9 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     companion object {
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
+        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
         private val SEARCH_REQUEST_TOKEN = Any()
-
-        fun getViewModelFactory(application: Application): ViewModelProvider.Factory =
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return SearchViewModel(application) as T
-                }
-            }
     }
 }
 

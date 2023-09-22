@@ -25,6 +25,9 @@ class SettingsLocalDataSourceImpl(private val sharedPreferences: SharedPreferenc
     private fun updateThemeLiveData() {
         val isNightModeEnabled = sharedPreferences.getBoolean(KEY_DARK_THEME, false)
         themeSettingsLiveData.value = ThemeSettings(isNightModeEnabled)
+        val nightMode =
+            if (isNightModeEnabled) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+        AppCompatDelegate.setDefaultNightMode(nightMode)
     }
 
     override fun updateThemeSetting(settings: ThemeSettings) {
