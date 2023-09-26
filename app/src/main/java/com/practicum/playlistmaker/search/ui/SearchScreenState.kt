@@ -2,13 +2,13 @@ package com.practicum.playlistmaker.search.ui
 
 import androidx.core.view.isVisible
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.databinding.ActivitySearchBinding
+import com.practicum.playlistmaker.databinding.FragmentSearchBinding
 import com.practicum.playlistmaker.search.data.model.Track
 
 sealed class SearchScreenState(val message: String? = null, val tracks: List<Track>? = null) {
 
     class Loading : SearchScreenState() {
-        override fun render(binding: ActivitySearchBinding) {
+        override fun render(binding: FragmentSearchBinding) {
             binding.progressBar.isVisible = true
             binding.variousErrors.isVisible = false
             binding.searchHistoryList.isVisible = false
@@ -17,7 +17,7 @@ sealed class SearchScreenState(val message: String? = null, val tracks: List<Tra
     }
 
     class NothingFound : SearchScreenState() {
-        override fun render(binding: ActivitySearchBinding) {
+        override fun render(binding: FragmentSearchBinding) {
             binding.progressBar.isVisible = false
             binding.variousErrors.isVisible = true
             binding.searchHistoryList.isVisible = false
@@ -28,7 +28,7 @@ sealed class SearchScreenState(val message: String? = null, val tracks: List<Tra
     }
 
     class Error(message: String?) : SearchScreenState(message = message) {
-        override fun render(binding: ActivitySearchBinding) {
+        override fun render(binding: FragmentSearchBinding) {
             binding.progressBar.isVisible = false
             binding.variousErrors.isVisible = true
             binding.searchHistoryList.isVisible = false
@@ -39,7 +39,7 @@ sealed class SearchScreenState(val message: String? = null, val tracks: List<Tra
     }
 
     class Success(tracks: List<Track>?) : SearchScreenState(tracks = tracks) {
-        override fun render(binding: ActivitySearchBinding) {
+        override fun render(binding: FragmentSearchBinding) {
             binding.progressBar.isVisible = false
             binding.variousErrors.isVisible = false
             binding.searchRefreshButton.isVisible = false
@@ -48,7 +48,7 @@ sealed class SearchScreenState(val message: String? = null, val tracks: List<Tra
     }
 
     class ShowHistory(tracks: List<Track>?) : SearchScreenState(tracks = tracks) {
-        override fun render(binding: ActivitySearchBinding) {
+        override fun render(binding: FragmentSearchBinding) {
             binding.clearHistoryButton.isVisible = !tracks.isNullOrEmpty()
             binding.searchHistoryList.isVisible = !tracks.isNullOrEmpty()
             binding.progressBar.isVisible = false
@@ -57,5 +57,5 @@ sealed class SearchScreenState(val message: String? = null, val tracks: List<Tra
         }
     }
 
-    abstract fun render(binding: ActivitySearchBinding)
+    abstract fun render(binding: FragmentSearchBinding)
 }

@@ -2,14 +2,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorOnPrimary">
+    android:background="?attr/colorOnPrimary"
+    tools:context="com.practicum.playlistmaker.media_library.ui.MediaLibraryFragment">
 
     <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Верхняя панель с заголовком и кнопкой назад -->
+        <!-- Верхняя панель с заголовком -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/layout_height"
@@ -17,23 +18,15 @@
             android:layout_marginTop="@dimen/mini_margin"
             android:layout_marginEnd="@dimen/big_margin">
 
-            <ImageView
-                android:id="@+id/mlSearchBackButton"
-                style="@style/backArrow"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="@dimen/standard_indent"
-                android:layout_marginEnd="@dimen/standard_indent" />
-
             <TextView
                 android:id="@+id/mediaLibraryHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toEndOf="@id/mlSearchBackButton"
                 android:paddingStart="@dimen/standard_indent"
-                android:paddingEnd="109dp"
                 android:text="@string/media_library"
-                android:textAppearance="@style/title2" />
+                android:textAppearance="@style/title2"
+                tools:ignore="RtlSymmetry" />
 
         </RelativeLayout>
 
