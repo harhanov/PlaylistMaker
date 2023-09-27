@@ -36,6 +36,7 @@ class SearchFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
+        viewModel.setSearchTextNotChanged(true)
         viewModel.onDestroy()
     }
 
@@ -48,7 +49,6 @@ class SearchFragment : Fragment() {
                 ) &&
                 viewModel.isClickAllowed.value == true
             ) {
-
                 when (screenStateLD) {
                     is SearchScreenState.Success -> {
                         screenStateLD.tracks?.let { trackListAdapter.setTracks(it) }
@@ -72,6 +72,7 @@ class SearchFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         viewModel.setClickAllowed(true)
+        viewModel.setSearchTextNotChanged(false)
         if (binding.searchEditText.text.toString().isNotEmpty()) {
             viewModel.trackSearch(binding.searchEditText.text.toString())
         } else {
@@ -179,6 +180,7 @@ class SearchFragment : Fragment() {
         if (actionId == EditorInfo.IME_ACTION_DONE) {
             if (binding.searchEditText.text.toString().isNotEmpty()) {
                 viewModel.trackSearch(binding.searchEditText.text.toString())
+                //viewModel.setSearchTextChanged(false)
             }
         }
         return false

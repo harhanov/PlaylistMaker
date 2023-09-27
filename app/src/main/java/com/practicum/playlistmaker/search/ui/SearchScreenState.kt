@@ -13,6 +13,7 @@ sealed class SearchScreenState(val message: String? = null, val tracks: List<Tra
             binding.variousErrors.isVisible = false
             binding.searchHistoryList.isVisible = false
             binding.searchRefreshButton.isVisible = false
+            binding.rvSongsList.isVisible = false
         }
     }
 
@@ -44,6 +45,7 @@ sealed class SearchScreenState(val message: String? = null, val tracks: List<Tra
             binding.variousErrors.isVisible = false
             binding.searchRefreshButton.isVisible = false
             binding.searchHistoryList.isVisible = false
+            binding.rvSongsList.isVisible = true
         }
     }
 
