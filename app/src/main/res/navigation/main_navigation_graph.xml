@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navigation_graph"
+    app:startDestination="@id/mediaLibraryFragment">
+
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.practicum.playlistmaker.search.ui.SearchFragment"
+        android:label="SearchFragment"
+        tools:layout="@layout/fragment_search">
+        <action
+            android:id="@+id/action_searchFragment_to_playerActivity"
+            app:destination="@id/playerActivity" />
+    </fragment>
+
+    <activity
+        android:id="@+id/playerActivity"
+        android:name="com.practicum.playlistmaker.player.ui.PlayerActivity"
+        android:label="PlayerActivity"
+        tools:layout="@layout/activity_player" />
+
+    <fragment
+        android:id="@+id/mediaLibraryFragment"
+        android:name="com.practicum.playlistmaker.media_library.ui.MediaLibraryFragment"
+        android:label="MediaLibraryFragment"
+        tools:layout="@layout/fragment_media_library" />
+
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.practicum.playlistmaker.settings.ui.SettingsFragment"
+        android:label="SettingsFragment"
+        tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/favouritesTracksFragment"
+        android:name="com.practicum.playlistmaker.media_library.ui.FavouritesTracksFragment"
+        android:label="fragment_favourites_tracks"
+        tools:layout="@layout/fragment_favourites_tracks" />
+    <fragment
+        android:id="@+id/playlistsFragment"
+        android:name="com.practicum.playlistmaker.media_library.ui.PlaylistsFragment"
+        android:label="fragment_playlists"
+        tools:layout="@layout/fragment_playlists" />
+    <activity
+        android:id="@+id/rootActivity"
+        android:name="com.practicum.playlistmaker.RootActivity"
+        android:label="activity_root"
+        tools:layout="@layout/activity_root" />
+</navigation>

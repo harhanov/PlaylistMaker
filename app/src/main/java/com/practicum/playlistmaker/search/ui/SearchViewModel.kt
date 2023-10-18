@@ -3,6 +3,7 @@ package com.practicum.playlistmaker.search.ui
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
+import android.util.Log
 import androidx.lifecycle.*
 import com.practicum.playlistmaker.search.data.network.SUCCESS_CODE
 import com.practicum.playlistmaker.search.data.model.Track
@@ -17,45 +18,62 @@ class SearchViewModel : ViewModel(), KoinComponent {
     val screenStateLD: LiveData<SearchScreenState> = screenState
     private val _isClickAllowed = MutableLiveData<Boolean>()
     val isClickAllowed: LiveData<Boolean> = _isClickAllowed
+    private val _isSearchTextChanged = MutableLiveData<Boolean>()
+    private val isSearchTextChanged: LiveData<Boolean> = _isSearchTextChanged
     private val handler = Handler(Looper.getMainLooper())
     private var lastQuery: String? = null
 
 
     fun trackSearch(searchText: String? = lastQuery) {
-        val searchRunnable = Runnable {
-            handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-            searchText.let { query ->
-                updateScreenState(SearchScreenState.Loading())
-                if (query != null) {
-                    tracksInteractor.searchTracks(query, object : TracksInteractor.TracksConsumer {
-                        override fun consume(
-                            foundTracks: List<Track>?,
-                            errorMessage: String?,
-                            code: Int
-                        ) {
-                            when (code) {
-                                SUCCESS_CODE -> {
-                                    if (!foundTracks.isNullOrEmpty()) {
-                                        updateScreenState(SearchScreenState.Success(foundTracks))
-                                    } else {
-                                        updateScreenState(SearchScreenState.NothingFound())
+        val searchTextChanged = isSearchTextChanged.value ?: false
+        if (!searchTextChanged) {
+            val searchRunnable = Runnable {
+                handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+                searchText.let { query ->
+                    updateScreenState(SearchScreenState.Loading())
+                    if (query != null) {
+                        tracksInteractor.searchTracks(
+                            query,
+                            object : TracksInteractor.TracksConsumer {
+                                override fun consume(
+                                    foundTracks: List<Track>?,
+                                    errorMessage: String?,
+                                    code: Int
+                                ) {
+                                    when (code) {
+                                        SUCCESS_CODE -> {
+                                            if (!foundTracks.isNullOrEmpty()) {
+                                                updateScreenState(
+                                                    SearchScreenState.Success(
+                                                        foundTracks
+                                                    )
+                                                )
+                                            } else {
+                                                updateScreenState(SearchScreenState.NothingFound())
+                                            }
+                                        }
+
+                                        else -> {
+                                            updateScreenState(SearchScreenState.Error(errorMessage))
+                                        }
                                     }
                                 }
-                                else -> {
-                                    updateScreenState(SearchScreenState.Error(errorMessage))
-                                }
-                            }
-                        }
-                    })
+                            })
+                    }
                 }
             }
+
+            val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY_MILLIS
+            handler.postAtTime(
+                searchRunnable,
+                SEARCH_REQUEST_TOKEN,
+                postTime
+            )
         }
-        val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY_MILLIS
-        handler.postAtTime(
-            searchRunnable,
-            SEARCH_REQUEST_TOKEN,
-            postTime
-        )
+    }
+
+    fun setSearchTextNotChanged(isTextChanged: Boolean) {
+        _isSearchTextChanged.postValue(isTextChanged)
     }
 
     private fun updateScreenState(newState: SearchScreenState) {
