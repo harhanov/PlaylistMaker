@@ -10,34 +10,38 @@ import com.practicum.playlistmaker.search.data.network.TracksSearchResponse
 import com.practicum.playlistmaker.search.data.model.Track
 import com.practicum.playlistmaker.search.domain.TracksRepository
 import com.practicum.playlistmaker.utils.Resource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 
 class TracksRepositoryImpl(
     private val networkClient: NetworkClient,
-    private val localStorage: LocalDataSource
+    private val localStorage: LocalDataSource,
 ) :
     TracksRepository {
-    override fun searchTracks(query: String): Resource<List<Track>> {
+    override fun searchTracks(query: String): Flow<Resource<List<Track>>> = flow {
         val response = networkClient.doSearch(
-            TracksSearchRequest(
-                query
-            )
+            TracksSearchRequest(query)
         )
 
-        return when (response.resultCode) {
+        when (response.resultCode) {
             NO_INTERNET_CONNECTION_CODE -> {
-                Resource.Error(
+                emit(Resource.Error(
                     message = INTERNET_CONNECTION_ERROR,
                     code = NO_INTERNET_CONNECTION_CODE
-                )
+                ))
             }
+
             SUCCESS_CODE -> {
-                Resource.Success((response as TracksSearchResponse).results.map {
-                    it.mapToTrack()
-                }, code = SUCCESS_CODE)
+                with(response as TracksSearchResponse) {
+                    val data = results.map {
+                        it.mapToTrack()
+                    }
+                    emit(Resource.Success(data, code = SUCCESS_CODE))
+                }
             }
             else -> {
-                Resource.Error(message = SERVER_ERROR, code = response.resultCode)
+                emit(Resource.Error(message = SERVER_ERROR, code = response.resultCode))
             }
         }
     }

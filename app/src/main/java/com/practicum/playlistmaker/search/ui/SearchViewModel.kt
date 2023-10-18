@@ -1,13 +1,13 @@
 package com.practicum.playlistmaker.search.ui
 
-import android.os.Handler
-import android.os.Looper
-import android.os.SystemClock
-import android.util.Log
 import androidx.lifecycle.*
 import com.practicum.playlistmaker.search.data.network.SUCCESS_CODE
 import com.practicum.playlistmaker.search.data.model.Track
 import com.practicum.playlistmaker.search.domain.TracksInteractor
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -20,56 +20,52 @@ class SearchViewModel : ViewModel(), KoinComponent {
     val isClickAllowed: LiveData<Boolean> = _isClickAllowed
     private val _isSearchTextChanged = MutableLiveData<Boolean>()
     private val isSearchTextChanged: LiveData<Boolean> = _isSearchTextChanged
-    private val handler = Handler(Looper.getMainLooper())
     private var lastQuery: String? = null
-
+    private var searchJob: Job? = null
 
     fun trackSearch(searchText: String? = lastQuery) {
         val searchTextChanged = isSearchTextChanged.value ?: false
         if (!searchTextChanged) {
-            val searchRunnable = Runnable {
-                handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+            searchJob?.cancel()
+            searchJob = viewModelScope.launch {
+                delay(SEARCH_DEBOUNCE_DELAY_MILLIS)
                 searchText.let { query ->
                     updateScreenState(SearchScreenState.Loading())
                     if (query != null) {
-                        tracksInteractor.searchTracks(
-                            query,
-                            object : TracksInteractor.TracksConsumer {
-                                override fun consume(
-                                    foundTracks: List<Track>?,
-                                    errorMessage: String?,
-                                    code: Int
-                                ) {
-                                    when (code) {
-                                        SUCCESS_CODE -> {
-                                            if (!foundTracks.isNullOrEmpty()) {
-                                                updateScreenState(
-                                                    SearchScreenState.Success(
-                                                        foundTracks
-                                                    )
-                                                )
-                                            } else {
-                                                updateScreenState(SearchScreenState.NothingFound())
-                                            }
-                                        }
-
-                                        else -> {
-                                            updateScreenState(SearchScreenState.Error(errorMessage))
-                                        }
-                                    }
-                                }
-                            })
+                        tracksInteractor
+                            .searchTracks(query)
+                            .collect { triple ->
+                                processResult(triple.first, triple.second, triple.third)
+                            }
                     }
                 }
             }
-
-            val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY_MILLIS
-            handler.postAtTime(
-                searchRunnable,
-                SEARCH_REQUEST_TOKEN,
-                postTime
-            )
         }
+    }
+
+    private fun processResult(foundTracks: List<Track>?, errorMessage: String?, code: Int) {
+        val tracks = mutableListOf<Track>()
+        if (!foundTracks.isNullOrEmpty()) {
+            tracks.addAll(foundTracks)
+        }
+        when (code) {
+            SUCCESS_CODE -> {
+                if (!foundTracks.isNullOrEmpty()) {
+                    updateScreenState(
+                        SearchScreenState.Success(
+                            tracks = foundTracks
+                        )
+                    )
+                } else {
+                    updateScreenState(SearchScreenState.NothingFound())
+                }
+            }
+
+            else -> {
+                updateScreenState(SearchScreenState.Error(errorMessage))
+            }
+        }
+
     }
 
     fun setSearchTextNotChanged(isTextChanged: Boolean) {
@@ -83,16 +79,15 @@ class SearchViewModel : ViewModel(), KoinComponent {
     fun setClickAllowed(allowed: Boolean) {
         _isClickAllowed.value = allowed
         if (allowed) {
-            handler.postDelayed({ _isClickAllowed.value = true }, CLICK_DEBOUNCE_DELAY_MILLIS)
+            viewModelScope.launch(Dispatchers.Main) {
+                delay(CLICK_DEBOUNCE_DELAY_MILLIS)
+                _isClickAllowed.value = true
+            }
         }
     }
 
-    fun onDestroy() {
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-    }
 
     fun searchDebounce(newQuery: String? = lastQuery) {
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
         if (!newQuery.isNullOrEmpty()) {
             if ((lastQuery == newQuery)) {
                 return
@@ -132,7 +127,6 @@ class SearchViewModel : ViewModel(), KoinComponent {
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
         private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
-        private val SEARCH_REQUEST_TOKEN = Any()
     }
 }
 

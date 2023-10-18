@@ -7,6 +7,8 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.practicum.playlistmaker.search.data.Response
 import com.practicum.playlistmaker.search.data.TracksSearchRequest
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 
 import retrofit2.Retrofit
@@ -22,15 +24,20 @@ class RetrofitNetworkClient(private val context: Context) : NetworkClient {
     private val iTunesService = retrofit.create(iTunesAPIService::class.java)
 
     @RequiresApi(Build.VERSION_CODES.M)
-    override fun doSearch(request: Any): Response {
+    override suspend fun doSearch(request: Any): Response {
         if (!isConnected()) {
             return Response()
                 .apply { resultCode = NO_INTERNET_CONNECTION_CODE }
         }
         return if (request is TracksSearchRequest) {
-            val resp = iTunesService.search(request.text).execute()
-            val body = resp.body() ?: Response()
-            body.apply { resultCode = resp.code() }
+            return withContext(Dispatchers.IO) {
+                try {
+                    val resp = iTunesService.search(request.text)
+                    resp.apply { resultCode = SUCCESS_CODE }
+                } catch (e: Throwable) {
+                    Response().apply { resultCode = SERVER_ERROR_CODE }
+                }
+            }
         } else {
             Response().apply { resultCode = BAD_REQUEST_CODE }
         }

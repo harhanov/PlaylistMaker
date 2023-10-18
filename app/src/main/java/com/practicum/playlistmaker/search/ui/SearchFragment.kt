@@ -28,7 +28,7 @@ class SearchFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
@@ -37,7 +37,6 @@ class SearchFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         viewModel.setSearchTextNotChanged(true)
-        viewModel.onDestroy()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -58,7 +57,7 @@ class SearchFragment : Fragment() {
                         screenStateLD.tracks?.let { historyListAdapter.setTracks(it) }
                     }
 
-                    else -> {}
+                    else -> Unit
                 }
                 screenStateLD.render(binding)
             }
@@ -83,7 +82,6 @@ class SearchFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        viewModel.onDestroy()
     }
 
     private fun handleButtons() {
@@ -180,7 +178,6 @@ class SearchFragment : Fragment() {
         if (actionId == EditorInfo.IME_ACTION_DONE) {
             if (binding.searchEditText.text.toString().isNotEmpty()) {
                 viewModel.trackSearch(binding.searchEditText.text.toString())
-                //viewModel.setSearchTextChanged(false)
             }
         }
         return false
