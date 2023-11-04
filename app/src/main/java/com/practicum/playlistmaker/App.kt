@@ -1,10 +1,14 @@
 package com.practicum.playlistmaker
 
 import android.app.Application
-import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
+import com.practicum.playlistmaker.media_library.di.favouritesDatabaseModule
+import com.practicum.playlistmaker.media_library.di.favouritesInteractorModule
+import com.practicum.playlistmaker.media_library.di.favouritesRepositoryModule
 import com.practicum.playlistmaker.media_library.di.favouritesTracksViewModelModule
+import com.practicum.playlistmaker.media_library.di.favouritesUIModule
 import com.practicum.playlistmaker.media_library.di.playlistsViewModel
+import com.practicum.playlistmaker.media_library.di.trackDBConverterModule
 import com.practicum.playlistmaker.player.di.playerDataModule
 import com.practicum.playlistmaker.player.di.playerInteractorModule
 import com.practicum.playlistmaker.player.di.playerRepositoryModule
@@ -73,11 +77,17 @@ class App : Application() {
                 favouritesTracksViewModelModule,
                 playlistsViewModel,
             )
+            modules(
+                favouritesDatabaseModule,
+                favouritesRepositoryModule,
+                favouritesInteractorModule,
+                trackDBConverterModule,
+                favouritesUIModule,
+            )
         }
     }
 
     private fun switchTheme(darkThemeEnabled: Boolean) {
-        Log.d("CUCURECU", "Current darkThemeEnabled value: $darkThemeEnabled")
         val nightMode = if (darkThemeEnabled) {
             AppCompatDelegate.MODE_NIGHT_YES
         } else {
