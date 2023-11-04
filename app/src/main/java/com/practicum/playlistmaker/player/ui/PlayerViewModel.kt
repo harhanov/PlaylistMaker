@@ -1,13 +1,15 @@
 package com.practicum.playlistmaker.player.ui
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.player.domain.PlayerInteractor
 import com.practicum.playlistmaker.player.domain.TrackModel
 import com.practicum.playlistmaker.utils.DateUtils.formatTrackTime
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -19,14 +21,8 @@ class PlayerViewModel(private val trackModel: TrackModel) : ViewModel(), KoinCom
 
     private val playerInteractor: PlayerInteractor by inject()
     private var playerState = PlayerState.DEFAULT
-    private val handler: Handler = Handler(Looper.getMainLooper())
 
-    private val timerUpdater = object : Runnable {
-        override fun run() {
-            updateTimer()
-            handler.postDelayed(this, CURRENT_POSITION_REFRESH)
-        }
-    }
+    private var timerJob: Job? = null
 
     init {
         val initialPosition = formatTrackTime(playerInteractor.getCurrentTime().toString())
@@ -45,7 +41,6 @@ class PlayerViewModel(private val trackModel: TrackModel) : ViewModel(), KoinCom
     private fun setOnCompletionListener() {
         playerInteractor.setOnCompletionListener {
             playerState = PlayerState.PREPARED
-            handler.removeCallbacks(timerUpdater)
             _screenState.value = PlayerScreenState.OnCompletePlaying()
         }
     }
@@ -53,14 +48,13 @@ class PlayerViewModel(private val trackModel: TrackModel) : ViewModel(), KoinCom
     private fun start() {
         playerInteractor.start()
         playerState = PlayerState.PLAYING
-        handler.postDelayed(timerUpdater, CURRENT_POSITION_REFRESH)
-        _screenState.value = PlayerScreenState.PlayButtonHandling(playerState)
+        startTimer()
     }
 
     fun pause() {
         playerInteractor.pause()
         playerState = PlayerState.PAUSED
-        handler.removeCallbacks(timerUpdater)
+        timerJob?.cancel()
         _screenState.value = PlayerScreenState.PlayButtonHandling(playerState)
     }
 
@@ -71,7 +65,6 @@ class PlayerViewModel(private val trackModel: TrackModel) : ViewModel(), KoinCom
     }
 
     fun onDestroy() {
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
         playerInteractor.onDestroy()
     }
 
@@ -80,9 +73,11 @@ class PlayerViewModel(private val trackModel: TrackModel) : ViewModel(), KoinCom
             PlayerState.PLAYING -> {
                 pause()
             }
+
             PlayerState.PREPARED, PlayerState.PAUSED -> {
                 start()
             }
+
             PlayerState.DEFAULT -> {
 
             }
@@ -93,9 +88,19 @@ class PlayerViewModel(private val trackModel: TrackModel) : ViewModel(), KoinCom
         _screenState.postValue(newState)
     }
 
+    private fun startTimer() {
+        timerJob = viewModelScope.launch {
+            while (playerState == PlayerState.PLAYING) {
+                updateTimer()
+                delay(CURRENT_POSITION_REFRESH)
+            }
+        }
+
+        _screenState.value = PlayerScreenState.PlayButtonHandling(playerState)
+    }
+
     companion object {
-        private const val CURRENT_POSITION_REFRESH = 200L
-        private val SEARCH_REQUEST_TOKEN = Any()
+        private const val CURRENT_POSITION_REFRESH = 300L
     }
 }
 

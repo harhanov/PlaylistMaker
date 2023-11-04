@@ -43,7 +43,7 @@ class App : Application() {
             null
         }
 
-        if (darkThemeEnabled != null) {
+        darkThemeEnabled?.let {
             switchTheme(darkThemeEnabled)
         }
 
