@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.practicum.playlistmaker.media_library.domain.db.FavouritesInteractor
 import com.practicum.playlistmaker.player.domain.PlayerInteractor
 import com.practicum.playlistmaker.player.domain.TrackModel
 import com.practicum.playlistmaker.utils.DateUtils.formatTrackTime
@@ -14,14 +15,17 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 
-class PlayerViewModel(private val trackModel: TrackModel) : ViewModel(), KoinComponent {
+class PlayerViewModel(
+    private val trackModel: TrackModel,
+    private val favouritesInteractor: FavouritesInteractor,
+) : ViewModel(), KoinComponent {
 
+    private var isFavourite = trackModel.isFavourite
     private val _screenState = MutableLiveData<PlayerScreenState>()
     val screenState: LiveData<PlayerScreenState> = _screenState
 
     private val playerInteractor: PlayerInteractor by inject()
     private var playerState = PlayerState.DEFAULT
-
     private var timerJob: Job? = null
 
     init {
@@ -33,8 +37,9 @@ class PlayerViewModel(private val trackModel: TrackModel) : ViewModel(), KoinCom
 
     private fun preparePlayer() {
         playerInteractor.preparePlayer(trackModel) {
+            updateFavoriteButtonState(trackModel.isFavourite)
             playerState = PlayerState.PREPARED
-            _screenState.value = PlayerScreenState.Preparing()
+            _screenState.value = PlayerScreenState.Preparing(trackModel)
         }
     }
 
@@ -97,6 +102,19 @@ class PlayerViewModel(private val trackModel: TrackModel) : ViewModel(), KoinCom
         }
 
         _screenState.value = PlayerScreenState.PlayButtonHandling(playerState)
+    }
+
+    suspend fun onFavoriteClicked() {
+        updateFavoriteButtonState(!isFavourite)
+        if (isFavourite) {
+            favouritesInteractor.removeFavourite(trackModel)
+        } else {
+            favouritesInteractor.addFavourite(trackModel)
+        }
+    }
+
+    private fun updateFavoriteButtonState(isFavourite: Boolean) {
+        _screenState.value = PlayerScreenState.FavouritesButtonHandling(isFavourite)
     }
 
     companion object {

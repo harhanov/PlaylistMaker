@@ -107,10 +107,12 @@ class SearchViewModel : ViewModel(), KoinComponent {
     }
 
     fun showHistory() {
-        if (!tracksInteractor.getHistory().isNullOrEmpty()) {
-            screenState.value = SearchScreenState.ShowHistory(tracksInteractor.getHistory())
-        } else {
-            screenState.value = SearchScreenState.Success(null)
+        viewModelScope.launch {
+            if (!tracksInteractor.getHistory().isNullOrEmpty()) {
+                screenState.value = SearchScreenState.ShowHistory(tracksInteractor.getHistory())
+            } else {
+                screenState.value = SearchScreenState.Success(null)
+            }
         }
     }
 

@@ -25,7 +25,7 @@ class TracksInteractorImpl(private val repository: TracksRepository) : TracksInt
         repository.clearHistory()
     }
 
-    override fun getHistory(): List<Track> {
+    override suspend fun getHistory(): List<Track> {
         return repository.getHistory()
     }
 }

@@ -2,9 +2,11 @@ package com.practicum.playlistmaker.player.ui
 
 import android.os.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
 import com.practicum.playlistmaker.player.domain.TrackModel
 import com.practicum.playlistmaker.search.data.model.Track
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -19,14 +21,19 @@ class PlayerActivity : AppCompatActivity() {
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-
         binding.playerBackButton.apply {
             setOnClickListener { finish() }
         }
         binding.playPauseButton.apply {
             setOnClickListener {
                 viewModel.playbackControl()
+            }
+        }
+        binding.favoriteButton.apply {
+            setOnClickListener{
+                viewModel.viewModelScope.launch {
+                    viewModel.onFavoriteClicked()
+                }
             }
         }
         viewModel.screenState.observe(this) {

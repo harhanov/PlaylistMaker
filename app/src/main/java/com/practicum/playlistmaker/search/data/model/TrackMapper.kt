@@ -1,8 +1,6 @@
-@file:Suppress("UNREACHABLE_CODE")
-
 package com.practicum.playlistmaker.search.data.model
 
-fun TrackDTO.mapToTrack(): Track {
+fun TrackDTO.mapToTrack(isFavourite: Boolean, orderAdded: Long): Track {
     return Track(
         trackId = trackId,
         trackName = trackName,
@@ -13,6 +11,8 @@ fun TrackDTO.mapToTrack(): Track {
         releaseDate = releaseDate,
         primaryGenreName = primaryGenreName,
         country = country,
-        previewUrl = previewUrl
+        previewUrl = previewUrl,
+        isFavourite = isFavourite,
+        orderAdded = orderAdded,
     )
 }

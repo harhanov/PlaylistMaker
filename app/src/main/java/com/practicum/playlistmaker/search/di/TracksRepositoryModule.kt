@@ -7,8 +7,7 @@ import org.koin.dsl.module
 val tracksRepositoryModule = module {
     single<TracksRepository> {
         TracksRepositoryImpl(
-            networkClient = get(),
-            localStorage = get()
+            get(), get(), get()
         )
     }
 }

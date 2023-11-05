@@ -10,17 +10,26 @@ import com.practicum.playlistmaker.utils.DateUtils
 
 
 sealed class PlayerScreenState {
-    class BeginningState(val track: TrackModel, private val currentPosition: String) :
+    class BeginningState(
+        private val track: TrackModel,
+        private val currentPosition: String,
+    ) :
         PlayerScreenState() {
         override fun render(binding: ActivityPlayerBinding) {
             binding.songTitle.text = track.trackName
             binding.artistName.text = track.artistName
-            binding.tvDurationValue.text = DateUtils.formatTrackTime(track.trackTime)
+            binding.tvDurationValue.text = track.trackTime?.let { DateUtils.formatTrackTime(it) }
             binding.tvAlbumValue.text = track.collectionName
             binding.tvReleaseYearValue.text =
                 track.releaseDate?.let { DateUtils.extractReleaseYear(it) }
             binding.tvGenreValue.text = track.primaryGenreName
             binding.tvCountryValue.text = track.country
+
+            if (track.isFavourite) {
+                binding.favoriteButton.setBackgroundResource(R.drawable.ic_favorite_selected)
+            } else {
+                binding.favoriteButton.setBackgroundResource(R.drawable.ic_favorite)
+            }
 
             Glide
                 .with(binding.cover)
@@ -33,6 +42,7 @@ sealed class PlayerScreenState {
                 .into(binding.cover)
 
             binding.playbackProgress.text = currentPosition
+
         }
     }
 
@@ -42,6 +52,7 @@ sealed class PlayerScreenState {
                 PlayerState.PLAYING -> {
                     binding.playPauseButton.setBackgroundResource(R.drawable.pause_button)
                 }
+
                 else -> {
                     binding.playPauseButton.setBackgroundResource(R.drawable.ic_play_arrow)
                 }
@@ -49,10 +60,27 @@ sealed class PlayerScreenState {
         }
     }
 
-    class Preparing : PlayerScreenState() {
+    class FavouritesButtonHandling(val isFavourite: Boolean) : PlayerScreenState() {
+        override fun render(binding: ActivityPlayerBinding) {
+            if (isFavourite) {
+                binding.favoriteButton.setBackgroundResource(R.drawable.ic_favorite_selected)
+            } else {
+                binding.favoriteButton.setBackgroundResource(R.drawable.ic_favorite)
+            }
+        }
+    }
+
+
+    class Preparing(private val trackModel: TrackModel) : PlayerScreenState() {
         override fun render(binding: ActivityPlayerBinding) {
             binding.playPauseButton.isEnabled = true
             binding.playPauseButton.setBackgroundResource(R.drawable.ic_play_arrow)
+            val isFavourite = trackModel.isFavourite
+            if (isFavourite) {
+                binding.favoriteButton.setBackgroundResource(R.drawable.ic_favorite_selected)
+            } else {
+                binding.favoriteButton.setBackgroundResource(R.drawable.ic_favorite)
+            }
         }
     }
 
