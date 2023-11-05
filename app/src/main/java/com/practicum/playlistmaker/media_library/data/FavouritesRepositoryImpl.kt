@@ -15,15 +15,14 @@ class FavouritesRepositoryImpl(
 ) : FavouritesRepository {
     override suspend fun addTrackToFavourites(track: TrackModel) {
         val currentTime = System.currentTimeMillis()
-        track.orderAdded = currentTime
-        track.isFavourite = true
-        val trackEntity = trackDBConverter.map(track)
+        val updatedTrack = track.copy(orderAdded = currentTime, isFavourite = true)
+        val trackEntity = trackDBConverter.map(updatedTrack)
         favouritesDatabase.trackDao().insertTrack(trackEntity)
     }
 
     override suspend fun removeTrackFromFavourites(track: TrackModel) {
-        track.isFavourite = false
-        val trackEntity = trackDBConverter.map(track)
+        val updatedTrack = track.copy(isFavourite = false)
+        val trackEntity = trackDBConverter.map(updatedTrack)
         favouritesDatabase.trackDao().deleteTrack(trackEntity)
     }
 

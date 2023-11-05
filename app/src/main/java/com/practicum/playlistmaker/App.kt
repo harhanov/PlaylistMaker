@@ -3,12 +3,9 @@ package com.practicum.playlistmaker
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import com.practicum.playlistmaker.media_library.di.favouritesDatabaseModule
-import com.practicum.playlistmaker.media_library.di.favouritesInteractorModule
-import com.practicum.playlistmaker.media_library.di.favouritesRepositoryModule
-import com.practicum.playlistmaker.media_library.di.favouritesTracksViewModelModule
+import com.practicum.playlistmaker.media_library.di.favouritesDomainModule
 import com.practicum.playlistmaker.media_library.di.favouritesUIModule
-import com.practicum.playlistmaker.media_library.di.playlistsViewModel
-import com.practicum.playlistmaker.media_library.di.trackDBConverterModule
+import com.practicum.playlistmaker.media_library.di.playlistsUIModule
 import com.practicum.playlistmaker.player.di.playerDataModule
 import com.practicum.playlistmaker.player.di.playerInteractorModule
 import com.practicum.playlistmaker.player.di.playerRepositoryModule
@@ -74,14 +71,11 @@ class App : Application() {
                 settingsViewModelModule,
             )
             modules(
-                favouritesTracksViewModelModule,
-                playlistsViewModel,
+                playlistsUIModule,
             )
             modules(
                 favouritesDatabaseModule,
-                favouritesRepositoryModule,
-                favouritesInteractorModule,
-                trackDBConverterModule,
+                favouritesDomainModule,
                 favouritesUIModule,
             )
         }
