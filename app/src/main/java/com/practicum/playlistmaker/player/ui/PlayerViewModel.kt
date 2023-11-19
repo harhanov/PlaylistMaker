@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.practicum.playlistmaker.media_library.domain.db.FavouritesInteractor
+import com.practicum.playlistmaker.media_library.favourites.domain.FavouritesInteractor
 import com.practicum.playlistmaker.player.domain.PlayerInteractor
 import com.practicum.playlistmaker.player.domain.TrackModel
 import com.practicum.playlistmaker.utils.DateUtils.formatTrackTime

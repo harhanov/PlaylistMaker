@@ -18,7 +18,7 @@
     <dimen name="circle_margin">5dp</dimen>
     <dimen name="list_item_padding">8dp</dimen>
     <dimen name="side_icons">24dp</dimen>
-    <dimen name="search_margin">24dp</dimen>
+    <dimen name="middle_margin">24dp</dimen>
     <dimen name="artist_text_size">11sp</dimen>
     <dimen name="titlesMaxLengthSize">40</dimen>
     <dimen name="button_side_boarder">14dp</dimen>
@@ -26,10 +26,10 @@
     <dimen name="margin_of_information_lines">17dp</dimen>
     <dimen name="progress_bar_side">44dp</dimen>
     <dimen name="mini_guide_line_margin">16dp</dimen>
-    <dimen name="guide_line_margin">24dp</dimen>
     <dimen name="standard_indent">12dp</dimen>
     <dimen name="mini_margin">4dp</dimen>
     <dimen name="big_margin">52dp</dimen>
     <dimen name="layout_height">56dp</dimen>
     <dimen name="tab_layout_height">48dp</dimen>
+    <dimen name="playlist_cover_side">160dp</dimen>
 </resources>

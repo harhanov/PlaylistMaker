@@ -36,7 +36,7 @@ class TracksRepositoryImpl(
 
             SUCCESS_CODE -> {
                 with(response as TracksSearchResponse) {
-                    val favouritesIDs = favouritesDatabase.trackDao().getFavoriteTrackIds()
+                    val favouritesIDs = favouritesDatabase.getTrackDao().getFavoriteTrackIds()
                     val data = results.map() {trackResponse ->
                         val isFavourite = favouritesIDs.contains(trackResponse.trackId)
                         val orderAdded = 0L
@@ -61,7 +61,7 @@ class TracksRepositoryImpl(
 
     override suspend fun getHistory(): List<Track> {
         val historyTracks = localStorage.getSearchHistory()
-        val favouritesIDs = favouritesDatabase.trackDao().getFavoriteTrackIds()
+        val favouritesIDs = favouritesDatabase.getTrackDao().getFavoriteTrackIds()
 
         historyTracks.forEach { track ->
             track.isFavourite = favouritesIDs.contains(track.trackId)

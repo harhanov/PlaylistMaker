@@ -1,44 +1,53 @@
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.practicum.playlistmaker.media_library.ui.PlaylistsFragment">
+    tools:context="com.practicum.playlistmaker.media_library.playlists.ui.PlaylistsFragment">
+
+    <Button
+        android:id="@+id/new_playlist_button"
+        style="@style/emergingButton"
+        android:layout_marginTop="24dp"
+        android:text="@string/new_playlist"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
+        android:id="@+id/playlist_error_ph"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_marginTop="46dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/new_playlist_button">
 
-        <Button
-            android:id="@+id/new_playlist_button"
-            style="@style/emergingButton"
-            android:layout_marginTop="14dp"
-            android:layout_marginBottom="46dp"
-            android:text="@string/new_playlist" />
-
-        <LinearLayout
-            android:id="@+id/playlist_error_ph"
+        <ImageView
+            android:id="@+id/playlist_error_image"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:src="@drawable/bad_request" />
+
+        <TextView
+            android:id="@+id/playlist_error_text"
+            style="@style/errorMessage"
             android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="visible">
-
-
-            <ImageView
-                android:id="@+id/pl_error_image"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/bad_request" />
-
-            <TextView
-                android:id="@+id/pl_error_text"
-                style="@style/errorMessage"
-                android:gravity="center"
-                android:text="@string/no_playlists_created" />
-
-        </LinearLayout>
+            android:text="@string/no_playlists_created" />
 
     </LinearLayout>
-</androidx.core.widget.NestedScrollView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/playlistsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_marginTop="16dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constraintTop_toBottomOf="@id/new_playlist_button"
+        app:spanCount="2"
+        tools:itemCount="4"
+        tools:listitem="@layout/playlist_item" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+

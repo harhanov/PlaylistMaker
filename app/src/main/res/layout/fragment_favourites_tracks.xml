@@ -1,52 +1,47 @@
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.practicum.playlistmaker.media_library.ui.FavouritesTracksFragment">
+    android:fillViewport="true"
+    tools:context="com.practicum.playlistmaker.media_library.favourites.ui.FavouritesTracksFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvFavSongsList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="20dp"
+        android:orientation="vertical"
+        android:visibility="visible"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:ignore="MissingConstraints"
+        tools:itemCount="5"
+        tools:listitem="@layout/list_item" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvFavSongsList"
+    <LinearLayout
+        android:id="@+id/fav_error_ph"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/fav_error_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="20dp"
-            android:orientation="vertical"
-            android:visibility="gone"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:ignore="MissingConstraints"
-            tools:itemCount="5"
-            tools:listitem="@layout/list_item" />
+            android:layout_gravity="center"
+            android:layout_marginTop="106dp"
+            android:src="@drawable/bad_request"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
-            android:id="@+id/fav_error_ph"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:visibility="visible">
+        <TextView
+            android:id="@+id/fav_error_text"
+            style="@style/errorMessage"
+            android:layout_margin="20dp"
+            android:gravity="center"
+            android:text="@string/empty_library" />
 
-            <ImageView
-                android:id="@+id/fav_error_image"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="106dp"
-                android:src="@drawable/bad_request"
-                app:layout_constraintTop_toTopOf="parent" />
+    </LinearLayout>
 
-            <TextView
-                android:id="@+id/fav_error_text"
-                style="@style/errorMessage"
-                android:layout_margin="20dp"
-                android:gravity="center"
-                android:text="@string/empty_library" />
-
-        </LinearLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,14 +1,16 @@
-package com.practicum.playlistmaker.media_library.ui
+package com.practicum.playlistmaker.media_library.favourites.ui
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.practicum.playlistmaker.media_library.domain.db.FavouritesInteractor
+import com.practicum.playlistmaker.media_library.favourites.domain.FavouritesInteractor
 import com.practicum.playlistmaker.player.domain.TrackModel
 import kotlinx.coroutines.launch
 
-class FavouritesTracksViewModel(private val favouritesInteractor: FavouritesInteractor) :
+class FavouritesTracksViewModel(
+    private val favouritesInteractor: FavouritesInteractor
+) :
     ViewModel() {
 
     private val _favouriteTracksState = MutableLiveData<FavouriteTracksState>()
@@ -29,7 +31,6 @@ class FavouritesTracksViewModel(private val favouritesInteractor: FavouritesInte
             }
         }
     }
-
 }
 
 sealed class FavouriteTracksState {

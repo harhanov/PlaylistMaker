@@ -7,6 +7,6 @@ import com.practicum.playlistmaker.media_library.data.db.entity.TrackEntity
 
 @Database(version = 1, entities = [TrackEntity::class])
 abstract class FavouritesDatabase : RoomDatabase() {
-    abstract fun trackDao(): TrackDao
+    abstract fun getTrackDao(): TrackDao
 
 }

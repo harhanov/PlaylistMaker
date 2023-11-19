@@ -1,9 +1,9 @@
-package com.practicum.playlistmaker.media_library.data
+package com.practicum.playlistmaker.media_library.favourites.data
 
 import com.practicum.playlistmaker.media_library.data.converters.TrackDBConverter
 import com.practicum.playlistmaker.media_library.data.db.FavouritesDatabase
 import com.practicum.playlistmaker.media_library.data.db.entity.TrackEntity
-import com.practicum.playlistmaker.media_library.domain.FavouritesRepository
+import com.practicum.playlistmaker.media_library.favourites.domain.FavouritesRepository
 import com.practicum.playlistmaker.player.domain.TrackModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -17,17 +17,17 @@ class FavouritesRepositoryImpl(
         val currentTime = System.currentTimeMillis()
         val updatedTrack = track.copy(orderAdded = currentTime, isFavourite = true)
         val trackEntity = trackDBConverter.map(updatedTrack)
-        favouritesDatabase.trackDao().insertTrack(trackEntity)
+        favouritesDatabase.getTrackDao().insertTrack(trackEntity)
     }
 
     override suspend fun removeTrackFromFavourites(track: TrackModel) {
         val updatedTrack = track.copy(isFavourite = false)
         val trackEntity = trackDBConverter.map(updatedTrack)
-        favouritesDatabase.trackDao().deleteTrack(trackEntity)
+        favouritesDatabase.getTrackDao().deleteTrack(trackEntity)
     }
 
     override fun getFavouriteTracks(): Flow<List<TrackModel>> = flow{
-        val tracks = favouritesDatabase.trackDao().getFavoriteTracks()
+        val tracks = favouritesDatabase.getTrackDao().getFavoriteTracks()
         emit(convertFromTrackEntity(tracks))
     }
 
