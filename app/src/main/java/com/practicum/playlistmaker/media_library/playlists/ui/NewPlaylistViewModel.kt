@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker.media_library.playlists.ui
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,7 +18,7 @@ class NewPlaylistViewModel(
     val toastMessage: LiveData<String> get() = _toastMessage
 
     fun updateCreateButtonState(text: String) {
-        _screenState.value = NewPlaylistScreenState.CreateButtonActiveState(!text.isNullOrEmpty())
+        _screenState.value = NewPlaylistScreenState.CreateButtonActiveState(text.isNotEmpty())
     }
 
     fun onNewPlaylistCreateClick(playlistModel: PlaylistModel) {
@@ -27,7 +26,6 @@ class NewPlaylistViewModel(
             val isPlaylistAdded = interactor.addPlaylist(playlistModel)
             if (isPlaylistAdded) {
                 _toastMessage.postValue("Плейлист с названием ${playlistModel.playlistName.toString()} создан")
-                Log.d("MyTag", "Playlist Image Path: ${playlistModel.playlistName}")
             } else {
                 _toastMessage.postValue("Ошибка при создании плейлиста")
             }

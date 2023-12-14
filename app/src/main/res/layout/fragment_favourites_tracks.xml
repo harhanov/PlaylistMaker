@@ -23,6 +23,7 @@
         android:id="@+id/fav_error_ph"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="106dp"
         android:orientation="vertical"
         android:visibility="visible">
 
@@ -31,7 +32,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="106dp"
             android:src="@drawable/bad_request"
             app:layout_constraintTop_toTopOf="parent" />
 

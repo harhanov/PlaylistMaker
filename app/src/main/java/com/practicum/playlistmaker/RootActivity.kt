@@ -1,7 +1,7 @@
 package com.practicum.playlistmaker
 
 import android.os.Bundle
-import android.view.View
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -11,6 +11,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 class RootActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d("Navigation", "RootActivity onCreate")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_root)
 

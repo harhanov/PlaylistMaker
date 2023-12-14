@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker.media_library.di
 
+import com.practicum.playlistmaker.media_library.data.db.PlaylistsDatabase
 import com.practicum.playlistmaker.media_library.favourites.data.FavouritesRepositoryImpl
 import com.practicum.playlistmaker.media_library.favourites.domain.FavouritesRepository
 import com.practicum.playlistmaker.media_library.favourites.domain.FavouritesInteractor
@@ -19,6 +20,8 @@ val mediaLibraryDomainModule = module {
     single<PlaylistInteractor> {
         PlaylistInteractorImpl(get())
     }
-    single<PlaylistRepository> { PlaylistRepositoryImpl(get(), get()) }
+    single<PlaylistRepository> { PlaylistRepositoryImpl(get(), get(), get()) }
+
+    single { get<PlaylistsDatabase>().getPlaylistDao() }
 
 }

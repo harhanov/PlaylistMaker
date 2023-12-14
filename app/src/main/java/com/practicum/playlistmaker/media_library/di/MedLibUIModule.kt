@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker.media_library.di
 
+import android.content.Context
 import com.practicum.playlistmaker.media_library.playlists.ui.NewPlaylistViewModel
 import com.practicum.playlistmaker.media_library.favourites.ui.FavouritesTracksViewModel
 import com.practicum.playlistmaker.media_library.playlists.ui.PlaylistAdapter
@@ -28,5 +29,8 @@ val mediaLibraryUIModule = module {
 
     factory { TrackModel }
 
-    single { PlaylistAdapter(get()) }
+    factory { (context: Context, layoutResourceId: Int, radiusInPixels: Int) ->
+        PlaylistAdapter(context, layoutResourceId, radiusInPixels)
+    }
+
 }

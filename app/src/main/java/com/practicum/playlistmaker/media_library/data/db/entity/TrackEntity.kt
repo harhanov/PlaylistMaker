@@ -22,7 +22,7 @@ data class TrackEntity(
     val country: String?,
     val previewUrl: String?,
     var isFavourite: Boolean = false,
-    val orderAdded:Long,
+    val orderAdded: Long,
 ) : Parcelable {
     @RequiresApi(Build.VERSION_CODES.Q)
     constructor(parcel: Parcel) : this(
@@ -38,9 +38,7 @@ data class TrackEntity(
         parcel.readString(),
         parcel.readBoolean(),
         parcel.readLong(),
-    ) {
-    }
-
+    )
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(trackId)
         parcel.writeString(trackName)

@@ -1,16 +1,16 @@
 package com.practicum.playlistmaker.media_library.favourites.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.databinding.FragmentFavouritesTracksBinding
-import com.practicum.playlistmaker.player.ui.PlayerActivity
-import com.practicum.playlistmaker.search.data.model.Track
+import com.practicum.playlistmaker.media_library.ui.MediaLibraryFragmentDirections
 import com.practicum.playlistmaker.search.ui.TrackListAdapter
+import com.practicum.playlistmaker.utils.BottomNavigationUtils
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -32,18 +32,15 @@ class FavouritesTracksFragment : Fragment() {
 
     private fun initRecycler() {
         trackListAdapter.onClickListener = { track ->
-            navigateTo(PlayerActivity::class.java, track)
+            findNavController().navigate(
+            MediaLibraryFragmentDirections.actionMediaLibraryFragmentToPlayerFragment(track))
+            BottomNavigationUtils.hideBottomNavigationView(activity)
         }
 
         binding.rvFavSongsList.apply {
             adapter = trackListAdapter
             layoutManager = LinearLayoutManager(this.context)
         }
-    }
-    private fun navigateTo(clazz: Class<PlayerActivity>, track: Track) {
-        val intent = Intent(requireContext(), clazz)
-        intent.putExtra(TRACK, track)
-        startActivity(intent)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -61,6 +58,7 @@ class FavouritesTracksFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         favouritesTracksViewModel.updateFavouritesTrack()
+        BottomNavigationUtils.showBottomNavigationView(activity)
     }
 
     private fun setupFavouriteTracksObserver() {
@@ -83,9 +81,5 @@ class FavouritesTracksFragment : Fragment() {
                 }
             }
         }
-    }
-
-    companion object {
-        const val TRACK = "track"
     }
 }

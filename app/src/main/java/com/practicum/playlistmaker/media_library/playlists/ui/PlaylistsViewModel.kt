@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker.media_library.playlists.ui
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -23,10 +22,8 @@ class PlaylistsViewModel(private val playlistInteractor: PlaylistInteractor) : V
         viewModelScope.launch {
             playlistInteractor.getPlaylists().collect { playlists ->
                 if (playlists.isNotEmpty()) {
-                    Log.d("PlaylistsView", "Playlists loaded: ${playlists.size} playlists")
                     _playlistsState.value = PlaylistsState.PlaylistsLoaded(playlists)
                 } else {
-                    Log.d("PlaylistsView", "No playlists loaded")
                     _playlistsState.value = PlaylistsState.Empty
                 }
             }

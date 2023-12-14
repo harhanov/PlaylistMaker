@@ -4,8 +4,6 @@ import android.os.Parcel
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 @Entity(tableName = "playlists_table")
 data class PlaylistEntity(

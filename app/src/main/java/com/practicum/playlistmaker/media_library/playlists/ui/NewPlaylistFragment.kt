@@ -1,12 +1,10 @@
 package com.practicum.playlistmaker.media_library.playlists.ui
 
-import android.R.attr.name
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -42,6 +40,7 @@ class NewPlaylistFragment : Fragment() {
     private lateinit var confirmDialog: MaterialAlertDialogBuilder
 
     private var selectedImageUri: Uri? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -55,7 +54,6 @@ class NewPlaylistFragment : Fragment() {
             typedValue,
             true
         )
-
 
         val colorOnSecondary = typedValue.data
         val dorbluColor = ContextCompat.getColor(requireContext(), dorblu)
@@ -90,15 +88,12 @@ class NewPlaylistFragment : Fragment() {
             .setNegativeButton((R.string.cancel)) { _, _ ->
             }
             .setPositiveButton((R.string.complete)) { _, _ ->
-                findNavController().navigateUp()
+                findNavController().popBackStack()
             }
         clickListenersSetUp()
-
-
         return view
 
     }
-
     private fun clickListenersSetUp() {
         binding.playlistBackButton.setOnClickListener {
             if (checkingForUnsavedData()) {
@@ -116,8 +111,8 @@ class NewPlaylistFragment : Fragment() {
                 viewModel.onNewPlaylistCreateClick(
                     PlaylistModel(
                         playlistName = binding.playlistNameEdit.text.toString(),
-                        playlistDescription = binding.playlistDescriptionEdit.toString(),
-                        playlistImagePath = selectedImageUri?.path,
+                        playlistDescription = binding.playlistDescriptionEdit.text.toString(),
+                        playlistImagePath = selectedImageUri?.toString(),
                     )
                 )
             }
@@ -141,6 +136,11 @@ class NewPlaylistFragment : Fragment() {
                 }
             }
         }
+
+//        val navController = Navigation.findNavController(requireActivity(), R.id.fragment_container)
+//        val navController = Navigation.findNavController(view)
+//        val navController = (activity as? AppCompatActivity)?.supportFragmentManager?.findFragmentById(R.id.new_playlist_fragment_container)?.findNavController()
+
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
         viewModel.screenState.observe(viewLifecycleOwner) { state ->
             state?.render(binding)

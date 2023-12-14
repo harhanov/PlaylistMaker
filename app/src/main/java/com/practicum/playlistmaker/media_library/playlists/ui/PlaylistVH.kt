@@ -1,12 +1,12 @@
 package com.practicum.playlistmaker.media_library.playlists.ui
 
 import android.content.res.Resources
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.media_library.playlists.domain.PlaylistModel
@@ -17,18 +17,19 @@ class PlaylistVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val playlistName: TextView = itemView.findViewById(R.id.playlist_name)
     private val numberOfTracks: TextView = itemView.findViewById(R.id.number_of_tracks)
 
-    fun bind(item: PlaylistModel, resources: Resources) {
-        val radiusInPixels = itemView.resources.getDimensionPixelSize(R.dimen.big_cover_corner_radius)
-        Glide.with(itemView)
-            .load(item.playlistImagePath)
-            .centerCrop()
-            .placeholder(R.drawable.crocozebra)
-            .transform(RoundedCorners(radiusInPixels))
-            .into(playlistCoverImage)
-
+    fun bind(item: PlaylistModel, resources: Resources, radiusInPixels: Int) {
+        val radius = resources.getDimension(radiusInPixels).toInt()
         playlistName.text = item.playlistName
         numberOfTracks.text = formatNumberOfTracks(item.numberOfTracks, resources)
 
+        Glide.with(itemView)
+            .load(item.playlistImagePath)
+            .placeholder(R.drawable.crocozebra)
+            .transform(
+                CenterCrop(),
+                RoundedCorners(radius)
+            )
+            .into(playlistCoverImage)
     }
 
     private fun formatNumberOfTracks(numberOfTracks: Int, resources: Resources): String {
