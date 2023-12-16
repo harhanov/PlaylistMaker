@@ -4,7 +4,6 @@ import com.practicum.playlistmaker.media_library.data.converters.PlaylistDBConve
 import com.practicum.playlistmaker.media_library.data.db.PlaylistsDatabase
 import com.practicum.playlistmaker.media_library.data.db.dao.PlaylistDao
 import com.practicum.playlistmaker.media_library.data.db.entity.PlaylistEntity
-import com.practicum.playlistmaker.media_library.data.db.entity.PlaylistTrackCrossRef
 import com.practicum.playlistmaker.media_library.playlists.domain.PlaylistModel
 import com.practicum.playlistmaker.media_library.playlists.domain.PlaylistRepository
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +17,7 @@ class PlaylistRepositoryImpl(
     private val playlistDao: PlaylistDao,
 ) : PlaylistRepository {
 
-    override suspend fun getAllNotEmptyPlaylists(): Flow<List<PlaylistModel>> {
+    override suspend fun getAllPlaylists(): Flow<List<PlaylistModel>> {
         return playlistsDatabase.getPlaylistDao().getPlaylists().map { it ->
             it.map { playlistConverter.mapToModel(it) }
         }
@@ -29,13 +28,14 @@ class PlaylistRepositoryImpl(
     }
 
     override suspend fun addTrackToPlaylist(playlistId: Long, trackId: Int) {
-        playlistsDatabase.getPlaylistDao().addTrackToPlaylist(PlaylistTrackCrossRef(playlistId, trackId))
+        playlistsDatabase.getPlaylistDao().addTrackAndUpdateCount(playlistId, trackId)
     }
 
     override suspend fun isTrackInPlaylist(playlistId: Long, trackId: Int): Boolean {
-        return withContext(Dispatchers.IO) {
+        val isInPlaylist = withContext(Dispatchers.IO) {
             playlistDao.getTrackCountInPlaylist(playlistId, trackId) > 0
         }
+        return isInPlaylist
     }
 
     private fun convertFromPlaylistEntity(playlists: List<PlaylistEntity>): List<PlaylistModel> {

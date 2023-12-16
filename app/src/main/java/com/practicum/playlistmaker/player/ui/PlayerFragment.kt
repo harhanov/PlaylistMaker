@@ -45,7 +45,6 @@ class PlayerFragment : Fragment(R.layout.fragment_player) {
     ): View {
 
         _binding = FragmentPlayerBinding.inflate(inflater, container, false)
-        Log.d("PlayerFragment", "onCreateView")
 
         binding.playerBackButton.apply {
             setOnClickListener { findNavController().navigateUp() }
@@ -125,10 +124,24 @@ class PlayerFragment : Fragment(R.layout.fragment_player) {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.playerEvent.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                is PlayerScreenState.PlayerEvent.NavigateBackToPlayerFragment -> {
+                    findNavController().popBackStack()
+                }
+            }
+        }
+
+    }
+
     private fun setupPlaylistsObserver() {
         viewModel.playlistsState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is PlaylistsState.PlaylistsLoaded -> {
+                    Log.d("setupPlaylistsObserver", "$state")
                     val playlists = state.playlists
                     playlistAdapter.setPlaylistsList(playlists)
                     playlistAdapter.notifyItemInserted(playlists.size - 1)
@@ -156,10 +169,10 @@ class PlayerFragment : Fragment(R.layout.fragment_player) {
     //
     override fun onResume() {
         super.onResume()
-        Log.d("PlayerFragment", "onResume")
+        Log.d("setupPlaylistsObserver", "Запустили onResume")
+        setupPlaylistsObserver()
         viewModel.preparePlayer()
         viewModel.screenState.value?.render(binding)
-        setupPlaylistsObserver()
     }
 
     @Suppress("DEPRECATION")

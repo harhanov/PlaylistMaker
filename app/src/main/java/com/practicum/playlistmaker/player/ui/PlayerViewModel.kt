@@ -38,6 +38,13 @@ class PlayerViewModel(
     private val _playlistsState = MutableLiveData<PlaylistsState>()
     val playlistsState: LiveData<PlaylistsState> = _playlistsState
 
+    private val _playerEvent = MutableLiveData<PlayerEvent>()
+    val playerEvent: LiveData<PlayerEvent> get() = _playerEvent
+
+    private fun navigateBackToPlayerFragment() {
+        _playerEvent.postValue(PlayerEvent.NavigateBackToPlayerFragment)
+    }
+
     init {
         val initialPosition = formatTrackTime(playerInteractor.getCurrentTime().toString())
         _screenState.value = BeginningState(trackModel, initialPosition)
@@ -152,10 +159,10 @@ class PlayerViewModel(
             val trackId = trackModel.trackId
             val isTrackInPlaylist =
                 playlist.playlistId?.let { playlistInteractor.isTrackInPlaylist(it, trackId) }
-
             if (!isTrackInPlaylist!!) {
                 playlist.playlistId.let { playlistInteractor.addTrackToPlaylist(it, trackId) }
                 _screenState.value = playlist.playlistName?.let { TrackAddedToPlaylist(it) }
+                navigateBackToPlayerFragment()
             } else {
                 _screenState.value = playlist.playlistName?.let { TrackAlreadyInPlaylist(it) }
             }

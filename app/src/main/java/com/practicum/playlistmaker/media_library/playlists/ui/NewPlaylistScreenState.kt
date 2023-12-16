@@ -8,7 +8,6 @@ sealed class NewPlaylistScreenState() {
         override fun render(binding: FragmentNewPlaylistBinding) {
             binding.playlistCreateButton.isEnabled = isNameFilled
         }
-
     }
 
     abstract fun render(binding: FragmentNewPlaylistBinding)

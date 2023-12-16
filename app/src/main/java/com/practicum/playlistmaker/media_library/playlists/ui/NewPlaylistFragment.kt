@@ -94,6 +94,7 @@ class NewPlaylistFragment : Fragment() {
         return view
 
     }
+
     private fun clickListenersSetUp() {
         binding.playlistBackButton.setOnClickListener {
             if (checkingForUnsavedData()) {
@@ -136,10 +137,6 @@ class NewPlaylistFragment : Fragment() {
                 }
             }
         }
-
-//        val navController = Navigation.findNavController(requireActivity(), R.id.fragment_container)
-//        val navController = Navigation.findNavController(view)
-//        val navController = (activity as? AppCompatActivity)?.supportFragmentManager?.findFragmentById(R.id.new_playlist_fragment_container)?.findNavController()
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
         viewModel.screenState.observe(viewLifecycleOwner) { state ->

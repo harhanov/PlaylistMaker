@@ -120,6 +120,7 @@ sealed class PlayerScreenState {
     }
 
     data class TrackAddedToPlaylist(val playlistName: String) : PlayerScreenState() {
+
         override fun render(binding: FragmentPlayerBinding) {
             showToast(
                 binding,
@@ -139,6 +140,10 @@ sealed class PlayerScreenState {
 
     fun showToast(binding: FragmentPlayerBinding, message: String) {
         Toast.makeText(binding.root.context, message, Toast.LENGTH_SHORT).show()
+    }
+
+    sealed class PlayerEvent {
+        object NavigateBackToPlayerFragment : PlayerEvent()
     }
 
     sealed class BottomSheetState : Serializable {
