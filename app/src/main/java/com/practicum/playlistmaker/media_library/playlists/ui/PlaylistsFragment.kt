@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentPlaylistsBinding
+import com.practicum.playlistmaker.utils.BottomNavigationUtils
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -30,23 +30,10 @@ class PlaylistsFragment : Fragment() {
         return binding.root
     }
 
-
-    private fun hideBottomNavigationView() {
-        val bottomNavigationView =
-            activity?.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-        bottomNavigationView?.visibility = View.GONE
-    }
-
-    private fun showBottomNavigationView() {
-        val bottomNavigationView =
-            activity?.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-        bottomNavigationView?.visibility = View.VISIBLE
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.newPlaylistButton.setOnClickListener {
-            hideBottomNavigationView()
+            BottomNavigationUtils.hideBottomNavigationView(activity)
             openNewPlaylist()
         }
 
@@ -54,7 +41,6 @@ class PlaylistsFragment : Fragment() {
         binding.playlistsRecyclerView.layoutManager =
             GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
         setupPlaylistsObserver()
-
     }
 
     private fun openNewPlaylist() {
@@ -65,7 +51,7 @@ class PlaylistsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        showBottomNavigationView()
+        BottomNavigationUtils.showBottomNavigationView(activity)
     }
 
     private fun setupPlaylistsObserver() {

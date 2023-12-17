@@ -11,4 +11,5 @@ import com.practicum.playlistmaker.media_library.data.db.entity.TrackEntity
 
 abstract class PlaylistsDatabase: RoomDatabase() {
     abstract fun getPlaylistDao(): PlaylistDao
+
 }
