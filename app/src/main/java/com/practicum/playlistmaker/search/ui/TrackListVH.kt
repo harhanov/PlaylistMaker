@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker.search.ui
 
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -12,7 +13,7 @@ import com.practicum.playlistmaker.utils.DateUtils
 
 
 class TrackListVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
+    val favoriteButton: Button? = itemView.findViewById(R.id.favorite_button)
     private val songCoverImage: ImageView = itemView.findViewById(R.id.song_cover_image)
     private val songTitle: TextView = itemView.findViewById(R.id.song_title)
     private val songArtist: TextView = itemView.findViewById(R.id.song_artist)

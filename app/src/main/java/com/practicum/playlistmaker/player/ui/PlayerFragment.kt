@@ -1,10 +1,10 @@
 package com.practicum.playlistmaker.player.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
@@ -27,6 +27,7 @@ import org.koin.core.parameter.parametersOf
 class PlayerFragment : Fragment(R.layout.fragment_player) {
     private var _binding: FragmentPlayerBinding? = null
     private val binding get() = _binding!!
+    private var shouldUpdatePlaylists = false
     private val playlistAdapter: PlaylistAdapter by inject {
         parametersOf(
             requireContext(),
@@ -34,10 +35,11 @@ class PlayerFragment : Fragment(R.layout.fragment_player) {
             R.dimen.mini_cover_corner_radius
         )
     }
+
     private val viewModel: PlayerViewModel by viewModel {
         parametersOf(parseIntent())
     }
-
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -70,18 +72,16 @@ class PlayerFragment : Fragment(R.layout.fragment_player) {
 
         val overlay = binding.overlay
 
-        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
             state = BottomSheetBehavior.STATE_HIDDEN
         }
+        binding.playlistsRecyclerView.adapter = playlistAdapter
+        binding.playlistsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         binding.addToPlaylistButton.setOnClickListener {
             viewModel.viewModelScope.launch {
                 viewModel.toggleBottomSheetVisibility()
                 viewModel.updatePlaylists()
-
-                binding.playlistsRecyclerView.adapter = playlistAdapter
-                binding.playlistsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-
                 playlistAdapter.setClickerListener(object : PlaylistAdapter.Clicker {
                     override fun onClick(playlist: PlaylistModel) {
                         viewModel.onPlaylistItemClick(playlist)
@@ -120,28 +120,32 @@ class PlayerFragment : Fragment(R.layout.fragment_player) {
         binding.newPlaylistButtonMini.setOnClickListener {
             openNewPlaylist()
         }
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.bottomSheetLiveData.observe(viewLifecycleOwner) { state ->
+            bottomSheetBehavior.state = state
+        }
+
+
+
 
         viewModel.playerEvent.observe(viewLifecycleOwner) { event ->
             when (event) {
                 is PlayerScreenState.PlayerEvent.NavigateBackToPlayerFragment -> {
-                    findNavController().popBackStack()
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                    shouldUpdatePlaylists = true
                 }
             }
         }
-
     }
 
     private fun setupPlaylistsObserver() {
         viewModel.playlistsState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is PlaylistsState.PlaylistsLoaded -> {
-                    Log.d("setupPlaylistsObserver", "$state")
                     val playlists = state.playlists
                     playlistAdapter.setPlaylistsList(playlists)
                     playlistAdapter.notifyItemInserted(playlists.size - 1)
@@ -156,23 +160,21 @@ class PlayerFragment : Fragment(R.layout.fragment_player) {
 
 
     private fun openNewPlaylist() {
+        viewModel.setBottomSheetState(bottomSheetBehavior.state)
         val action = PlayerFragmentDirections.actionPlayerFragmentToNewPlaylistFragment()
         findNavController().navigate(action)
-
     }
 
     override fun onDestroy() {
-        viewModel.onDestroy()
         super.onDestroy()
+        viewModel.onDestroy()
     }
 
     //
     override fun onResume() {
         super.onResume()
-        Log.d("setupPlaylistsObserver", "Запустили onResume")
         setupPlaylistsObserver()
         viewModel.preparePlayer()
-        viewModel.screenState.value?.render(binding)
     }
 
     @Suppress("DEPRECATION")

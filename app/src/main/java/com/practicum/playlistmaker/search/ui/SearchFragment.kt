@@ -1,7 +1,6 @@
 package com.practicum.playlistmaker.search.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -136,16 +135,8 @@ class SearchFragment : Fragment() {
         }
 
         binding.rvSongsList.apply {
-            if (adapter == null) {
-                Log.d("RecyclerView", "Adapter is null before setting")
-            }
             adapter = trackListAdapter
             layoutManager = LinearLayoutManager(this.context)
-            if (adapter == null) {
-                Log.d("RecyclerView", "Adapter is still null after setting")
-            } else {
-                Log.d("RecyclerView", "Adapter is set successfully")
-            }
         }
     }
 
@@ -197,11 +188,8 @@ class SearchFragment : Fragment() {
     }
 
     private fun navigateToPlayerFragment(track: Track) {
-        Log.d("Navigation", "Navigating to PlayerActivity with track: $track")
         val action = SearchFragmentDirections.actionSearchFragmentToPlayerFragment(track)
-        Log.d("Navigation", "Action created, navigating...")
         findNavController().navigate(action)
-        Log.d("Navigation", "Navigation completed")
     }
 
     companion object {

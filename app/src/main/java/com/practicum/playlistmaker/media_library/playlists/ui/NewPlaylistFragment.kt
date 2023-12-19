@@ -91,6 +91,7 @@ class NewPlaylistFragment : Fragment() {
                 findNavController().popBackStack()
             }
         clickListenersSetUp()
+        activity?.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         return view
 
     }
@@ -178,8 +179,3 @@ class NewPlaylistFragment : Fragment() {
         _binding = null
     }
 }
-
-
-
-
-

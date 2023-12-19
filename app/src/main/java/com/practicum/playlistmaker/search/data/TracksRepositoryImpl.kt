@@ -1,6 +1,6 @@
 package com.practicum.playlistmaker.search.data
 
-import com.practicum.playlistmaker.media_library.data.db.FavouritesDatabase
+import com.practicum.playlistmaker.media_library.data.db.PlaylistsDatabase
 import com.practicum.playlistmaker.search.data.network.INTERNET_CONNECTION_ERROR
 import com.practicum.playlistmaker.search.data.network.NO_INTERNET_CONNECTION_CODE
 import com.practicum.playlistmaker.search.data.network.SERVER_ERROR
@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.flow
 class TracksRepositoryImpl(
     private val networkClient: NetworkClient,
     private val localStorage: LocalDataSource,
-    private val favouritesDatabase: FavouritesDatabase,
+    private val playlistsDatabase: PlaylistsDatabase,
 ) :
     TracksRepository {
     override fun searchTracks(query: String): Flow<Resource<List<Track>>> = flow {
@@ -36,7 +36,7 @@ class TracksRepositoryImpl(
 
             SUCCESS_CODE -> {
                 with(response as TracksSearchResponse) {
-                    val favouritesIDs = favouritesDatabase.getTrackDao().getFavoriteTrackIds()
+                    val favouritesIDs = playlistsDatabase.getTrackDao().getFavoriteTrackIds()
                     val data = results.map() {trackResponse ->
                         val isFavourite = favouritesIDs.contains(trackResponse.trackId)
                         val orderAdded = 0L
@@ -61,7 +61,7 @@ class TracksRepositoryImpl(
 
     override suspend fun getHistory(): List<Track> {
         val historyTracks = localStorage.getSearchHistory()
-        val favouritesIDs = favouritesDatabase.getTrackDao().getFavoriteTrackIds()
+        val favouritesIDs = playlistsDatabase.getTrackDao().getFavoriteTrackIds()
 
         historyTracks.forEach { track ->
             track.isFavourite = favouritesIDs.contains(track.trackId)

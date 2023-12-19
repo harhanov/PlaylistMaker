@@ -17,7 +17,7 @@ class PlaylistAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistVH {
         val view = LayoutInflater.from(parent.context).inflate(layoutResourceId, parent, false)
         return PlaylistVH(view)
-    }
+        }
 
     override fun onBindViewHolder(holder: PlaylistVH, position: Int) {
         val playlist = playlists[position]

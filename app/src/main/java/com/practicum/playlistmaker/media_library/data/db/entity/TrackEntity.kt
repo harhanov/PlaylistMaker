@@ -4,6 +4,7 @@ import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
 import androidx.annotation.RequiresApi
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
@@ -21,6 +22,7 @@ data class TrackEntity(
     val primaryGenreName: String?,
     val country: String?,
     val previewUrl: String?,
+    @ColumnInfo(name = "is_favorite")
     var isFavourite: Boolean = false,
     val orderAdded: Long,
 ) : Parcelable {

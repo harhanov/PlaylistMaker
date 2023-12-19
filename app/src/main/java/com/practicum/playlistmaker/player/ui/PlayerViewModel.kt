@@ -44,7 +44,12 @@ class PlayerViewModel(
     private fun navigateBackToPlayerFragment() {
         _playerEvent.postValue(PlayerEvent.NavigateBackToPlayerFragment)
     }
+    private val _bottomSheetState = MutableLiveData<Int>()
+    val bottomSheetLiveData: LiveData<Int> get() = _bottomSheetState
 
+    fun setBottomSheetState(state: Int) {
+        _bottomSheetState.value = state
+    }
     init {
         val initialPosition = formatTrackTime(playerInteractor.getCurrentTime().toString())
         _screenState.value = BeginningState(trackModel, initialPosition)

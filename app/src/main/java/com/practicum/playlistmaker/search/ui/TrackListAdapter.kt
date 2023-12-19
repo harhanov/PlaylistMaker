@@ -17,6 +17,11 @@ class TrackListAdapter : RecyclerView.Adapter<TrackListVH>() {
 
     override fun onBindViewHolder(holder: TrackListVH, position: Int) {
         val track = tracks[position]
+        if (track.isFavourite) {
+            holder.favoriteButton?.setBackgroundResource(R.drawable.ic_favorite_selected)
+        } else {
+            holder.favoriteButton?.setBackgroundResource(R.drawable.ic_favorite)
+        }
         holder.bind(track)
         holder.itemView.setOnClickListener {
             onClickListener?.invoke(track)

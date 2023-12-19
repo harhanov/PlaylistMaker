@@ -1,11 +1,14 @@
 package com.practicum.playlistmaker.player.ui
 
+import android.content.res.ColorStateList
+import android.util.TypedValue
 import android.view.View
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.button.MaterialButton
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentPlayerBinding
 import com.practicum.playlistmaker.player.domain.TrackModel
@@ -77,6 +80,15 @@ sealed class PlayerScreenState {
 
     class Preparing(private val trackModel: TrackModel) : PlayerScreenState() {
         override fun render(binding: FragmentPlayerBinding) {
+            val typedValue = TypedValue()
+            binding.root.context.theme.resolveAttribute(
+                com.google.android.material.R.attr.colorOnSecondary,
+                typedValue,
+                true
+            )
+            val playPauseButton: MaterialButton = binding.playPauseButton
+            val colorOnSecondary = typedValue.data
+            playPauseButton.backgroundTintList = ColorStateList.valueOf(colorOnSecondary)
             binding.playPauseButton.isEnabled = true
             binding.playPauseButton.setBackgroundResource(R.drawable.ic_play_arrow)
             val isFavourite = trackModel.isFavourite

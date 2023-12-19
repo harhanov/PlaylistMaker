@@ -95,17 +95,18 @@
                 app:layout_constraintVertical_chainStyle="spread_inside"
                 app:layout_constraintWidth_max="51dp" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/playPauseButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:gravity="center"
-                app:backgroundTint="?attr/colorOnSecondary"
+                android:background="@drawable/ic_play_arrow"
                 app:layout_constraintBottom_toTopOf="@id/playback_progress"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/artistName" />
+                app:layout_constraintTop_toBottomOf="@id/artistName"
+                android:enabled="false"/>
 
             <Button
                 android:id="@+id/favorite_button"

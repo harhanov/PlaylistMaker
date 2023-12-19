@@ -12,8 +12,6 @@ class PlaylistsViewModel(private val playlistInteractor: PlaylistInteractor) : V
 
     private val _playlistsState = MutableLiveData<PlaylistsState>()
     val playlistsState: LiveData<PlaylistsState> = _playlistsState
-
-
     init {
         updatePlaylists()
     }
@@ -32,6 +30,7 @@ class PlaylistsViewModel(private val playlistInteractor: PlaylistInteractor) : V
 }
 
 sealed class PlaylistsState {
-    data class PlaylistsLoaded(val playlists: List<PlaylistModel>) : PlaylistsState()
+    data class PlaylistsLoaded(val playlists: List<PlaylistModel>) : PlaylistsState(){}
+
     object Empty : PlaylistsState()
 }
