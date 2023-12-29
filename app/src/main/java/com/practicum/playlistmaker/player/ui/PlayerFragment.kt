@@ -39,6 +39,7 @@ class PlayerFragment : Fragment(R.layout.fragment_player) {
     private val viewModel: PlayerViewModel by viewModel {
         parametersOf(parseIntent())
     }
+
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     override fun onCreateView(
         inflater: LayoutInflater,

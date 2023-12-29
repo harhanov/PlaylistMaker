@@ -7,4 +7,6 @@ interface PlaylistInteractor {
     suspend fun addPlaylist(playlist: PlaylistModel): Boolean
     suspend fun addTrackToPlaylist(playlistId: Long, trackId: Int)
     suspend fun isTrackInPlaylist(playlistId: Long, trackId: Int): Boolean
+    suspend fun getPlaylistById(playlistId: Long): PlaylistModel
+    suspend fun calculateTotalPlayingTime(playlistId: Long): String
 }

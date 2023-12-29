@@ -58,4 +58,10 @@ interface PlaylistDao {
     @Query("SELECT COUNT(*) FROM playlist_track_cross_ref WHERE playlistId = :playlistId")
     suspend fun getNumberOfTracksInPlaylist(playlistId: Long): Int
 
+    @Query("SELECT * FROM playlists_table WHERE playlistId = :playlistId")
+    suspend fun getPlaylistById(playlistId: Long): PlaylistEntity?
+
+    @Query("SELECT trackTime FROM favourites_table WHERE trackId IN (SELECT trackId FROM playlist_track_cross_ref WHERE playlistId = :playlistId)")
+    suspend fun getTrackTimeMillisForPlaylist(playlistId: Long): List<String>
+
 }

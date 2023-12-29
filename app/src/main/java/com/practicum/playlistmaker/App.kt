@@ -5,15 +5,19 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.practicum.playlistmaker.media_library.di.mediaLibraryDatabaseModule
 import com.practicum.playlistmaker.media_library.di.mediaLibraryDomainModule
 import com.practicum.playlistmaker.media_library.di.mediaLibraryUIModule
-import com.practicum.playlistmaker.media_library.di.playlistsUIModule
 import com.practicum.playlistmaker.player.di.playerDataModule
 import com.practicum.playlistmaker.player.di.playerInteractorModule
 import com.practicum.playlistmaker.player.di.playerRepositoryModule
 import com.practicum.playlistmaker.player.di.playerViewModelModule
-import com.practicum.playlistmaker.search.di.*
+import com.practicum.playlistmaker.search.di.localDataSourceModule
+import com.practicum.playlistmaker.search.di.searchNetworkDataModule
+import com.practicum.playlistmaker.search.di.searchUiModule
+import com.practicum.playlistmaker.search.di.searchViewModelModule
+import com.practicum.playlistmaker.search.di.tracksInteractorModule
+import com.practicum.playlistmaker.search.di.tracksRepositoryModule
 import com.practicum.playlistmaker.settings.data.SettingsLocalDataSource
-import com.practicum.playlistmaker.settings.data.impl.SettingsRepositoryImpl
 import com.practicum.playlistmaker.settings.data.impl.SettingsLocalDataSourceImpl
+import com.practicum.playlistmaker.settings.data.impl.SettingsRepositoryImpl
 import com.practicum.playlistmaker.settings.di.settingsDataModule
 import com.practicum.playlistmaker.settings.di.settingsInteractorsModule
 import com.practicum.playlistmaker.settings.di.settingsRepositoryModule
@@ -69,9 +73,6 @@ class App : Application() {
                 settingsInteractorsModule,
                 settingsRepositoryModule,
                 settingsViewModelModule,
-            )
-            modules(
-                //playlistsUIModule,
             )
             modules(
                 mediaLibraryDatabaseModule,

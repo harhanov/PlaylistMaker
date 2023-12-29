@@ -9,12 +9,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentPlaylistsBinding
+import com.practicum.playlistmaker.media_library.playlists.domain.PlaylistModel
+import com.practicum.playlistmaker.media_library.ui.MediaLibraryFragmentDirections
 import com.practicum.playlistmaker.utils.BottomNavigationUtils
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-class PlaylistsFragment : Fragment() {
+class PlaylistsFragment : Fragment(R.layout.fragment_playlists) {
 
     private val playlistsViewModel: PlaylistsViewModel by viewModel()
     private lateinit var binding: FragmentPlaylistsBinding
@@ -37,10 +39,28 @@ class PlaylistsFragment : Fragment() {
             openNewPlaylist()
         }
 
+        playlistAdapter.setClickerListener(object : PlaylistAdapter.Clicker {
+            override fun onClick(playlist: PlaylistModel) {
+                openPlaylistInformation(playlist.playlistId)
+            }
+        })
+
         binding.playlistsRecyclerView.adapter = playlistAdapter
         binding.playlistsRecyclerView.layoutManager =
             GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
         setupPlaylistsObserver()
+    }
+
+    private fun openPlaylistInformation(playlistId: Long?) {
+        val navController = findNavController()
+        val action = playlistId?.let {
+            MediaLibraryFragmentDirections.actionMediaLibraryFragmentToPlaylistInformationFragment(
+                it
+            )
+        }
+        if (action != null) {
+            navController.navigate(action)
+        }
     }
 
     private fun openNewPlaylist() {

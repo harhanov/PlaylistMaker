@@ -6,6 +6,7 @@ import com.practicum.playlistmaker.media_library.data.db.dao.PlaylistDao
 import com.practicum.playlistmaker.media_library.data.db.entity.PlaylistEntity
 import com.practicum.playlistmaker.media_library.playlists.domain.PlaylistModel
 import com.practicum.playlistmaker.media_library.playlists.domain.PlaylistRepository
+import com.practicum.playlistmaker.utils.PlaylistUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -36,6 +37,26 @@ class PlaylistRepositoryImpl(
             playlistDao.getTrackCountInPlaylist(playlistId, trackId) > 0
         }
         return isInPlaylist
+    }
+    override suspend fun getPlaylistById(playlistId: Long): PlaylistModel {
+        val playlistEntity = playlistDao.getPlaylistById(playlistId)
+            ?: throw NoSuchElementException("Playlist not found")
+
+        return playlistConverter.mapToModel(playlistEntity)
+    }
+    override suspend fun getTotalPlayingTime(playlistId: Long): String {
+        val trackTimeMillisList = playlistDao.getTrackTimeMillisForPlaylist(playlistId)
+        val totalPlayingTimeSeconds = trackTimeMillisList.sumOf { convertTimeStringToSeconds(it) }
+        return formatTotalPlayingTime(totalPlayingTimeSeconds)
+    }
+    private fun convertTimeStringToSeconds(timeString: String): Long {
+        val timeInMillis = timeString.toLongOrNull() ?: 0
+        return timeInMillis / 1000
+    }
+
+    private fun formatTotalPlayingTime(totalPlayingTimeMillis: Long): String {
+        val totalPlayingTimeMinutes = totalPlayingTimeMillis / 60
+        return "$totalPlayingTimeMinutes ${PlaylistUtils.getMinutesWord(totalPlayingTimeMinutes)}"
     }
 
     private fun convertFromPlaylistEntity(playlists: List<PlaylistEntity>): List<PlaylistModel> {

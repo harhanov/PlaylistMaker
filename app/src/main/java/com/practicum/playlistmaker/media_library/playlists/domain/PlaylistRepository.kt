@@ -7,4 +7,6 @@ interface PlaylistRepository {
     suspend fun addPlaylist(playlist: PlaylistModel)
     suspend fun addTrackToPlaylist(playlistId: Long, trackId: Int)
     suspend fun isTrackInPlaylist(playlistId: Long, trackId: Int): Boolean
+    suspend fun getPlaylistById(playlistId: Long): PlaylistModel
+    suspend fun getTotalPlayingTime(playlistId: Long): String
 }
