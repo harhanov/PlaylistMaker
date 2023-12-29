@@ -1,0 +1,27 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:left="72dp"
+        android:right="18dp"
+        android:top="-499dp">
+        <shape android:shape="line">
+            <stroke
+                android:width="1dp"
+                android:color="@color/dorblu" />
+        </shape>
+    </item>
+
+    <item>
+        <rotate
+            android:fromDegrees="270"
+            android:toDegrees="90">
+            <shape android:shape="rectangle">
+                <stroke
+                    android:width="1dp"
+                    android:color="@color/dorblu"
+                    android:dashWidth="999dp"
+                    android:dashGap="400dp" />
+                <corners android:radius="8dp" />
+            </shape>
+        </rotate>
+    </item>
+</layer-list>

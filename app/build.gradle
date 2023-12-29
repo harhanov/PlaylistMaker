@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+
+    id 'androidx.navigation.safeargs'
     id 'kotlin-kapt'
 }
 
@@ -54,14 +56,17 @@ dependencies {
     implementation 'androidx.media:media:1.6.0'
     implementation 'io.insert-koin:koin-android:3.3.0'
     implementation 'androidx.fragment:fragment-ktx:1.6.1'
+
     implementation "androidx.navigation:navigation-fragment-ktx:2.7.3"
     implementation "androidx.navigation:navigation-ui-ktx:2.7.3"
+
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
     // Room
     def room_version = "2.5.1"
     implementation("androidx.room:room-runtime:$room_version")
     kapt("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
+
 
 }
 

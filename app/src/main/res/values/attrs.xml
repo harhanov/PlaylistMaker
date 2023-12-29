@@ -5,4 +5,5 @@
     <attr name="titleColor" format="color" />
     <attr name="bandColor" format="color" />
     <attr name="addToPlaylistButtonColor" format="color" />
+    <attr name = "rounderColor" format="color"/>
 </resources>

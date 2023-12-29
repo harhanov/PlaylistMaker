@@ -2,9 +2,9 @@ package com.practicum.playlistmaker
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.practicum.playlistmaker.media_library.di.favouritesDatabaseModule
-import com.practicum.playlistmaker.media_library.di.favouritesDomainModule
-import com.practicum.playlistmaker.media_library.di.favouritesUIModule
+import com.practicum.playlistmaker.media_library.di.mediaLibraryDatabaseModule
+import com.practicum.playlistmaker.media_library.di.mediaLibraryDomainModule
+import com.practicum.playlistmaker.media_library.di.mediaLibraryUIModule
 import com.practicum.playlistmaker.media_library.di.playlistsUIModule
 import com.practicum.playlistmaker.player.di.playerDataModule
 import com.practicum.playlistmaker.player.di.playerInteractorModule
@@ -71,12 +71,12 @@ class App : Application() {
                 settingsViewModelModule,
             )
             modules(
-                playlistsUIModule,
+                //playlistsUIModule,
             )
             modules(
-                favouritesDatabaseModule,
-                favouritesDomainModule,
-                favouritesUIModule,
+                mediaLibraryDatabaseModule,
+                mediaLibraryDomainModule,
+                mediaLibraryUIModule,
             )
         }
     }

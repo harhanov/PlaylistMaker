@@ -6,9 +6,14 @@ import com.practicum.playlistmaker.player.domain.TrackModel
 class MediaPlayerControl(private val mediaPlayer: MediaPlayer) : PlayerControl {
 
     override fun preparePlayer(track: TrackModel, prepare: () -> Unit) {
-        mediaPlayer.setOnPreparedListener { prepare() }
+        mediaPlayer.setOnPreparedListener {
+            prepare()
+        }
+
+        mediaPlayer.reset()
         mediaPlayer.setDataSource(track.previewUrl)
         mediaPlayer.prepareAsync()
+
     }
 
     override fun setOnCompletionListener(onComplete: () -> Unit) {

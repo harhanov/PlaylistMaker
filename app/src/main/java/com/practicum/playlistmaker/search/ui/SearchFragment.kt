@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker.search.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,10 +8,11 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.databinding.FragmentSearchBinding
-import com.practicum.playlistmaker.player.ui.PlayerActivity
 import com.practicum.playlistmaker.search.data.model.Track
+import com.practicum.playlistmaker.utils.BottomNavigationUtils
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -41,6 +41,7 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         viewModel.screenStateLD.observe(viewLifecycleOwner) { screenStateLD ->
             if (viewModel.shouldDisplayScreenState(
                     screenStateLD,
@@ -77,6 +78,7 @@ class SearchFragment : Fragment() {
         } else {
             viewModel.showHistory()
         }
+        BottomNavigationUtils.showBottomNavigationView(activity)
     }
 
     override fun onDestroyView() {
@@ -113,7 +115,8 @@ class SearchFragment : Fragment() {
             if (viewModel.isClickAllowed.value == true) {
                 viewModel.addToHistory(track)
                 viewModel.setClickAllowed(false)
-                navigateTo(PlayerActivity::class.java, track)
+                navigateToPlayerFragment(track)
+                BottomNavigationUtils.hideBottomNavigationView(activity)
             }
         }
 
@@ -121,7 +124,8 @@ class SearchFragment : Fragment() {
             if (viewModel.isClickAllowed.value == true) {
                 viewModel.addToHistory(track)
                 viewModel.setClickAllowed(false)
-                navigateTo(PlayerActivity::class.java, track)
+                navigateToPlayerFragment(track)
+                BottomNavigationUtils.hideBottomNavigationView(activity)
             }
         }
 
@@ -183,14 +187,12 @@ class SearchFragment : Fragment() {
         return false
     }
 
-    private fun navigateTo(clazz: Class<PlayerActivity>, track: Track) {
-        val intent = Intent(requireContext(), clazz)
-        intent.putExtra(TRACK, track)
-        startActivity(intent)
+    private fun navigateToPlayerFragment(track: Track) {
+        val action = SearchFragmentDirections.actionSearchFragmentToPlayerFragment(track)
+        findNavController().navigate(action)
     }
 
     companion object {
         private const val INPUT_TEXT = "searchTextValue"
-        private const val TRACK = "track"
     }
 }
