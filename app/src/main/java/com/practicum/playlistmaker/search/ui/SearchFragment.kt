@@ -35,7 +35,7 @@ class SearchFragment : Fragment() {
     }
 
     override fun onStop() {
-        super.onStop()
+        super.onStop() 
         viewModel.setSearchTextNotChanged(true)
     }
 

@@ -4,7 +4,7 @@ import com.practicum.playlistmaker.media_library.data.db.entity.TrackEntity
 import com.practicum.playlistmaker.player.domain.TrackModel
 
 class TrackDBConverter {
-    fun map(track: TrackModel): TrackEntity {
+    fun mapToEntity(track: TrackModel): TrackEntity {
         return TrackEntity(
             track.trackId,
             track.trackName,
@@ -21,7 +21,7 @@ class TrackDBConverter {
         )
     }
 
-    fun map(track: TrackEntity): TrackModel {
+    fun mapToModel(track: TrackEntity): TrackModel {
         return TrackModel(
             track.trackId,
             track.trackName,

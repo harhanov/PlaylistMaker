@@ -9,6 +9,7 @@ import androidx.room.Transaction
 import androidx.room.Update
 import com.practicum.playlistmaker.media_library.data.db.entity.PlaylistEntity
 import com.practicum.playlistmaker.media_library.data.db.entity.PlaylistTrackCrossRef
+import com.practicum.playlistmaker.media_library.data.db.entity.TrackEntity
 import kotlinx.coroutines.flow.Flow
 
 
@@ -61,7 +62,7 @@ interface PlaylistDao {
     @Query("SELECT * FROM playlists_table WHERE playlistId = :playlistId")
     suspend fun getPlaylistById(playlistId: Long): PlaylistEntity?
 
-    @Query("SELECT trackTime FROM favourites_table WHERE trackId IN (SELECT trackId FROM playlist_track_cross_ref WHERE playlistId = :playlistId)")
-    suspend fun getTrackTimeMillisForPlaylist(playlistId: Long): List<String>
+    @Query("SELECT * FROM tracks_table WHERE trackId IN (SELECT trackId FROM playlist_track_cross_ref WHERE playlistId = :playlistId)")
+    suspend fun getTracksForPlaylist(playlistId: Long): List<TrackEntity>
 
 }

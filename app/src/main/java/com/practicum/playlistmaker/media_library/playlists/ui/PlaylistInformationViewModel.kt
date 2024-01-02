@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.media_library.playlists.domain.PlaylistInteractor
 import com.practicum.playlistmaker.media_library.playlists.domain.PlaylistModel
+import com.practicum.playlistmaker.player.domain.TrackModel
 import kotlinx.coroutines.launch
 
 
@@ -20,6 +21,9 @@ class PlaylistInformationViewModel(
     private val _totalPlayingTime = MutableLiveData<String>()
     val totalPlayingTime: LiveData<String> = _totalPlayingTime
 
+    private val _playlistTracks = MutableLiveData<List<TrackModel>?>()
+    val playlistTracks: MutableLiveData<List<TrackModel>?> = _playlistTracks
+
     init {
         viewModelScope.launch {
             try {
@@ -27,8 +31,19 @@ class PlaylistInformationViewModel(
                 _playlist.value = playlist
 
                 calculateTotalPlayingTime()
+                loadPlaylistTracks()
             } catch (_: Exception) {
 
+            }
+        }
+    }
+
+    private fun loadPlaylistTracks() {
+        viewModelScope.launch {
+            try {
+                val tracks = playlistInteractor.getTracksForPlaylist(playlistId)
+                _playlistTracks.value = tracks
+            } catch (_: Exception) {
             }
         }
     }
@@ -43,5 +58,6 @@ class PlaylistInformationViewModel(
             }
         }
     }
+
 }
 

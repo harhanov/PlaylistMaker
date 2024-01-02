@@ -16,13 +16,13 @@ class TracksRepositoryImpl(
     override suspend fun addTrackToBase(track: TrackModel, isFavourite: Boolean) {
         val currentTime = System.currentTimeMillis()
         val updatedTrack = track.copy(orderAdded = currentTime, isFavourite = isFavourite)
-        val trackEntity = trackDBConverter.map(updatedTrack)
+        val trackEntity = trackDBConverter.mapToEntity(updatedTrack)
         playlistsDatabase.getTrackDao().insertFavoriteTrack(trackEntity)
     }
 
     override suspend fun removeTrackFromFavourites(track: TrackModel) {
         val updatedTrack = track.copy(isFavourite = false)
-        val trackEntity = trackDBConverter.map(updatedTrack)
+        val trackEntity = trackDBConverter.mapToEntity(updatedTrack)
         playlistsDatabase.getTrackDao().deleteFavoriteTrack(trackEntity)
     }
 
@@ -32,7 +32,7 @@ class TracksRepositoryImpl(
     }
 
     private fun convertFromTrackEntity(tracks: List<TrackEntity>): List<TrackModel> {
-        return tracks.map { track -> trackDBConverter.map(track) }
+        return tracks.map { track -> trackDBConverter.mapToModel(track) }
     }
 
 }

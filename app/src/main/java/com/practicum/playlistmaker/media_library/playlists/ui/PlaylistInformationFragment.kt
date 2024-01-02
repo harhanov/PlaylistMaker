@@ -6,10 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.PlaylistInformationBinding
 import com.practicum.playlistmaker.media_library.playlists.domain.PlaylistModel
+import com.practicum.playlistmaker.player.domain.TrackModel
+import com.practicum.playlistmaker.search.data.model.Track
 import com.practicum.playlistmaker.search.ui.TrackListAdapter
 import com.practicum.playlistmaker.utils.BottomNavigationUtils
 import com.practicum.playlistmaker.utils.PlaylistUtils
@@ -55,6 +58,30 @@ class PlaylistInformationFragment : Fragment(R.layout.playlist_information) {
                 updateUI(it)
             }
         }
+        viewModel.playlistTracks.observe(viewLifecycleOwner) { tracks ->
+            tracks?.let {
+                trackListAdapter.setTracks(it.map(TrackModel::trackModelToTrack))
+            }
+        }
+        initRecycler()
+    }
+
+    private fun initRecycler() {
+
+        trackListAdapter.onClickListener = { track ->
+            navigateToPlayerFragment(track)
+            BottomNavigationUtils.hideBottomNavigationView(activity)
+        }
+
+        binding.trackRecyclerView.apply {
+            adapter = trackListAdapter
+            layoutManager = LinearLayoutManager(this.context)
+        }
+    }
+
+    private fun navigateToPlayerFragment(track: Track) {
+        val action = PlaylistInformationFragmentDirections.actionPlaylistInformationFragmentToPlayerFragment(track)
+        findNavController().navigate(action)
     }
 
     private fun updateUI(playlist: PlaylistModel) {
@@ -67,6 +94,9 @@ class PlaylistInformationFragment : Fragment(R.layout.playlist_information) {
             .load(playlist.playlistImagePath)
             .placeholder(R.drawable.playlist_placeholder)
             .into(binding.playlistCover)
+        val tracksList = viewModel.playlistTracks.value
+        val tracks = viewModel.playlistTracks.value?.map { it.trackModelToTrack() } ?: emptyList()
+        trackListAdapter.setTracks(tracks)
     }
 
     private fun parseIntent(): Long {
