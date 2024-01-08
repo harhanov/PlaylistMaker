@@ -11,4 +11,7 @@ interface PlaylistRepository {
     suspend fun getPlaylistById(playlistId: Long): PlaylistModel
     suspend fun getTotalPlayingTime(playlistId: Long): String
     suspend fun getTracksForPlaylist(playlistId: Long): List<TrackModel>
+    suspend fun removeTrackAndUpdateCount(playlistId: Long, trackId: Int)
+    suspend fun removePlaylist(playlistId: Long)
+    suspend fun updatePlaylist(playlist: PlaylistModel)
 }

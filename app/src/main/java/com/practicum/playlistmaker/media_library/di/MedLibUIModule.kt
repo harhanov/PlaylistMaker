@@ -14,6 +14,7 @@ import org.koin.dsl.module
 val mediaLibraryUIModule = module {
     factory { TrackListAdapter() }
 
+
     viewModel {
         FavouritesTracksViewModel(get())
 
@@ -24,9 +25,8 @@ val mediaLibraryUIModule = module {
     }
 
 
-    viewModel {
-        NewPlaylistViewModel(interactor = get())
-    }
+    viewModel { NewPlaylistViewModel(interactor = get()) }
+
 
     factory { TrackModel }
 
@@ -40,6 +40,5 @@ val mediaLibraryUIModule = module {
             get()
         )
     }
-
 
 }

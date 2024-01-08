@@ -24,16 +24,20 @@ class PlaylistInformationViewModel(
     private val _playlistTracks = MutableLiveData<List<TrackModel>?>()
     val playlistTracks: MutableLiveData<List<TrackModel>?> = _playlistTracks
 
+    private val _bottomSheetState = MutableLiveData<Int>()
+    val bottomSheetLiveData: LiveData<Int> get() = _bottomSheetState
+
+    private var isPlaylistEmpty: Boolean = false
+
     init {
         viewModelScope.launch {
             try {
                 val playlist = playlistInteractor.getPlaylistById(playlistId)
                 _playlist.value = playlist
-
                 calculateTotalPlayingTime()
                 loadPlaylistTracks()
+                isPlaylistEmpty = playlist.numberOfTracks == 0
             } catch (_: Exception) {
-
             }
         }
     }
@@ -55,6 +59,44 @@ class PlaylistInformationViewModel(
                 _totalPlayingTime.value = totalPlayingTime
             } catch (_: Exception) {
 
+            }
+        }
+    }
+
+    fun removeTrack(trackId: Int) {
+        viewModelScope.launch {
+            try {
+                playlistInteractor.removeTrackAndUpdateCount(playlistId, trackId)
+                calculateTotalPlayingTime()
+                loadPlaylistTracks()
+                _playlist.value = playlistInteractor.getPlaylistById(playlistId)
+            } catch (_: Exception) {
+            }
+        }
+    }
+
+    fun removePlaylist(playlistId: Long) {
+        viewModelScope.launch {
+            try {
+                playlistInteractor.deletePlaylist(playlistId)
+            } catch (_: Exception) {
+            }
+        }
+    }
+
+    fun getIsPlaylistEmpty(): Boolean {
+        return isPlaylistEmpty
+    }
+
+    fun refreshPlaylist() {
+        viewModelScope.launch {
+            try {
+                val playlist = playlistInteractor.getPlaylistById(playlistId)
+                _playlist.value = playlist
+                calculateTotalPlayingTime()
+                loadPlaylistTracks()
+                isPlaylistEmpty = playlist.numberOfTracks == 0
+            } catch (_: Exception) {
             }
         }
     }

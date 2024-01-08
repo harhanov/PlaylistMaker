@@ -78,7 +78,8 @@
                 style="@style/playlistDescription"
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="@id/playlistDescription"
-                app:layout_constraintTop_toBottomOf="@id/playlistDescription" />
+                app:layout_constraintTop_toBottomOf="@id/playlistDescription"
+                tools:text="300 минут" />
 
             <ImageView
                 android:id="@+id/separatorPoint"
@@ -110,7 +111,7 @@
                 app:tint="@android:color/black" />
 
             <ImageView
-                android:id="@+id/playlistMoreButton"
+                android:id="@+id/playlistMenuButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
@@ -138,7 +139,7 @@
         app:behavior_hideable="false"
         app:behavior_peekHeight="200dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        app:layout_constraintTop_toBottomOf="@id/playlistMoreButton">
+        app:layout_constraintTop_toBottomOf="@id/playlistMenuButton">
 
         <View
             android:layout_width="50dp"
@@ -156,6 +157,57 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="5"
             tools:listitem="@layout/list_item" />
+    </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/bottom_sheet_preferences"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bottom_sheet_rounder"
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="300dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        app:layout_constraintTop_toBottomOf="@id/playlistMenuButton">
+
+        <View
+            android:layout_width="50dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/rounder" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/playlistMenuRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="14dp"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:itemCount="1"
+            tools:listitem="@layout/playlist_item" />
+
+        <TextView
+            android:id="@+id/share"
+            style="@style/ys_regular"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="37dp"
+            android:text="@string/share" />
+
+        <TextView
+            android:id="@+id/edit"
+            style="@style/ys_regular"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="42dp"
+            android:text="@string/edit_information" />
+
+        <TextView
+            android:id="@+id/delete"
+            style="@style/ys_regular"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="42dp"
+            android:text="@string/delete_playlist" />
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

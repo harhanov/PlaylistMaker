@@ -11,4 +11,7 @@ interface PlaylistInteractor {
     suspend fun getPlaylistById(playlistId: Long): PlaylistModel
     suspend fun calculateTotalPlayingTime(playlistId: Long): String
     suspend fun getTracksForPlaylist(playlistId: Long): List<TrackModel>
+    suspend fun removeTrackAndUpdateCount(playlistId: Long, trackId: Int)
+    suspend fun deletePlaylist(playlistId: Long)
+    suspend fun updatePlaylist(playlistModel: PlaylistModel): Boolean
 }

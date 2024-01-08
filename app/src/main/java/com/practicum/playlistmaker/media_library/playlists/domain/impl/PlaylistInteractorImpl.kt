@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker.media_library.playlists.domain.impl
 
-import com.practicum.playlistmaker.media_library.data.db.entity.TrackEntity
 import com.practicum.playlistmaker.media_library.playlists.domain.PlaylistInteractor
 import com.practicum.playlistmaker.media_library.playlists.domain.PlaylistModel
 import com.practicum.playlistmaker.media_library.playlists.domain.PlaylistRepository
@@ -42,5 +41,35 @@ class PlaylistInteractorImpl(private val playlistRepository: PlaylistRepository)
 
     override suspend fun getTracksForPlaylist(playlistId: Long): List<TrackModel> {
         return playlistRepository.getTracksForPlaylist(playlistId)
+    }
+
+    override suspend fun removeTrackAndUpdateCount(playlistId: Long, trackId: Int) {
+        playlistRepository.removeTrackAndUpdateCount(playlistId, trackId)
+    }
+
+    override suspend fun deletePlaylist(playlistId: Long) {
+        playlistRepository.removePlaylist(playlistId)
+    }
+
+    override suspend fun updatePlaylist(playlistModel: PlaylistModel): Boolean {
+        try {
+            val currentPlaylist = playlistModel.playlistId?.let {
+                playlistRepository.getPlaylistById(
+                    it
+                )
+            }
+            val updatedPlaylist = currentPlaylist?.copy(
+                playlistName = playlistModel.playlistName,
+                playlistDescription = playlistModel.playlistDescription,
+                playlistImagePath = playlistModel.playlistImagePath
+            )
+            if (updatedPlaylist != null) {
+                playlistRepository.updatePlaylist(updatedPlaylist)
+            }
+
+            return true
+        } catch (e: Exception) {
+            return false
+        }
     }
 }

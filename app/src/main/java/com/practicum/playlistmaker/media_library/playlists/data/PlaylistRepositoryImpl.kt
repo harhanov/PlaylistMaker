@@ -44,13 +44,12 @@ class PlaylistRepositoryImpl(
     override suspend fun getPlaylistById(playlistId: Long): PlaylistModel {
         val playlistEntity = playlistDao.getPlaylistById(playlistId)
             ?: throw NoSuchElementException("Playlist not found")
-
         return playlistConverter.mapToModel(playlistEntity)
     }
 
     override suspend fun getTotalPlayingTime(playlistId: Long): String {
         val tracks = playlistDao.getTracksForPlaylist(playlistId)
-        val totalPlayingTimeMinutes = tracks.sumOf { convertTimeStringToMinutes(it.trackTime) }
+        val totalPlayingTimeMinutes = tracks.sumOf { it.trackTime?.toLongOrNull() ?: 0 } / 60000
         return "$totalPlayingTimeMinutes ${PlaylistUtils.getMinutesWord(totalPlayingTimeMinutes)}"
     }
 
@@ -60,7 +59,20 @@ class PlaylistRepositoryImpl(
             tracks.map { trackConverter.mapToModel(it) }
         }
     }
-    private fun convertTimeStringToMinutes(timeString: String?): Long {
-        return (timeString?.toLongOrNull() ?: 0) / 60000
+
+    override suspend fun removeTrackAndUpdateCount(playlistId: Long, trackId: Int) {
+        withContext(Dispatchers.IO) {
+            playlistDao.removeTrackAndUpdateCount(playlistId, trackId)
+        }
+    }
+    override suspend fun removePlaylist(playlistId: Long) {
+        withContext(Dispatchers.IO) {
+            playlistDao.deletePlaylistCrossRef(playlistId)
+            playlistDao.deletePlaylist(playlistId)
+        }
+    }
+
+    override suspend fun updatePlaylist(playlist: PlaylistModel) {
+        playlistsDatabase.getPlaylistDao().updatePlaylist(playlistConverter.mapToEntity(playlist))
     }
 }
