@@ -57,5 +57,6 @@
     <string name="delete_playlist">Удалить плейлист</string>
     <string name="want_to_delete_playlist">Вы уверены, что хотите удалить этот плейлист?</string>
     <string name="save">Сохранить</string>
+    <string name="empty_playlist_announce">Этот плейлист сейчас пуст</string>
 
 </resources>

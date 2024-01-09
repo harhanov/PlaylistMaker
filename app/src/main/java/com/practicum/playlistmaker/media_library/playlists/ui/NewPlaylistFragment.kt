@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -192,7 +191,6 @@ class NewPlaylistFragment : Fragment() {
         }
         viewModel.playlistInfo.observe(viewLifecycleOwner) { playlistModel ->
             playlistModel?.let {
-                Log.d("Debug", "Received updated playlist info: $playlistModel")
                 binding.playlistNameEdit.setText(it.playlistName)
                 binding.playlistDescriptionEdit.setText(it.playlistDescription)
 

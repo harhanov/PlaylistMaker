@@ -12,6 +12,7 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -193,7 +194,7 @@ class PlaylistInformationFragment : Fragment(R.layout.playlist_information) {
         }
     }
 
-    private fun checkingPlaylistForEmptinessAndShare(){
+    private fun checkingPlaylistForEmptinessAndShare() {
         if (viewModel.getIsPlaylistEmpty()) {
             Toast.makeText(
                 requireContext(),
@@ -267,7 +268,7 @@ class PlaylistInformationFragment : Fragment(R.layout.playlist_information) {
 
     private fun showDeleteDialog(
         titleRes: Int,
-        message:Int,
+        message: Int,
         positiveButtonAction: () -> Unit,
     ) {
         val dialogBackground =
@@ -310,18 +311,25 @@ class PlaylistInformationFragment : Fragment(R.layout.playlist_information) {
     }
 
     private fun updateUI(playlist: PlaylistModel) {
-        binding.playlistTitle.text = playlist.playlistName
-        binding.playlistDescription.text = playlist.playlistDescription
-        binding.numberOfTracks.text =
-            PlaylistUtils.formatNumberOfTracks(playlist.numberOfTracks, binding.root.resources)
-        binding.totalPlayingTime.text = viewModel.totalPlayingTime.value
-        Glide.with(binding.playlistCover)
-            .load(playlist.playlistImagePath)
-            .placeholder(R.drawable.playlist_placeholder)
-            .into(binding.playlistCover)
-        val tracks = viewModel.playlistTracks.value?.map { it.trackModelToTrack() } ?: emptyList()
-        trackListAdapter.setTracks(tracks)
+        if (playlist.numberOfTracks > 0) {
+            binding.playlistTitle.text = playlist.playlistName
+            binding.playlistDescription.text = playlist.playlistDescription
+            binding.numberOfTracks.text =
+                PlaylistUtils.formatNumberOfTracks(playlist.numberOfTracks, binding.root.resources)
+            binding.totalPlayingTime.text = viewModel.totalPlayingTime.value
+            Glide.with(binding.playlistCover)
+                .load(playlist.playlistImagePath)
+                .placeholder(R.drawable.playlist_placeholder)
+                .into(binding.playlistCover)
+            val tracks =
+                viewModel.playlistTracks.value?.map { it.trackModelToTrack() } ?: emptyList()
+            trackListAdapter.setTracks(tracks)
+            binding.playlistInfoPh.isVisible = false
+        } else {
+            binding.playlistInfoPh.isVisible = true
+        }
     }
+
 
     private fun parseIntent(): Long {
         return requireArguments().getLong(PLAYLIST_ID_KEY, 0L)
