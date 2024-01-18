@@ -4,13 +4,22 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.practicum.playlistmaker.media_library.favourites.domain.FavouritesInteractor
+import com.practicum.playlistmaker.media_library.favourites.domain.TracksInteractor
 import com.practicum.playlistmaker.media_library.playlists.domain.PlaylistInteractor
 import com.practicum.playlistmaker.media_library.playlists.domain.PlaylistModel
 import com.practicum.playlistmaker.media_library.playlists.ui.PlaylistsState
 import com.practicum.playlistmaker.player.domain.PlayerInteractor
 import com.practicum.playlistmaker.player.domain.TrackModel
-import com.practicum.playlistmaker.player.ui.PlayerScreenState.*
+import com.practicum.playlistmaker.player.ui.PlayerScreenState.BeginningState
+import com.practicum.playlistmaker.player.ui.PlayerScreenState.BottomSheetState
+import com.practicum.playlistmaker.player.ui.PlayerScreenState.FavouritesButtonHandling
+import com.practicum.playlistmaker.player.ui.PlayerScreenState.OnCompletePlaying
+import com.practicum.playlistmaker.player.ui.PlayerScreenState.PlayButtonHandling
+import com.practicum.playlistmaker.player.ui.PlayerScreenState.PlayerEvent
+import com.practicum.playlistmaker.player.ui.PlayerScreenState.Preparing
+import com.practicum.playlistmaker.player.ui.PlayerScreenState.ShowPlaylistBottomSheet
+import com.practicum.playlistmaker.player.ui.PlayerScreenState.TrackAddedToPlaylist
+import com.practicum.playlistmaker.player.ui.PlayerScreenState.TrackAlreadyInPlaylist
 import com.practicum.playlistmaker.utils.DateUtils.formatTrackTime
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
@@ -21,7 +30,7 @@ import org.koin.core.component.inject
 
 class PlayerViewModel(
     private val trackModel: TrackModel,
-    private val favouritesInteractor: FavouritesInteractor,
+    private val tracksInteractor: TracksInteractor,
     val playlistInteractor: PlaylistInteractor,
 ) : ViewModel(), KoinComponent {
 
@@ -132,9 +141,9 @@ class PlayerViewModel(
         isFavourite = !isFavourite
         updateFavoriteButtonState(isFavourite)
         if (isFavourite) {
-            favouritesInteractor.addFavourite(trackModel)
+            tracksInteractor.addFavourite(trackModel, isFavourite)
         } else {
-            favouritesInteractor.removeFavourite(trackModel)
+            tracksInteractor.removeFavourite(trackModel)
         }
     }
 
@@ -166,6 +175,7 @@ class PlayerViewModel(
                 playlist.playlistId?.let { playlistInteractor.isTrackInPlaylist(it, trackId) }
             if (!isTrackInPlaylist!!) {
                 playlist.playlistId.let { playlistInteractor.addTrackToPlaylist(it, trackId) }
+                tracksInteractor.addFavourite(trackModel, isFavourite)
                 _screenState.value = playlist.playlistName?.let { TrackAddedToPlaylist(it) }
                 navigateBackToPlayerFragment()
             } else {

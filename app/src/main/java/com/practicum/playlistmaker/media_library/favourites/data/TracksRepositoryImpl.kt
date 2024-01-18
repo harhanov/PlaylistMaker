@@ -3,27 +3,27 @@ package com.practicum.playlistmaker.media_library.favourites.data
 import com.practicum.playlistmaker.media_library.data.converters.TrackDBConverter
 import com.practicum.playlistmaker.media_library.data.db.PlaylistsDatabase
 import com.practicum.playlistmaker.media_library.data.db.entity.TrackEntity
-import com.practicum.playlistmaker.media_library.favourites.domain.FavouritesRepository
+import com.practicum.playlistmaker.media_library.favourites.domain.TracksRepository
 import com.practicum.playlistmaker.player.domain.TrackModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 
-class FavouritesRepositoryImpl(
+class TracksRepositoryImpl(
     private val playlistsDatabase: PlaylistsDatabase,
     private val trackDBConverter: TrackDBConverter,
-) : FavouritesRepository {
-    override suspend fun addTrackToFavourites(track: TrackModel) {
+) : TracksRepository {
+    override suspend fun addTrackToBase(track: TrackModel, isFavourite: Boolean) {
         val currentTime = System.currentTimeMillis()
-        val updatedTrack = track.copy(orderAdded = currentTime, isFavourite = true)
-        val trackEntity = trackDBConverter.map(updatedTrack)
-        playlistsDatabase.getTrackDao().insertTrack(trackEntity)
+        val updatedTrack = track.copy(orderAdded = currentTime, isFavourite = isFavourite)
+        val trackEntity = trackDBConverter.mapToEntity(updatedTrack)
+        playlistsDatabase.getTrackDao().insertFavoriteTrack(trackEntity)
     }
 
     override suspend fun removeTrackFromFavourites(track: TrackModel) {
         val updatedTrack = track.copy(isFavourite = false)
-        val trackEntity = trackDBConverter.map(updatedTrack)
-        playlistsDatabase.getTrackDao().deleteTrack(trackEntity)
+        val trackEntity = trackDBConverter.mapToEntity(updatedTrack)
+        playlistsDatabase.getTrackDao().deleteFavoriteTrack(trackEntity)
     }
 
     override fun getFavouriteTracks(): Flow<List<TrackModel>> = flow{
@@ -32,7 +32,7 @@ class FavouritesRepositoryImpl(
     }
 
     private fun convertFromTrackEntity(tracks: List<TrackEntity>): List<TrackModel> {
-        return tracks.map { track -> trackDBConverter.map(track) }
+        return tracks.map { track -> trackDBConverter.mapToModel(track) }
     }
 
 }

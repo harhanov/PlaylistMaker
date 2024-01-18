@@ -1,7 +1,6 @@
 package com.practicum.playlistmaker.media_library.data.db.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -9,6 +8,7 @@ import androidx.room.Transaction
 import androidx.room.Update
 import com.practicum.playlistmaker.media_library.data.db.entity.PlaylistEntity
 import com.practicum.playlistmaker.media_library.data.db.entity.PlaylistTrackCrossRef
+import com.practicum.playlistmaker.media_library.data.db.entity.TrackEntity
 import kotlinx.coroutines.flow.Flow
 
 
@@ -18,8 +18,11 @@ interface PlaylistDao {
     @Insert(entity = PlaylistEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPlaylist(playlist: PlaylistEntity)
 
-    @Delete(entity = PlaylistEntity::class)
-    suspend fun deletePlaylist(playlist: PlaylistEntity)
+    @Query("DELETE FROM playlists_table WHERE playlistId = :playlistId")
+    suspend fun deletePlaylist(playlistId: Long)
+
+    @Query("DELETE FROM playlist_track_cross_ref WHERE playlistId = :playlistId")
+    suspend fun deletePlaylistCrossRef(playlistId: Long)
 
     @Query("SELECT * FROM playlists_table")
     fun getPlaylists(): Flow<List<PlaylistEntity>>
@@ -57,5 +60,11 @@ interface PlaylistDao {
 
     @Query("SELECT COUNT(*) FROM playlist_track_cross_ref WHERE playlistId = :playlistId")
     suspend fun getNumberOfTracksInPlaylist(playlistId: Long): Int
+
+    @Query("SELECT * FROM playlists_table WHERE playlistId = :playlistId")
+    suspend fun getPlaylistById(playlistId: Long): PlaylistEntity?
+
+    @Query("SELECT * FROM tracks_table WHERE trackId IN (SELECT trackId FROM playlist_track_cross_ref WHERE playlistId = :playlistId)")
+    suspend fun getTracksForPlaylist(playlistId: Long): List<TrackEntity>
 
 }

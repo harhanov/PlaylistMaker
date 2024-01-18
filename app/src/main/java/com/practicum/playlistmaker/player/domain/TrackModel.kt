@@ -19,7 +19,7 @@ data class TrackModel(
     val country: String?,
     val previewUrl: String?,
     var isFavourite: Boolean = false,
-    var orderAdded: Long
+    var orderAdded: Long,
 ) : Parcelable {
 
     @RequiresApi(Build.VERSION_CODES.Q)

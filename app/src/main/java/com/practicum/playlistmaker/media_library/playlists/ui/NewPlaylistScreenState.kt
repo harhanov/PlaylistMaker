@@ -9,8 +9,6 @@ sealed class NewPlaylistScreenState() {
             binding.playlistCreateButton.isEnabled = isNameFilled
         }
     }
-
     abstract fun render(binding: FragmentNewPlaylistBinding)
-
 }
 

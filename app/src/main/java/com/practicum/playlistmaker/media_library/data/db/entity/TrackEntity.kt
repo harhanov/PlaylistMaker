@@ -9,7 +9,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
-@Entity(tableName = "favourites_table")
+@Entity(tableName = "tracks_table")
 data class TrackEntity(
     @PrimaryKey()
     val trackId: Int,

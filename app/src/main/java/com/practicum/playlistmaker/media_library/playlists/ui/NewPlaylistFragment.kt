@@ -28,14 +28,23 @@ import com.practicum.playlistmaker.databinding.FragmentNewPlaylistBinding
 import com.practicum.playlistmaker.media_library.playlists.domain.PlaylistModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.IOException
 
 
 class NewPlaylistFragment : Fragment() {
     private var _binding: FragmentNewPlaylistBinding? = null
-    private val binding
+    val binding
         get() = _binding!!
 
-    private val viewModel: NewPlaylistViewModel by viewModel()
+    private val viewModel: NewPlaylistViewModel by viewModel { parametersOf(requireContext()) }
+
+    private val playlistId: Long? by lazy {
+        arguments?.getLong(PlaylistInformationFragment.PLAYLIST_ID_KEY)
+    }
 
     private lateinit var confirmDialog: MaterialAlertDialogBuilder
 
@@ -45,6 +54,11 @@ class NewPlaylistFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
+
+        playlistId?.let {
+            viewModel.setPlaylistInfo(it)
+        }
+
         val view = inflater.inflate(R.layout.fragment_new_playlist, container, false)
         _binding = FragmentNewPlaylistBinding.bind(view)
 
@@ -90,6 +104,7 @@ class NewPlaylistFragment : Fragment() {
             .setPositiveButton((R.string.complete)) { _, _ ->
                 findNavController().popBackStack()
             }
+
         clickListenersSetUp()
         activity?.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         return view
@@ -98,7 +113,7 @@ class NewPlaylistFragment : Fragment() {
 
     private fun clickListenersSetUp() {
         binding.playlistBackButton.setOnClickListener {
-            if (checkingForUnsavedData()) {
+            if (checkingForUnsavedData() && viewModel.isEditMode.value != true) {
                 confirmDialog.show()
             } else {
                 findNavController().navigateUp()
@@ -110,13 +125,37 @@ class NewPlaylistFragment : Fragment() {
 
         binding.playlistCreateButton.setOnClickListener {
             viewModel.viewModelScope.launch {
-                viewModel.onNewPlaylistCreateClick(
-                    PlaylistModel(
-                        playlistName = binding.playlistNameEdit.text.toString(),
-                        playlistDescription = binding.playlistDescriptionEdit.text.toString(),
-                        playlistImagePath = selectedImageUri?.toString(),
+                val playlistName = binding.playlistNameEdit.text.toString()
+                val playlistDescription = binding.playlistDescriptionEdit.text.toString()
+
+                // Сохраняем изображение во внутреннее хранилище
+                val playlistImageUri = selectedImageUri?.let {
+                    val selectedImageBitmap = BitmapFactory.decodeStream(
+                        requireContext().contentResolver.openInputStream(it)
                     )
-                )
+                    saveImageToInternalStorage(selectedImageBitmap)
+                }
+
+                if (viewModel.isEditMode.value == true) {
+                    // Редактирование существующего плейлиста
+                    viewModel.updatePlaylist(
+                        PlaylistModel(
+                            playlistId = viewModel.playlistInfo.value?.playlistId ?: 0,
+                            playlistName = playlistName,
+                            playlistDescription = playlistDescription,
+                            playlistImagePath = playlistImageUri?.toString(),
+                        )
+                    )
+                } else {
+                    // Создание нового плейлиста
+                    viewModel.onNewPlaylistCreateClick(
+                        PlaylistModel(
+                            playlistName = playlistName,
+                            playlistDescription = playlistDescription,
+                            playlistImagePath = playlistImageUri?.toString(),
+                        )
+                    )
+                }
             }
         }
     }
@@ -130,7 +169,7 @@ class NewPlaylistFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (checkingForUnsavedData()) {
+                if (checkingForUnsavedData() && viewModel.isEditMode.value != true) {
                     confirmDialog.show()
                 } else {
                     isEnabled = false
@@ -150,7 +189,28 @@ class NewPlaylistFragment : Fragment() {
                 findNavController().navigateUp()
             }
         }
+        viewModel.playlistInfo.observe(viewLifecycleOwner) { playlistModel ->
+            playlistModel?.let {
+                binding.playlistNameEdit.setText(it.playlistName)
+                binding.playlistDescriptionEdit.setText(it.playlistDescription)
+
+                it.playlistImagePath?.let { imagePath ->
+                    val imageUri = Uri.parse(imagePath)
+                    displaySelectedImage(imageUri)
+                }
+            }
+        }
+        viewModel.isEditMode.observe(viewLifecycleOwner) { isEditMode ->
+            if (isEditMode) {
+                binding.playlistCreateButton.text = getString(R.string.save)
+                binding.playlistHeader.text = getString(R.string.edit_information)
+            }
+        }
+        viewModel.onBackPressed.observe(viewLifecycleOwner) {
+            findNavController().popBackStack()
+        }
     }
+
 
     private val getContent =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
@@ -161,21 +221,49 @@ class NewPlaylistFragment : Fragment() {
         }
 
     private fun displaySelectedImage(imageUri: Uri?) {
-        val inputStream = requireContext().contentResolver.openInputStream(imageUri!!)
-        val selectedImageBitmap: Bitmap? = BitmapFactory.decodeStream(inputStream)
-        if (selectedImageBitmap != null) {
-            Glide.with(this)
-                .load(selectedImageBitmap)
-                .transform(
-                    CenterCrop(),
-                    RoundedCorners(resources.getDimensionPixelSize(R.dimen.big_cover_corner_radius))
-                )
-                .into(binding.playlistCover)
+        try {
+            val contentResolver = requireContext().contentResolver
+            val parcelFileDescriptor = contentResolver.openFileDescriptor(imageUri!!, "r")
+            val selectedImageBitmap: Bitmap? =
+                BitmapFactory.decodeFileDescriptor(parcelFileDescriptor?.fileDescriptor)
+            if (selectedImageBitmap != null) {
+                Glide.with(this)
+                    .load(selectedImageBitmap)
+                    .transform(
+                        CenterCrop(),
+                        RoundedCorners(resources.getDimensionPixelSize(R.dimen.big_cover_corner_radius))
+                    )
+                    .into(binding.playlistCover)
+            }
+
+            parcelFileDescriptor?.close()
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        } catch (e: SecurityException) {
+            e.printStackTrace()
         }
     }
+    private fun saveImageToInternalStorage(bitmap: Bitmap): Uri? {
+        // Генерируем уникальное имя файла, добавляя к базовому имени метку времени
+        val timestamp = System.currentTimeMillis()
+        val uniqueFileName = "playlist_cover_$timestamp.jpg"
 
+        val file = File(requireContext().filesDir, uniqueFileName)
+
+        return try {
+            FileOutputStream(file).use { out ->
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
+            }
+            Uri.fromFile(file)
+        } catch (e: IOException) {
+            e.printStackTrace()
+            null
+        }
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
 }
+
